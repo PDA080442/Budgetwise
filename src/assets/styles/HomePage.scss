@@ -1,0 +1,82 @@
+// font-family: "Montserrat", sans-serif;
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: black;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+::before,
+::after,
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+img,
+p,
+div {
+  margin: 0;
+  padding: 0;
+}
+
+div,
+p {
+  font-family: 'Sen', sans-serif;
+}
+
+// Header Desktop
+.header {
+  max-width: 1920px;
+  width: 100%;
+  height: 70px;
+  margin-top: 40px;
+  color: black;
+}
+
+.header__items {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__logo {
+  display: flex;
+  width: 210px;
+  gap: 43px;
+}
+
+.logo__text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0171bc;
+}
+
+.header__nav {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  margin-left: 85px;
+  display: flex;
+  gap: 40px;
+}
+
+.header__auth {
+  padding-top: 10px;
+  margin-left: 310px;
+}
+
+.header__search {
+  margin-left: px;
+}
