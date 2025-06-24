@@ -34,5 +34,5 @@
 <style src="../assets/styles/HomePage.scss"></style> -->
 
 <template>
-  <NuxtLayout> </NuxtLayout>
+  <v-btn>kkjkjnjk</v-btn>
 </template>
