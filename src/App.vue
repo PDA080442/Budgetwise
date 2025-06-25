@@ -1,82 +1,35 @@
+<!-- src/App.vue -->
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView, RouterLink } from 'vue-router'
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/"></RouterLink>
-        <RouterLink to="/about"></RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <v-app>
+    <header>
+      <div class="wrapper">
+        <nav>
+          <RouterLink to="/"></RouterLink>
+          <RouterLink to="/about"></RouterLink>
+          <RouterLink to="/register"></RouterLink>
+        </nav>
+      </div>
+    </header>
+    <v-main>
+      <RouterView />
+    </v-main>
+  </v-app>
 </template>
 
 <style scoped>
-/* header {
-  line-height: 1.5;
-  max-height: 100vh;
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
 nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  margin-left: 16px;
+  text-decoration: none;
+  color: inherit;
 }
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-} */
 </style>

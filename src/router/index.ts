@@ -1,21 +1,20 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-// Заглушки, можно потом заменить на реальные компоненты из src/views
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
     component: () => import('@/views/HomePage.vue'),
   },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/RegisterPage.vue'),
+  },
   // {
   //   path: '/login',
   //   name: 'Login',
   //   component: () => import('@/views/LoginPage.vue'),
-  // },
-  // {
-  //   path: '/register',
-  //   name: 'Register',
-  //   component: () => import('@/views/RegisterPage.vue'),
   // },
   // {
   //   path: '/home',
