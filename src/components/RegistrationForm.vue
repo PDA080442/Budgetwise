@@ -3,9 +3,6 @@
     <v-card class="pa-6">
       <v-card-title class="titleform">Регистрация</v-card-title>
 
-      <!-- <v-alert v-if="serverErrors.main" type="error">
-        {{ serverErrors.main }}
-      </v-alert> -->
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-text-field
@@ -15,10 +12,6 @@
             required
             hide-details="auto"
           />
-
-          <!-- <v-alert v-if="serverErrors.email" tupe="error">
-            {{ serverErrors.email }}
-          </v-alert> -->
 
           <v-text-field
             label="Пароль"
@@ -41,9 +34,7 @@
       <v-divider />
       <v-card-actions>
         <v-spacer />
-        <!-- <div>{{ value }}</div> -->
         <v-btn class="reg__btn d-flex justify-center" @click="submit">Зарегистрироваться </v-btn>
-        <!-- <v-btn class="reg__btn d-flex justify-center" @click="a">test </v-btn> -->
       </v-card-actions>
       <v-card-text clas>Есть аккаунт?</v-card-text>
       <v-btn class="log__btn d-flex justify-center" @click="login">Войти в аккаунт</v-btn>
@@ -109,6 +100,11 @@ const rules = {
 const submit = async () => {
   if (!form.value.validate()) return
   try {
+    // const tokens = await regdata(formdata)
+    // localStorage.setItem('accessToken', tokens.accessToken)
+    // localStorage.setItem('refreshToken', tokens.refreshToken)
+    // alert('Вы зарегистрировались. Токены хранятся')
+    // console.log(localStorage)
     await regdata(formdata)
     alert('Запрос отправлен')
   } catch (err) {
