@@ -38,7 +38,7 @@ export interface FormData {
   passwordConfirm: string
 }
 
-/* Для формы входа */
+/* для формы вхожа */
 // export interface LoginData {
 //   email: string
 //   password: string
@@ -60,4 +60,4 @@ export async function regdata(formdata: FormData): Promise<AuthTokens> {
   return response.data as AuthTokens
 }
 
-/* будет промис с login form */
+/*  запрос с login form */
