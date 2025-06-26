@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <v-main class="fill-height d-flex align-center justify-center">
     <RegistrationForm />
   </v-main>
@@ -14,9 +14,9 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style> -->
+<style scoped></style>
 
-<template>
+<!-- <template>
   <v-main class="fill-height d-flex align-center justify-center">
     <TestForm />
   </v-main>
@@ -24,7 +24,6 @@ export default defineComponent({
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-// Импортируем новый компонент формы
 import TestForm from '@/components/TestForm.vue'
 
 export default defineComponent({
@@ -33,4 +32,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style scoped></style> -->
