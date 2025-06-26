@@ -3,9 +3,9 @@
     <v-card class="pa-6">
       <v-card-title class="titleform">Регистрация</v-card-title>
 
-      <v-alert v-if="serverErrors.main" type="error">
+      <!-- <v-alert v-if="serverErrors.main" type="error">
         {{ serverErrors.main }}
-      </v-alert>
+      </v-alert> -->
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-text-field
@@ -16,9 +16,9 @@
             hide-details="auto"
           />
 
-          <v-alert v-if="serverErrors.email" tupe="error">
+          <!-- <v-alert v-if="serverErrors.email" tupe="error">
             {{ serverErrors.email }}
-          </v-alert>
+          </v-alert> -->
 
           <v-text-field
             label="Пароль"
@@ -69,7 +69,7 @@ const formdata = reactive<FormData>({
   passwordConfirm: '',
 })
 
-const serverErrors = reactive<{ email?: string; main?: string }>({})
+// const serverErrors = reactive<{ email?: string; main?: string }>({})
 
 const rules = {
   require: (u: string) => !!u || 'Поле нужно заполнить',
