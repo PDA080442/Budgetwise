@@ -12,7 +12,7 @@ const formdata: FormData = {
 
 export async function testdata(formdata: FormData): Promise<void> {
   const response = await axios.post(
-    'http://localhost:8000/api/items/', // Тим даст ссылку
+    '/api/items/', // Тим даст ссылку
     {
       name: formdata.name,
       description: formdata.description,
@@ -24,4 +24,4 @@ export async function testdata(formdata: FormData): Promise<void> {
   console.log('Сервер:', response.data)
 }
 
-testdata(formdata)
+// testdata(formdata)
