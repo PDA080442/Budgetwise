@@ -26,4 +26,13 @@ export default defineConfig({
   optimizeDeps: {
     include: ['vuetify'],
   },
+  // server: {
+  //   proxy: {
+  //     '/reg': {
+  //       target: 'http://localhost:8000',
+  //       changeOrigin: true,
+  //       rewrite: (path) => path.replace(/^\/api/, '/api'),
+  //     },
+  //   },
+  // },
 })
