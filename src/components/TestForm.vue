@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <v-container class="d-flex justify-center">
     <v-card class="pa-6" max-width="500">
       <v-card-title class="text-h5">Тестовый запрос</v-card-title>
@@ -28,8 +28,8 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
-import { testdata } from '@/components/usePromise'
-import type { FormData } from '@/components/usePromise'
+import { testdata } from '@/composables/usePromise'
+import type { FormData } from '@/composables/usePromise'
 
 const form = ref()
 const valid = ref(false)
@@ -53,4 +53,4 @@ const submit = async () => {
     alert('Ошибка' + err)
   }
 }
-</script>
+</script> -->

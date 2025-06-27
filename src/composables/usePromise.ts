@@ -27,9 +27,13 @@ import axios from 'axios'
 
 //  testdata(formdata)
 
+
+// TODO: Это не Промисы это запросы авторизации
+// TODO: Вынести логику запросов в отдельный модуль абстрагированный - делает только запросы
+// TODO: Типы должны быть рахбиты по логике и хранится в отдельных файлах
 export interface AuthTokens {
-  accessToken: string
-  refreshToken: string
+  access: string
+  refresh: string
 }
 
 export interface FormData {
@@ -56,13 +60,11 @@ export async function regdata(formdata: FormData): Promise<void> {
       headers: { 'Content-Type': 'application/json' },
     },
   )
-  // console.log('Сервер:', response.data)
-  // return response.data as AuthTokens
 }
 
-export async function logdata(logindata: LoginData): Promise<void> {
+export async function logdata(logindata: LoginData): Promise<AuthTokens> {
   const response = await axios.post(
-    '/reg/register/', // Тим даст ссылку
+    '/reg/login/', // Тим даст ссылку
     {
       email: logindata.email,
       password: logindata.password,
@@ -70,8 +72,8 @@ export async function logdata(logindata: LoginData): Promise<void> {
     {
       headers: { 'Content-Type': 'application/json' },
     },
-    
   )
+  return response.data as AuthTokens
 }
 /*  запрос с login form */
 

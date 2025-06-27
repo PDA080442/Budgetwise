@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
+
+
+// TODO: Разбить роуты на модули
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -15,6 +18,12 @@ const routes: RouteRecordRaw[] = [
     path: '/entrance',
     name: 'Entrance',
     component: () => import('@/views/EntrancePage.vue'),
+  },
+
+  {
+    path: '/tttt',
+    name: 'Tttt',
+    component: () => import('@/views/Tttt.vue'),
   },
   // {
   //   path: '/home',

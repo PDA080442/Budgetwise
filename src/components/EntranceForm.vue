@@ -2,14 +2,14 @@
   <v-container class="d-flex justify-center">
     <v-card class="pa-6" width="400">
       <v-card-title class="titleform">Вход</v-card-title>
-      
+
       <v-alert v-if="serverErrors.main" type="error">
         {{ serverErrors.main }}
       </v-alert>
-      
+
       <v-card-text>
         <v-form ref="form" @submit.prevent="submit">
-          <v-text-field 
+          <v-text-field
             v-model="logindata.email"
             label="Email"
             :rules="[rules.require, rules.email]"
@@ -20,48 +20,38 @@
             {{ serverErrors.email }}
           </v-alert>
 
-          <v-text-field 
+          <v-text-field
             v-model="logindata.password"
-            label="Пароль" 
+            label="Пароль"
             type="password"
             :rules="[rules.require, rules.passwordmin]"
             required
           />
-
         </v-form>
       </v-card-text>
 
       <v-divider class="my-2" />
 
       <v-card-actions class="px-0">
-        <v-btn 
-          block 
-          class="ent__btn"
-          type="submit"
-          @click="submit"
-        >
-          Войти
-        </v-btn>
+        <v-btn block class="ent__btn" type="submit" @click="submit"> Войти </v-btn>
       </v-card-actions>
-      
+
       <v-card-text class="coment py-2">Ещё нет аккаунта?</v-card-text>
-      
+
       <v-card-actions class="px-0">
-        <v-btn block class="log__btn">Регистрация</v-btn>
+        <v-btn block class="log__btn" @click="goToRegistration">Регистрация</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
 </template>
 
 <script lang="ts" setup>
-
-
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { isEmail } from 'validator'
 import axios from 'axios'
-import { logdata } from '@/components/usePromise'
-import type { LoginData } from '@/components/usePromise'
+import { logdata } from '@/composables/usePromise'
+import type { LoginData, AuthTokens } from '@/composables/usePromise'
 
 const form = ref()
 const router = useRouter()
@@ -74,21 +64,27 @@ const logindata = reactive<LoginData>({
 const serverErrors = reactive<{ email?: string; main?: string }>({})
 
 const rules = {
-  require: (u: string) => !!u || "Поле нужно заполнить",
+  require: (u: string) => !!u || 'Поле нужно заполнить',
   email: (u: string) => isEmail(u) || 'Введен неправильный mail',
   passwordmin: (u: string) => u?.length >= 6 || 'Минимальная длина - 6 символов',
 }
 
-const submit = async() => {
+const submit = async () => {
   serverErrors.main = undefined
   serverErrors.email = undefined
 
   if (!form.value.validate()) return
 
   try {
-    await logdata(logindata)
+    const tokens: AuthTokens = await logdata(logindata)
+    console.log(tokens)
+
+    localStorage.setItem('accessToken', tokens.access)
+    localStorage.setItem('refreshToken', tokens.refresh)
+    axios.defaults.headers.common['Authorization'] = tokens.access
     alert('Запрос отправлен')
-    login() // Перенаправление на страницу входа
+    router.push({ path: '/' })
+    // login()
   } catch (err) {
     if (axios.isAxiosError(err)) {
       serverErrors.main = err.response?.data?.message || 'Ошибка сервера'
@@ -98,12 +94,12 @@ const submit = async() => {
   }
 }
 
-const login = () => {
-  router.push({ path: '/login' })
-}
+// const login = () => {
+//   router.push({ path: '/login' })
+// }
 
 const goToRegistration = () => {
-  router.push({ path: '/registration' }) // Перенаправление на страницу регистрации
+  router.push({ path: '/register' }) // Перенаправление на страницу регистрации
 }
 </script>
 
@@ -129,7 +125,7 @@ const goToRegistration = () => {
   letter-spacing: normal;
 }
 
-.log__btn{
+.log__btn {
   color: #2f9be3;
   opacity: 1;
   font-size: 15px;

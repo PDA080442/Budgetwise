@@ -46,8 +46,8 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { isEmail } from 'validator'
-import { regdata } from '@/components/usePromise'
-import type { FormData } from '@/components/usePromise'
+import { regdata } from '@/composables/usePromise'
+import type { FormData } from '@/composables/usePromise'
 
 const form = ref()
 const valid = ref(form)
@@ -60,8 +60,6 @@ const formdata = reactive<FormData>({
   password2: '',
 })
 
-// const serverErrors = reactive<{ email?: string; main?: string }>({})
-
 const rules = {
   require: (u: string) => !!u || 'Поле нужно заполнить',
   email: (u: string) => isEmail(u) || 'Введен неправильный mail',
@@ -69,52 +67,19 @@ const rules = {
   passsame: (u: string) => u === formdata.password || 'Пароли не совпадают',
 }
 
-// function a() {
-//   value.value += 1
-// }
-
-// const submit = async () => {
-//   // serverErrors.main = undefined
-//   // serverErrors.email = undefined
-
-//   if (!form.value.validate()) return
-//   try {
-//     await axios.post(
-//       'api/items/', // Тим даст ссылку
-//       {
-//         email: formdata.email,
-//         password: formdata.password,
-//         passwordConfirm: formdata.passwordConfirm,
-//       },
-//       {
-//         headers: { 'Content-Type': 'application/json' },
-//       },
-//     )
-//     alert('Запрос отправлен')
-//     // router.push({ path: '/login' })
-//   } catch (err) {
-//     alert('Ошибка:' + err)
-//   }
-// }
-
 const submit = async () => {
   if (!form.value.validate()) return
   try {
-    // const tokens: AuthTokens = await regdata(formdata)
-    // localStorage.setItem('accessToken', tokens.accessToken)
-    // localStorage.setItem('refreshToken', tokens.refreshToken)
-    // alert('Вы зарегистрировались. Токены хранятся')
-    // console.log(localStorage)
     await regdata(formdata)
-    alert('Запрос отправлен')
-    router.push({ path: '/login' })
+
+    router.push({ path: '/entrance' })
   } catch (err) {
-    alert('Ошибка' + err)
+    console.error(err)
   }
 }
 
 const login = () => {
-  router.push({ path: '/login' })
+  router.push({ path: '/entrance' })
 }
 </script>
 
