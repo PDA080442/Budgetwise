@@ -1,0 +1,172 @@
+<template>
+  <v-container class="d-flex justify-center">
+    <v-card class="pa-6" width="400">
+      <v-card-title class="titleform">Вход</v-card-title>
+      
+      <v-alert v-if="serverErrors.main" type="error">
+        {{ serverErrors.main }}
+      </v-alert>
+      
+      <v-card-text>
+        <v-form ref="form" @submit.prevent="submit">
+          <v-text-field 
+            v-model="formdata.email"
+            label="Email"
+            :rules="[rules.require, rules.email]"
+            required
+          />
+
+          <v-alert v-if="serverErrors.email" type="error">
+            {{ serverErrors.email }}
+          </v-alert>
+
+          <v-text-field 
+            v-model="formdata.password"
+            label="Пароль" 
+            type="password"
+            :rules="[rules.require, rules.passwordmin]"
+            required
+          />
+
+        </v-form>
+      </v-card-text>
+
+      <v-divider class="my-2" />
+
+      <v-card-actions class="px-0">
+        <v-btn 
+          block 
+          class="ent__btn"
+          type="submit"
+          @click="submit"
+        >
+          Войти
+        </v-btn>
+      </v-card-actions>
+      
+      <v-card-text class="coment py-2">Ещё нет аккаунта?</v-card-text>
+      
+      <v-card-actions class="px-0">
+        <v-btn block class="log__btn">Регистрация</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-container>
+</template>
+
+<script lang="ts" setup>
+
+// import Header from './Header.vue'
+// import { defineComponent } from 'vue'
+
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { isEmail } from 'validator'
+import axios from 'axios'
+
+// export default defineComponent({
+//   name: 'Home',
+//   components:{
+//     Header
+//   }
+// });
+
+const form = ref()
+const valid = ref(form)
+const router = useRouter()
+
+
+const formdata = reactive({
+  email: '',
+  password: '',
+})
+
+const serverErrors = reactive<{ email?: string; main?: string }>({
+
+})
+
+const rules = {
+  require: (u: string) => !!u || "Поле нужно заполнить",
+  email: (u: string) => isEmail(u) || 'Введен неправильный mail',
+  passwordmin: (u: string) => u?.length >= 6 || 'Минимальная длина - 6 символов',
+  passsame: (u: string) => u === formdata.password || 'Пароли не совпадают',
+}
+
+const submit = async() => {
+  // serverErrors.main = undefined
+  // serverErrors.email = undefined
+
+  if (!form.value.validate()) return
+  try {
+    const response = await axios.post(
+      'https://some-domain.com/api/', // Тим даст ссылку
+      {
+        email: formdata.email,
+        password: formdata.password,
+      },
+      {
+        headers: {"Content-Type": "application/json"}
+      }
+    )
+    router.push({ path: '/login' })
+   } 
+    catch (error: any) {
+  if (error.response) {
+    serverErrors.main = error.response.data.message || 'Ошибка входа. Попробуйте еще раз.';
+    if (error.response.data.errors && error.response.data.errors.email) {
+      serverErrors.email = error.response.data.errors.email[0];
+    }
+  // } else {
+  //   serverErrors.main = 'Ошибка сети. Попробуйте еще раз.';
+  // }
+    }
+  }
+
+const login = () => {
+  router.push({ path: '/login' })
+}
+
+}
+
+
+</script>
+
+<style scoped lang="scss">
+.v-card {
+  border-radius: 25px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.titleform {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 300;
+  color: #0171bc;
+  padding-bottom: 16px;
+}
+
+.ent__btn {
+  color: #ffffff;
+  background-color: #0171bc;
+  opacity: 1;
+  font-size: 20px;
+  letter-spacing: normal;
+}
+
+.log__btn{
+  color: #2f9be3;
+  opacity: 1;
+  font-size: 15px;
+  letter-spacing: normal;
+}
+
+.coment {
+  text-align: center;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  padding-bottom: 4px;
+}
+
+.v-card__actions {
+  padding-top: 0;
+}
+</style>
