@@ -1,4 +1,4 @@
-<!-- src/App.vue -->
+src/App.vue
 <script setup lang="ts">
 import { RouterView, RouterLink } from 'vue-router'
 </script>
