@@ -47,7 +47,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { isEmail } from 'validator'
 import { regdata } from '@/components/usePromise'
-import type { FormData, AuthTokens } from '@/components/usePromise'
+import type { FormData } from '@/components/usePromise'
 
 const form = ref()
 const valid = ref(form)
@@ -100,11 +100,12 @@ const rules = {
 const submit = async () => {
   if (!form.value.validate()) return
   try {
-    const tokens: AuthTokens = await regdata(formdata)
-    localStorage.setItem('accessToken', tokens.accessToken)
-    localStorage.setItem('refreshToken', tokens.refreshToken)
-    alert('Вы зарегистрировались. Токены хранятся')
-    console.log(localStorage)
+    // const tokens: AuthTokens = await regdata(formdata)
+    // localStorage.setItem('accessToken', tokens.accessToken)
+    // localStorage.setItem('refreshToken', tokens.refreshToken)
+    // alert('Вы зарегистрировались. Токены хранятся')
+    // console.log(localStorage)
+    await regdata(formdata)
     alert('Запрос отправлен')
   } catch (err) {
     alert('Ошибка' + err)

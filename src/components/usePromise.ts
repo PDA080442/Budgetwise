@@ -44,7 +44,7 @@ export interface FormData {
 //   password: string
 // }
 
-export async function regdata(formdata: FormData): Promise<AuthTokens> {
+export async function regdata(formdata: FormData): Promise<void> {
   const response = await axios.post(
     '/reg/register/', // Тим даст ссылку
     {
@@ -57,7 +57,7 @@ export async function regdata(formdata: FormData): Promise<AuthTokens> {
     },
   )
   // console.log('Сервер:', response.data)
-  return response.data as AuthTokens
+  // return response.data as AuthTokens
 }
 
 /*  запрос с login form */
