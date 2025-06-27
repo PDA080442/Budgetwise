@@ -35,22 +35,23 @@ export interface AuthTokens {
 export interface FormData {
   email: string
   password: string
-  passwordConfirm: string
+  password2: string
 }
 
 /* для формы вхожа */
-// export interface LoginData {
-//   email: string
-//   password: string
-// }
+export interface LoginData {
+  email: string
+  password: string
+}
 
+/* Запрос с reg form */
 export async function regdata(formdata: FormData): Promise<void> {
   const response = await axios.post(
     '/reg/register/', // Тим даст ссылку
     {
       email: formdata.email,
       password: formdata.password,
-      passwordConfirm: formdata.passwordConfirm,
+      password2: formdata.password2,
     },
     {
       headers: { 'Content-Type': 'application/json' },
@@ -61,3 +62,24 @@ export async function regdata(formdata: FormData): Promise<void> {
 }
 
 /*  запрос с login form */
+
+/*   */
+
+/*  запрос с login form */
+
+//
+//
+//
+
+/* запрос logout */
+export async function logoutReq(refreshToken: string): Promise<void> {
+  await axios.post(
+    'reg/logout',
+    {
+      refreshToken,
+    },
+    {
+      headers: { 'Content-Type': 'application/json' },
+    },
+  )
+}

@@ -24,7 +24,7 @@
           <v-text-field
             label="Подтвердите пароль"
             type="password"
-            v-model="formdata.passwordConfirm"
+            v-model="formdata.password2"
             :rules="[rules.require, rules.passsame]"
             required
           />
@@ -57,7 +57,7 @@ const router = useRouter()
 const formdata = reactive<FormData>({
   email: '',
   password: '',
-  passwordConfirm: '',
+  password2: '',
 })
 
 // const serverErrors = reactive<{ email?: string; main?: string }>({})
@@ -107,6 +107,7 @@ const submit = async () => {
     // console.log(localStorage)
     await regdata(formdata)
     alert('Запрос отправлен')
+    router.push({ path: '/login' })
   } catch (err) {
     alert('Ошибка' + err)
   }
