@@ -38,11 +38,11 @@ export interface FormData {
   passwordConfirm: string
 }
 
-/* для формы вхожа */
-// export interface LoginData {
-//   email: string
-//   password: string
-// }
+
+export interface LoginData {
+  email: string
+  password: string
+}
 
 export async function regdata(formdata: FormData): Promise<void> {
   const response = await axios.post(
@@ -60,4 +60,17 @@ export async function regdata(formdata: FormData): Promise<void> {
   // return response.data as AuthTokens
 }
 
+export async function logdata(logindata: LoginData): Promise<void> {
+  const response = await axios.post(
+    '/reg/register/', // Тим даст ссылку
+    {
+      email: logindata.email,
+      password: logindata.password,
+    },
+    {
+      headers: { 'Content-Type': 'application/json' },
+    },
+    
+  )
+}
 /*  запрос с login form */

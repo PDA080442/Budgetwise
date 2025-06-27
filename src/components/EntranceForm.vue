@@ -10,7 +10,7 @@
       <v-card-text>
         <v-form ref="form" @submit.prevent="submit">
           <v-text-field 
-            v-model="formdata.email"
+            v-model="logindata.email"
             label="Email"
             :rules="[rules.require, rules.email]"
             required
@@ -21,7 +21,7 @@
           </v-alert>
 
           <v-text-field 
-            v-model="formdata.password"
+            v-model="logindata.password"
             label="Пароль" 
             type="password"
             :rules="[rules.require, rules.passwordmin]"
@@ -55,79 +55,56 @@
 
 <script lang="ts" setup>
 
-// import Header from './Header.vue'
-// import { defineComponent } from 'vue'
 
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { isEmail } from 'validator'
 import axios from 'axios'
-
-// export default defineComponent({
-//   name: 'Home',
-//   components:{
-//     Header
-//   }
-// });
+import { logdata } from '@/components/usePromise'
+import type { LoginData } from '@/components/usePromise'
 
 const form = ref()
-const valid = ref(form)
 const router = useRouter()
 
-
-const formdata = reactive({
+const logindata = reactive<LoginData>({
   email: '',
   password: '',
 })
 
-const serverErrors = reactive<{ email?: string; main?: string }>({
-
-})
+const serverErrors = reactive<{ email?: string; main?: string }>({})
 
 const rules = {
   require: (u: string) => !!u || "Поле нужно заполнить",
   email: (u: string) => isEmail(u) || 'Введен неправильный mail',
   passwordmin: (u: string) => u?.length >= 6 || 'Минимальная длина - 6 символов',
-  passsame: (u: string) => u === formdata.password || 'Пароли не совпадают',
 }
 
 const submit = async() => {
-  // serverErrors.main = undefined
-  // serverErrors.email = undefined
+  serverErrors.main = undefined
+  serverErrors.email = undefined
 
   if (!form.value.validate()) return
+
   try {
-    const response = await axios.post(
-      'https://some-domain.com/api/', // Тим даст ссылку
-      {
-        email: formdata.email,
-        password: formdata.password,
-      },
-      {
-        headers: {"Content-Type": "application/json"}
-      }
-    )
-    router.push({ path: '/login' })
-   } 
-    catch (error: any) {
-  if (error.response) {
-    serverErrors.main = error.response.data.message || 'Ошибка входа. Попробуйте еще раз.';
-    if (error.response.data.errors && error.response.data.errors.email) {
-      serverErrors.email = error.response.data.errors.email[0];
-    }
-  // } else {
-  //   serverErrors.main = 'Ошибка сети. Попробуйте еще раз.';
-  // }
+    await logdata(logindata)
+    alert('Запрос отправлен')
+    login() // Перенаправление на страницу входа
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      serverErrors.main = err.response?.data?.message || 'Ошибка сервера'
+    } else {
+      serverErrors.main = 'Неизвестная ошибка'
     }
   }
+}
 
 const login = () => {
   router.push({ path: '/login' })
 }
 
+const goToRegistration = () => {
+  router.push({ path: '/registration' }) // Перенаправление на страницу регистрации
 }
-
-
 </script>
 
 <style scoped lang="scss">
