@@ -38,7 +38,6 @@ export interface FormData {
   password2: string
 }
 
-/* для формы вхожа */
 export interface LoginData {
   email: string
   password: string
