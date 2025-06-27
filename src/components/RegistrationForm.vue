@@ -37,7 +37,9 @@
         <v-btn class="reg__btn d-flex justify-center" @click="submit">Зарегистрироваться </v-btn>
       </v-card-actions>
       <v-card-text clas>Есть аккаунт?</v-card-text>
-      <v-btn class="log__btn d-flex justify-center" @click="login">Войти в аккаунт</v-btn>
+      <v-card-actions class="justify-center px-0">
+        <v-btn class="log__btn d-flex justify-center" @click="login">Войти в аккаунт</v-btn>
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -107,7 +109,6 @@ const login = () => {
   background-color: #0171bc;
   opacity: 1;
   font-size: 15px;
-  margin-left: 15px;
 }
 
 // .v-btn:hover {

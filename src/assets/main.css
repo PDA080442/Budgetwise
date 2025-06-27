@@ -11,12 +11,11 @@
   margin: 0 auto;
   padding: 0;
   font-weight: normal;
-  margin-right: 0px;
+  /* margin-right: 0px;
   margin-left: 0px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  
+  align-items: center; */
 }
 
 a,
@@ -35,7 +34,7 @@ a,
 
 @media (min-width: 1024px) {
   body {
-    display: flex; 
+    display: flex;
     place-items: center;
   }
 
