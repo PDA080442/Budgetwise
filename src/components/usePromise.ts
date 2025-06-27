@@ -60,6 +60,19 @@ export async function regdata(formdata: FormData): Promise<void> {
   // return response.data as AuthTokens
 }
 
+export async function logdata(logindata: LoginData): Promise<void> {
+  const response = await axios.post(
+    '/reg/register/', // Тим даст ссылку
+    {
+      email: logindata.email,
+      password: logindata.password,
+    },
+    {
+      headers: { 'Content-Type': 'application/json' },
+    },
+    
+  )
+}
 /*  запрос с login form */
 
 /*   */
