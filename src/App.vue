@@ -25,9 +25,8 @@ import { RouterView, RouterLink } from 'vue-router'
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* padding: 16px; */
-  padding:0;
-  margin:0;
+  width: 0;
+  height: 0;
 }
 nav a {
   margin-left: 16px;
