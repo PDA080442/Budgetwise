@@ -1,19 +1,20 @@
-<template>
-  <div>
-    <h1>Добро пожаловать на главную страницу!</h1>
-  </div>
+<!-- <template>
+  <v-container>
+    <v-btn @click="click"></v-btn>
+  </v-container>
 </template>
 
-<!-- <script>
-export default {
-  name: 'HomePage',
-  // Здесь можно добавить данные, методы и другие опции компонента
-};
-</script> -->
+<script lang="ts" setup>
+import router from '@/router'
+
+const click = () => {
+  router.push({ path: '/finance' })
+}
+</script>
 
 <style scoped>
 /* Стили для компонента */
 h1 {
   color: blue;
 }
-</style>
+</style> -->

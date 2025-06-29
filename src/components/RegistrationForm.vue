@@ -36,8 +36,8 @@
         <v-spacer />
         <v-btn class="reg__btn d-flex justify-center" @click="submit">Зарегистрироваться </v-btn>
       </v-card-actions>
-      <v-card-text clas>Есть аккаунт?</v-card-text>
       <v-card-actions class="justify-center px-0">
+        <v-card-text clas>Есть аккаунт?</v-card-text>
         <v-btn class="log__btn d-flex justify-center" @click="login">Войти в аккаунт</v-btn>
       </v-card-actions>
     </v-card>
@@ -54,7 +54,7 @@ import type { FormData } from '@/composables/usePromise'
 const form = ref()
 const valid = ref(form)
 const router = useRouter()
-// const value = ref(0)
+// const value = rev-(0)
 
 const formdata = reactive<FormData>({
   email: '',

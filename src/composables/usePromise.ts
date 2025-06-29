@@ -27,7 +27,6 @@ import axios from 'axios'
 
 //  testdata(formdata)
 
-
 // TODO: Это не Промисы это запросы авторизации
 // TODO: Вынести логику запросов в отдельный модуль абстрагированный - делает только запросы
 // TODO: Типы должны быть рахбиты по логике и хранится в отдельных файлах
@@ -64,7 +63,7 @@ export async function regdata(formdata: FormData): Promise<void> {
 
 export async function logdata(logindata: LoginData): Promise<AuthTokens> {
   const response = await axios.post(
-    '/reg/login/', // Тим даст ссылку
+    '/reg/login/',
     {
       email: logindata.email,
       password: logindata.password,
@@ -73,17 +72,24 @@ export async function logdata(logindata: LoginData): Promise<AuthTokens> {
       headers: { 'Content-Type': 'application/json' },
     },
   )
+
+  // выводим в консоль только если действительно есть ответ
+  if (response && response.data) {
+    console.log('Ответ бэка:', response.data)
+  }
+
   return response.data as AuthTokens
 }
-/*  запрос с login form */
 
-/*   */
-
-/*  запрос с login form */
-
-//
-//
-//
+export async function verifyToken(token: string): Promise<boolean> {
+  await axios.get('/api/token/verify/', {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return true
+}
 
 /* запрос logout */
 export async function logoutReq(refreshToken: string): Promise<void> {
