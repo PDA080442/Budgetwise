@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts" setup>
+import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { logoutReq } from '@/composables/usePromise'
 
@@ -10,15 +11,17 @@ const router = useRouter()
 
 const logout = async () => {
   const refreshToken = localStorage.getItem('refreshToken')
-  if (!refreshToken) return router.push({ path: '/login' })
-
-  try {
-    await logoutReq(refreshToken)
-  } catch (err) {
-    alert('Ошибка выхода' + err)
+  if (refreshToken) {
+    try {
+      await logoutReq(refreshToken)
+    } catch {}
   }
+  // return router.push({ path: '/entrance' })
 
   localStorage.removeItem('refreshToken')
-  router.push({ path: '/login' })
+  localStorage.removeItem('accessToken')
+  delete axios.defaults.headers.common['Authorization']
+  router.push({ path: '/entrance' })
+  console.log(localStorage)
 }
 </script>

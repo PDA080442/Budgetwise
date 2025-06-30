@@ -37,12 +37,16 @@ router.beforeEach(async (to, from, next) => {
   if (!to.meta.requireAuth) return next()
   const token = localStorage.getItem('accessToken')
   if (!token) return next({ path: '/entrance' })
+  if (!axios.defaults.headers.common['Authorization']) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  }
   try {
     await verifyToken(token)
     return next()
   } catch {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
+    delete axios.defaults.headers.common['Authorization']
     return next({ path: '/entrance' })
   }
 })
