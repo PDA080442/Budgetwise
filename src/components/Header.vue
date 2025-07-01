@@ -57,8 +57,6 @@
     </header>
 </template>
 
-
-
 <script lang="ts">
 import { defineComponent, shallowRef, ref } from 'vue'
 
@@ -85,10 +83,7 @@ export default defineComponent ({
 })
 </script>
 
-
-
-<style >
-
+<style>
 .nav {
     display: flex;
     justify-content: center;

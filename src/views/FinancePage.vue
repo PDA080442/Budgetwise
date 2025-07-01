@@ -1,21 +1,27 @@
 <template>
-  <!-- <div class="about">
-    <h1>This is an about page</h1>
-  </div> -->
-  <Header />
-  <div class="pa-4 text-center">
-    <Tranz/>
-
-  </div>
-  
+  <v-container>
+    <TransactionList :transactions="transactions" />
+    <v-btn>Обновить транзакции</v-btn>
+  </v-container>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue'
+import TransactionList from '@/components/TransactionList.vue'
+import { getTransaction, type Transaction } from '@/composables/usePromise'
+
+const transactions = ref<Transaction[]>([])
+
+onMounted(async () => {
+  try {
+    const token = localStorage.getItem('accessToken')
+    if (!token) {
+      throw new Error('Токен не найден в localStorage')
+    }
+    transactions.value = await getTransaction(token)
+    console.log('Загрузка транзакций', transactions.value)
+  } catch (err) {
+    alert('Ошибка загрузки платежей' + err)
   }
 }
 

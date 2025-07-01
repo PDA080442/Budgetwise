@@ -1,15 +1,18 @@
 <template>
-  <div>
-    <h1>Добро пожаловать на главную страницу!</h1>
-  </div>
+  <v-container>
+    <v-btn @click="finance">Страница финансов</v-btn>
+    <LogoutButton />
+  </v-container>
 </template>
 
-<!-- <script>
-export default {
-  name: 'HomePage',
-  // Здесь можно добавить данные, методы и другие опции компонента
-};
-</script> -->
+<script lang="ts" setup>
+import LogoutButton from '@/components/LogoutButton.vue'
+import router from '@/router'
+
+const finance = () => {
+  router.push({ path: '/finance' })
+}
+</script>
 
 <style scoped>
 /* Стили для компонента */
