@@ -46,6 +46,14 @@ export interface LoginData {
   password: string
 }
 
+export interface Transaction {
+  id: number
+  amount: number
+  date: string
+  category: string
+  type: string
+}
+
 /* Запрос с reg form */
 export async function regdata(formdata: FormData): Promise<void> {
   const response = await axios.post(
@@ -102,4 +110,14 @@ export async function logoutReq(refreshToken: string): Promise<void> {
       headers: { 'Content-Type': 'application/json' },
     },
   )
+}
+
+export async function getTransaction(token: string): Promise<Transaction[]> {
+  const response = await axios.get<Transaction[]>('/api/transactions/', {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return response.data
 }

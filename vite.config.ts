@@ -31,8 +31,12 @@ export default defineConfig({
       '/reg/': {
         target: 'http://localhost:8000',
         changeOrigin: true,
-        secure: false,
         rewrite: (path) => path.replace(/^\/reg/, '/reg'),
+      },
+      '/api/transactions/': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        secure: false,
       },
     },
   },
