@@ -16,11 +16,11 @@ const routes: RouteRecordRaw[] = [
     name: 'Entrance',
     component: () => import('@/views/EntrancePage.vue'),
   },
-  // {
-  //   path: '/home',
-  //   name: 'Home',
-  //   component: () => import('@/views/HomePage.vue'),
-  // },
+  {
+    path: '/finance',
+    name: 'Finance',
+    component: () => import('@/views/FinancePage.vue'),
+  },
   // {
   //   path: '/upcoming',
   //   name: 'Upcoming',

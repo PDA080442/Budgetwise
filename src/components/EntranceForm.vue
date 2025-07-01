@@ -4,7 +4,7 @@
       <v-card-title class="titleform">Вход</v-card-title>
       
       <v-alert v-if="serverErrors.main" type="error">
-        {{ serverErrors.main }}
+        {{ serverErrors?.main }}
       </v-alert>
       
       <v-card-text>
@@ -54,6 +54,7 @@
 </template>
 
 <script lang="ts" setup>
+
 
 
 import { ref, reactive } from 'vue'
