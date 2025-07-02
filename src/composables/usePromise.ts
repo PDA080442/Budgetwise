@@ -121,3 +121,94 @@ export async function getTransaction(token: string): Promise<Transaction[]> {
   })
   return response.data
 }
+
+
+
+
+
+export interface CreateTransactionData {
+  amount: number
+  date: string // Ожидается в формате YYYY-MM-DD
+  category: string
+  operationType: string // На сервер отправляем как 'type'
+}
+
+export interface Transaction {
+  id: number
+  amount: number
+  date: string
+  category: string
+  type: string // 'Доход' или 'Расход'
+}
+
+
+// export async function createTransaction(
+//   token: string,
+//   transactionData: CreateTransactionData
+// ): Promise<Transaction> {
+//   try {
+//     // Преобразуем operationType в type для соответствия серверу
+//     const { operationType, ...rest } = transactionData;
+    
+    
+//     console.log("Отправка данных на сервер:", payload);
+
+//     const response = await axios.post<Transaction>(
+//       '/api/transactions/', // Убедитесь, что эндпоинт корректен
+//       {
+//         operationType:
+//         category:
+//         amount: 
+//         date:
+//       },
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Authorization': `Bearer ${token}`
+//         }
+//       }
+//     );
+
+//     return response.data;
+//   } catch (error) {
+//     console.error('Ошибка создания транзакции:', error);
+//     throw new Error('Не удалось создать транзакцию');
+//   }
+// }
+
+export async function createTransaction(
+  token: string,
+  data: CreateTransactionData
+): Promise<Transaction> {
+  try {
+    const response = await axios.post(
+      '/api/transactions/',
+      {
+        amount: data.amount,
+        date: data.date,
+        category: data.category,
+        type: data.operationType
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    
+    return response.data as Transaction;
+    
+  } catch (error) {
+    console.error('Ошибка создания транзакции:', error);
+    throw new Error('Не удалось создать транзакцию');
+  }
+}
+
+
+// Вспомогательная функция для преобразования даты
+export function formatDateForServer(dateString: string): string {
+  const parts = dateString.split('.');
+  if (parts.length !== 3) return dateString;
+  return `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD
+}

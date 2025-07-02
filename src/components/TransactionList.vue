@@ -9,7 +9,7 @@
             <td>{{ props.item.amount }}</td>
             <td>{{ props.item.date }}</td>
             <td>{{ props.item.category }}</td>
-            <td>{{ props.item.type }}</td>
+            <td>{{ getOperationTypeText(props.item.type) }}</td>
           </tr>
         </template>
       </v-data-table>
@@ -33,6 +33,10 @@ interface TransProps {
 }
 
 const { transactions } = defineProps<TransProps>()
+
+const getOperationTypeText = (type: string) => {
+  return type === 'income' ? 'Доход' : 'Расход'
+}
 
 const headers = [
   { title: 'ID', value: 'id' },

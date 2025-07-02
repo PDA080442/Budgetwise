@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column fill-height">
-    <!-- <Header /> -->
+    <Header />
 
     <v-main class="fill-height d-flex align-center justify-center">
       <EntranceForm />
