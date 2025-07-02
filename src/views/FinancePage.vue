@@ -1,7 +1,7 @@
 <template>
   <v-container class="d-flex">
     <TransactionList :transactions="transactions" />
-    <v-btn @click="reloadPage">Обновить транзакции</v-btn>
+    <!-- <v-btn @click="reloadPage">Обновить транзакции</v-btn> -->
   </v-container>
 </template>
 
@@ -27,7 +27,7 @@ onMounted(async () => {
   }
 })
 
-const reloadPage = () => {
-  location.reload()
-}
+// const reloadPage = () => {
+//   location.reload()
+// }
 </script>
