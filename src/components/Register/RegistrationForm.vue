@@ -48,13 +48,12 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { isEmail } from 'validator'
-import { regdata } from '@/composables/usePromise'
-import type { FormData } from '@/composables/usePromise'
+import { regdata } from '@/composables/auth.request'
+import type { FormData } from '@/types/auth.type'
 
 const form = ref()
 const valid = ref(form)
 const router = useRouter()
-// const value = rev-(0)
 
 const formdata = reactive<FormData>({
   email: '',

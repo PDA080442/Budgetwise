@@ -5,7 +5,7 @@
 <script lang="ts" setup>
 import axios from 'axios'
 import { useRouter } from 'vue-router'
-import { logoutReq } from '@/composables/usePromise'
+import { logoutReq } from '@/composables/auth.request'
 
 const router = useRouter()
 
