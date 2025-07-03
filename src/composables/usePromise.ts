@@ -142,39 +142,6 @@ export interface Transaction {
 }
 
 
-// export async function createTransaction(
-//   token: string,
-//   transactionData: CreateTransactionData
-// ): Promise<Transaction> {
-//   try {
-//     // Преобразуем operationType в type для соответствия серверу
-//     const { operationType, ...rest } = transactionData;
-    
-    
-//     console.log("Отправка данных на сервер:", payload);
-
-//     const response = await axios.post<Transaction>(
-//       '/api/transactions/', // Убедитесь, что эндпоинт корректен
-//       {
-//         operationType:
-//         category:
-//         amount: 
-//         date:
-//       },
-//       {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': `Bearer ${token}`
-//         }
-//       }
-//     );
-
-//     return response.data;
-//   } catch (error) {
-//     console.error('Ошибка создания транзакции:', error);
-//     throw new Error('Не удалось создать транзакцию');
-//   }
-// }
 
 export async function createTransaction(
   token: string,

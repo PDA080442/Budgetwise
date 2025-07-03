@@ -7,20 +7,35 @@
       </template>
 
       <v-card prepend-icon="mdi-pencil" title="Добавление транзакции">
-        <v-card-text>
-          <v-row dense>
+        <v-container>
+          <v-row>
             <v-col cols="12" md="6" sm="6">
-              <v-text-field 
-              v-model="amount" 
-              label="Сумма*" 
-              :rules="[rules.require, rules.negative]"
+              <v-text-field v-model="amount" label="Сумма*" :rules="[rules.require, rules.negative]"
                 required></v-text-field>
             </v-col>
 
+
             <v-col cols="12" md="6" sm="6">
-              <v-text-field v-model="date" hint="Пример: 25.06.2025" label="Дата*"
-                :rules="[rules.require, rules.dateFormat]" required></v-text-field>
-            </v-col>
+              <v-date-input
+                v-model="date"
+                :display-format="formatDate"
+                label="Дата*"
+                required
+                clearable
+                prepend-icon=""
+              ></v-date-input>
+              <!-- <v-date-input 
+
+              :display-format="format" 
+              @update:model-value="(e) => inputDate(e)" 
+              :value="date" 
+              label="Дата*" 
+              required 
+              clearable
+              prepend-icon="" ></v-date-input>
+
+            >-->
+            </v-col> 
 
             <v-col cols="12" sm="6">
               <v-select v-model="category" :items="[
@@ -39,19 +54,13 @@
             </v-col>
 
             <v-col cols="12" sm="6">
-              <v-select 
-              v-model="operationType"
-              :items="operationTypes" 
-              item-title="title"
-              item-value="value"
-              label="Тип операции*"
-              :rules="[rules.require]" 
-              required></v-select>
+              <v-select v-model="operationType" :items="operationTypes" item-title="title" item-value="value"
+                label="Тип операции*" :rules="[rules.require]" required></v-select>
             </v-col>
           </v-row>
 
           <small class="text-caption text-medium-emphasis">*Обязательное поле</small>
-        </v-card-text>
+        </v-container>
 
         <v-divider></v-divider>
 
@@ -60,12 +69,8 @@
 
           <v-btn text="Закрыть" variant="plain" @click="dialog = false"></v-btn>
 
-          <v-btn color="primary" 
-          text="Сохранить" 
-          variant="tonal"
-          @click="saveTransaction"
-          :disabled="!formValid"
-          ></v-btn>
+          <v-btn color="primary" text="Сохранить" variant="tonal" @click="saveTransaction"
+            :disabled="!formValid"></v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -86,37 +91,39 @@ export default defineComponent({
   },
   setup(props) {
     const dialog = ref(false);
-    const date = ref('');
     const amount = ref('');
     const category = ref('');
     const operationType = ref('');
+    const date = ref<Date | null>(null);
 
     const operationTypes = [
       { title: 'Доход', value: 'income' },
       { title: 'Расход', value: 'expense' }
     ];
-    
+
     const rules = {
       require: (u: string) => !!u || "Обязательное поле",
       negative: (u: string) => {
         const value = parseFloat(u);
-        return !isNaN(value) && value > 0 || "Сумма должна быть положительной";
-      },
-      dateFormat: (u: string) => {
-        const datePattern = /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(\d{4})$/;
-        return datePattern.test(u) || "Неверный формат даты. Пример: 25.06.2025";
+        return (!isNaN(value) && value > 0) || "Сумма должна быть положительной";
       }
     };
 
-    // Проверка валидности всей формы
+    const formatDate = (date: Date | null): string => {
+      if (!date) return '';
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
     const formValid = computed(() => {
       return (
         rules.require(amount.value) === true &&
-        rules.require(date.value) === true &&
+        date.value !== null &&
         rules.require(category.value) === true &&
         rules.require(operationType.value) === true &&
-        rules.negative(amount.value) === true &&
-        rules.dateFormat(date.value) === true
+        rules.negative(amount.value) === true
       );
     });
 
@@ -128,13 +135,14 @@ export default defineComponent({
 
       props.onSave({
         amount: amount.value,
-        date: date.value,
+        date: formatDate(date.value),
         category: category.value,
         operationType: operationType.value
       });
 
+      // Сброс формы
       amount.value = '';
-      date.value = '';
+      date.value = null;
       category.value = '';
       operationType.value = '';
       dialog.value = false;
@@ -146,11 +154,12 @@ export default defineComponent({
       amount,
       category,
       operationType,
+      operationTypes,
       rules,
       formValid,
-      saveTransaction,
-      operationTypes
+      formatDate,
+      saveTransaction
     };
-  },
+  }
 });
 </script>

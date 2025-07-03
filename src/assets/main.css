@@ -24,6 +24,12 @@ a,
   padding: 3px;
 }
 
+element.style {
+    max-width: 100%;
+    padding: 0px;
+}
+
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(197, 50%, 54%, 0.286);
