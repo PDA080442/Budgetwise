@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column fill-height">
-    <HeaderElem />
+    <!-- <Header /> -->
 
     <v-main class="fill-height d-flex align-center justify-center">
       <EntranceForm />
@@ -10,14 +10,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Header from '@/layouts/components/Header.vue'
 import EntranceForm from '@/components/Entrance/EntranceForm.vue'
-import HeaderElem from '@/components/HeaderElem.vue'
 
 export default defineComponent({
   name: 'EntrancePage',
   components: {
     EntranceForm,
-    HeaderElem,
   },
 })
 </script>

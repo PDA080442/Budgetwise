@@ -1,8 +1,16 @@
 <template>
-  <v-container>
-    <TransactionList :transactions="transactions" />
-    <Tranz :onSave="saveTransaction" />
-  </v-container>
+
+  <MainLayout>
+
+    <template #content>
+      <v-container>
+        <TransactionList :transactions="transactions" />
+        <Tranz :onSave="saveTransaction" />
+      </v-container>
+    </template>
+  </MainLayout>
+
+
 </template>
 
 <script lang="ts" setup>

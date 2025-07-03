@@ -1,19 +1,10 @@
-<!-- src/App.vue -->
+src/App.vue
 <script setup lang="ts">
 import { RouterView, RouterLink } from 'vue-router'
 </script>
 
 <template>
   <v-app>
-    <header>
-      <div class="wrapper">
-        <nav>
-          <RouterLink to="/"></RouterLink>
-          <RouterLink to="/"></RouterLink>
-          <RouterLink to="/register"></RouterLink>
-        </nav>
-      </div>
-    </header>
     <v-main>
       <RouterView />
     </v-main>

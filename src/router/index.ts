@@ -2,6 +2,8 @@ import { verifyToken } from '@/composables/verification.request'
 import axios from 'axios'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
+
+import HomePage from '@/views/HomePage.vue'
 import AuthRoutes from './auth'
 
 // TODO: Разбить роуты на модули
@@ -10,14 +12,24 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/HomePage.vue'),
+    component: () => HomePage,
   },
   {
     path: '/finance',
     name: 'Finance',
     component: () => import('@/views/FinancePage.vue'),
-    meta: { requireAuth: true },
+    meta: {
+      requireAuth: true,
+    },
   },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('@/views/ContactPage.vue'),
+    meta: {
+      requireAuth: true,
+    },
+  }
 ]
 
 const router = createRouter({
