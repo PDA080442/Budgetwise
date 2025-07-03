@@ -1,25 +1,17 @@
-import { verifyToken } from '@/composables/usePromise'
+import { verifyToken } from '@/composables/verification.request'
 import axios from 'axios'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
+import AuthRoutes from './auth'
+
 // TODO: Разбить роуты на модули
 const routes: RouteRecordRaw[] = [
+  ...AuthRoutes,
   {
     path: '/',
     name: 'Home',
     component: () => import('@/views/HomePage.vue'),
   },
-  {
-    path: '/register',
-    name: 'Register',
-    component: () => import('@/views/RegisterPage.vue'),
-  },
-  {
-    path: '/entrance',
-    name: 'Entrance',
-    component: () => import('@/views/EntrancePage.vue'),
-  },
-
   {
     path: '/finance',
     name: 'Finance',
@@ -41,7 +33,7 @@ router.beforeEach(async (to, from, next) => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
   }
   try {
-    await verifyToken(token)
+    await verifyToken()
     return next()
   } catch {
     localStorage.removeItem('accessToken')

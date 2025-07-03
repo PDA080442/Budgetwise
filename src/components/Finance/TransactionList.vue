@@ -20,19 +20,13 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue'
 
-interface Trans {
-  id: number
-  amount: number
-  date: string
-  category: string
-  type: string
+import type { Transaction } from '@/types/transaction.type'
+
+interface TransactionListProps {
+  transactions: Transaction[]
 }
 
-interface TransProps {
-  transactions: Trans[]
-}
-
-const { transactions } = defineProps<TransProps>()
+const { transactions } = defineProps<TransactionListProps>()
 
 const getOperationTypeText = (type: string) => {
   return type === 'income' ? 'Доход' : 'Расход'
@@ -45,13 +39,4 @@ const headers = [
   { title: 'Категория', value: 'category' },
   { title: 'Тип операции', value: 'type' },
 ]
-// const transactions = [
-//   {
-//     id: 1,
-//     amount: 1000,
-//     date: '22.11.2000',
-//     category: 'text',
-//     type: 'расход',
-//   },
-// ]
 </script>

@@ -50,8 +50,9 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { isEmail } from 'validator'
 import axios from 'axios'
-import { logdata } from '@/composables/usePromise'
-import type { LoginData, AuthTokens } from '@/composables/usePromise'
+import { logdata } from '@/composables/auth.request'
+import type { LoginData, AuthTokens } from '@/types/auth.type'
+import { useApi } from '@/composables/useApi'
 
 const form = ref()
 const router = useRouter()
@@ -69,22 +70,19 @@ const rules = {
   passwordmin: (u: string) => u?.length >= 6 || 'Минимальная длина - 6 символов',
 }
 
+const { call } = useApi('/reg')
+
 const submit = async () => {
+  console.log('submit')
+
   serverErrors.main = undefined
   serverErrors.email = undefined
 
   if (!form.value.validate()) return
 
   try {
-    const tokens: AuthTokens = await logdata(logindata)
-    console.log(tokens)
-
-    localStorage.setItem('accessToken', tokens.access)
-    localStorage.setItem('refreshToken', tokens.refresh)
-    axios.defaults.headers.common['Authorization'] = tokens.access
-    alert('Запрос отправлен')
+    await logdata(logindata)
     router.push({ path: '/' })
-    // login()
   } catch (err) {
     if (axios.isAxiosError(err)) {
       serverErrors.main = err.response?.data?.message || 'Ошибка сервера'
@@ -94,12 +92,8 @@ const submit = async () => {
   }
 }
 
-// const login = () => {
-//   router.push({ path: '/login' })
-// }
-
 const goToRegistration = () => {
-  router.push({ path: '/register' }) // Перенаправление на страницу регистрации
+  router.push({ path: '/register' })
 }
 </script>
 
