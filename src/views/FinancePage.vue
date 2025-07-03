@@ -1,7 +1,6 @@
 <template>
 
   <MainLayout>
-
     <template #content>
       <v-container>
         <TransactionList :transactions="transactions" />
@@ -21,6 +20,7 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { type Transaction } from '@/types/transaction.type'
 import { getTransaction, createTransaction } from '@/composables/transaction.request'
+import MainLayout from '@/layouts/MainLayout.vue'
 
 const transactions = ref<Transaction[]>([])
 
