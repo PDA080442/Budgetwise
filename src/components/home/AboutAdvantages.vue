@@ -7,9 +7,11 @@
     <div class="box2">
       <div class="advantages__list">
         <ul class="advantages__list__box" v-for="(advantage, index) in advantages" :key="index">
-          <li class="advantage">
-            <div>{{ advantage }}</div>
-          </li>
+          <div class="liBox">
+            <li class="advantage">
+              <div>{{ advantage }}</div>
+            </li>
+          </div>
         </ul>
       </div>
 
@@ -20,9 +22,9 @@
       </div>
 
       <div class="message">
-        <div  class="box_message">
-<div class>в нашей компании вы сможете сделать/получить тото тоьто и nl b ng </div>
-</div>
+        <div class="box_message">
+          <div class>в нашей компании вы сможете сделать/получить тото тоьто и nl b ng </div>
+        </div>
       </div>
     </div>
 
@@ -31,13 +33,17 @@
 
 <script setup lang="ts">
 
-import { ref } from 'vue';
+
+
+
+
+import { ref, VueElement } from 'vue';
 const advantages = ref([
-  '1 dsfsdf',
-  '2 sdfsf',
-  '3 sdfsdf',
-  '4 sdfsdf',
-  '5 sdfsdf'
+  'делаем это для того',
+  'делаем то, чтобы работало это',
+  'занимаемся этим',
+  'вааававвавав',
+  'ааававааааапрпр'
 ])
 
 </script>
@@ -49,21 +55,37 @@ const advantages = ref([
 }
 
 .advantages {
+  // height: 10000px;
   &__list {
     font-size: 18px;
     font-family: Montserrat;
     display: inline-block;
     width: 100%;
+    // margin-left: 40px;
+
+    &__box {
+      // height: 1000px;
+    }
+
+
+
+    li ::before {
+      content: '✓';
+      // position: absolute;
+      margin-right: 20px;
+    }
 
     &__box {
       max-width: 275px;
       min-width: 265px;
-
+      // height: 100;
 
 
       .advantage {
         list-style: none;
         padding: 7px;
+        max-width: 500px;
+        min-width: 350px;
 
         &:hover {
           background-color: rgb(234, 232, 232);
@@ -78,6 +100,7 @@ const advantages = ref([
 .box2 {
   gap: 10px;
   width: 100%;
+  // height: 1000px;
 }
 
 .message {
@@ -109,10 +132,17 @@ const advantages = ref([
 }
 
 .box_message {
-padding: 30px;
-max-width: 260px;
-word-break: break-all;
+  padding: 30px;
+  max-width: 260px;
+  word-break: break-all;
 
 
+}
+
+.liBox {
+  // width: 110%;
+  // position: relative;
+  // margin-left: 20px;
+  // left: 20px;
 }
 </style>

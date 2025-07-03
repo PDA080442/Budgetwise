@@ -4,39 +4,24 @@
     <div>
 
       <AboutSection></AboutSection>
-
       <div class="advantages">
         <div class="advantages__box">
 
           <div class="advantages__text">
-            бебебебебебебебюбюбю ме улюлюл перенос текста
+            ну короче мы можем вам предоставить или сделать следующие пункты и тп
           </div>
           <div class="box_for_cards">
-            <div class="card" v-for="i in 3" :key="i">
-
-              <div class='card__img'>
-
-              </div>
-
-              <div class="card__title">
-                заголовок
-              </div>
-
-              <div class="card__text">
-                основная информация карточки
-              </div>
-
-            </div>
-
-
+            <cardsAbout v-for="(card, index) in items" :card="card" :key="index"></cardsAbout>
           </div>
         </div>
       </div>
       <div class="services">
+<topServices></topServices>
 
       </div>
-
     </div>
+
+
   </div>
 
 
@@ -45,13 +30,37 @@
 
 <script setup lang="ts">
 import AboutSection from '@/components/home/AboutSection.vue';
+import cardsAbout from '@/components/home/cardsAbout.vue';
+import { ref } from 'vue';
+import topServices from '@/components/home/topServices.vue';
+
+const items = ref([
+  {
+    img: 'https://i.pinimg.com/736x/23/1c/6a/231c6a787a2f2d4756bc64bf43b1e915.jpg',
+    title: 'мы делаем это',
+    description: 'какая-то информация о том, что мы там предоставляем, днлаем и ид и тп ну ю ноу короче'
+  },
+
+  {
+    img: 'https://i.pinimg.com/originals/50/2c/d4/502cd454e26e17d2e44550ecfdbd944e.jpg',
+    title: 'и еще это',
+    description: 'краткая информаия о том что мы делаем, но уже для этого пункта'
+
+  },
+  {
+    img: 'https://i.pinimg.com/736x/c0/27/db/c027db5c0ef0ee96149626c8fa82375e.jpg',
+    title: 'и это',
+    description: 'еще одно описание того, чем мы занимаемся, что предоставляем'
+  }
+])
 </script>
 
 <style lang="scss" scoped>
+
 .advantages {
   // background-color: rgb(208, 208, 237);
   width: 95%;
-  height: 600px;
+  max-height: 900px;
   margin-top: 100px;
   margin-left: auto;
 
@@ -67,17 +76,19 @@ import AboutSection from '@/components/home/AboutSection.vue';
   &__text {
     font-family: Montserrat;
     font-size: 36px;
-    width: 50%;
+    width: 60%;
     line-height: 40px;
     font-weight: 600;
   }
+
 }
 
 
 
 .services {
-  width: 900px;
-  height: 400px;
+  // background-color: red;
+  width: 1200px;
+  height: 550px;
   margin-top: 100px;
   margin-left: auto;
   margin-right: auto;
@@ -91,51 +102,6 @@ import AboutSection from '@/components/home/AboutSection.vue';
   display: flex;
   gap: 28px;
 
-  .card {
-    width: 310px;
-    min-height: 400px;
-    max-height: 500px;
-    background-color: white;
-    // border-width: 3px;
-    // border-style: solid;
-    // display: inline-block;
-    display: flex;
-    flex-direction: column;
-    border-radius: 40px;
-    box-shadow: 15px 15px 38px rgba(230, 230, 230, 0.9);
-    padding: 35px;
-    gap: 3px;
 
-    &__img {
-      // border: 1px solid red;
-      margin: 0 auto;
-      width: 170px;
-      height: 170px;
-      background: url("/@fs/C:/Users/kiras/Downloads/%D0%98%D0%BB%D0%BB%D1%8E%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F.png");
-      background-size: cover;
-      // display: flex;
-    }
-
-    &__text {
-      font-family: Montserrat;
-      font-size: 18px;
-      font-weight: 400;
-      // display: flex;
-      // gap: 60px;
-    }
-
-
-
-    &__title {
-      font-family: Montserrat;
-      font-weight: 600;
-      font-size: 25px;
-      // display: flex;
-
-
-
-    }
-
-  }
 }
 </style>
