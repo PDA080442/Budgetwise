@@ -7,7 +7,10 @@
 }
 
 #app {
+  max-width: 1920px;
+  width: 100%;
   margin: 0 auto;
+  /* padding: 2rem; */
   font-weight: normal;
   /* display: flex; */
   padding: 0;
@@ -20,6 +23,7 @@ a,
 .green {
   text-decoration: none;
   color: rgb(255, 255, 255);
+  color: hsla(160, 100%, 37%, 1);
   transition: 0.4s;
   padding: 3px;
 }
