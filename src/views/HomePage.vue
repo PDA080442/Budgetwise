@@ -1,28 +1,29 @@
 <template>
 
-  <div>
-    <div>
+  <MainLayout></MainLayout>
+      <div>
+        <div>
 
-      <AboutSection></AboutSection>
-      <div class="advantages">
-        <div class="advantages__box">
+          <AboutSection></AboutSection>
+          <div class="advantages">
+            <div class="advantages__box">
 
-          <div class="advantages__text">
-            ну короче мы можем вам предоставить или сделать следующие пункты и тп
+              <div class="advantages__text">
+                ну короче мы можем вам предоставить или сделать следующие пункты и тп
+              </div>
+              <div class="box_for_cards">
+                <cardsAbout v-for="(card, index) in items" :card="card" :key="index"></cardsAbout>
+              </div>
+            </div>
           </div>
-          <div class="box_for_cards">
-            <cardsAbout v-for="(card, index) in items" :card="card" :key="index"></cardsAbout>
+          <div class="services">
+    <topServices></topServices>
+
           </div>
         </div>
-      </div>
-      <div class="services">
-<topServices></topServices>
 
-      </div>
+
     </div>
-
-
-  </div>
 
 
 
@@ -33,6 +34,7 @@ import AboutSection from '@/components/home/AboutSection.vue';
 import cardsAbout from '@/components/home/cardsAbout.vue';
 import { ref } from 'vue';
 import topServices from '@/components/home/topServices.vue';
+import MainLayout from '@/layouts/MainLayout.vue';
 
 const items = ref([
   {

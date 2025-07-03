@@ -4,9 +4,7 @@
 
     <template #content>
       <v-container>
-        <!-- <Header /> -->
         <TransactionList :transactions="transactions" />
-        <!-- <v-btn @click="loadTransactions" class="mt-4">Обновить транзакции</v-btn> -->
         <Tranz :onSave="saveTransaction" />
       </v-container>
     </template>

@@ -12,7 +12,7 @@
     </div>
 
     <div class="about__image">
-      <img src="C:\Users\kiras\Downloads\Иллюстрация.png" alt="программист с ноутбуком" class="image">
+      <img src="C:\Users\Арина\Desktop\practica\Budgetwise\src\assets\img\header\proger.jpg" alt="программист с ноутбуком" class="image">
     </div>
 
   </div>

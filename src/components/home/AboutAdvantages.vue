@@ -85,7 +85,7 @@ const advantages = ref([
         list-style: none;
         padding: 7px;
         max-width: 500px;
-        min-width: 350px;
+        min-width: 295px;
 
         &:hover {
           background-color: rgb(234, 232, 232);
