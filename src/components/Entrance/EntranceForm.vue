@@ -51,8 +51,7 @@ import { useRouter } from 'vue-router'
 import { isEmail } from 'validator'
 import axios from 'axios'
 import { logdata } from '@/composables/auth.request'
-import type { LoginData, AuthTokens } from '@/types/auth.type'
-import { useApi } from '@/composables/useApi'
+import type { LoginData } from '@/types/auth.type'
 
 const form = ref()
 const router = useRouter()
@@ -69,8 +68,6 @@ const rules = {
   email: (u: string) => isEmail(u) || 'Введен неправильный mail',
   passwordmin: (u: string) => u?.length >= 6 || 'Минимальная длина - 6 символов',
 }
-
-const { call } = useApi('/reg')
 
 const submit = async () => {
   console.log('submit')

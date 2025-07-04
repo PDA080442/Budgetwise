@@ -6,5 +6,5 @@
 </template>
 
 <script lang="ts" setup>
-import Header from '@/layouts/components/Header.vue'
+import Header from '@/layouts/components/MainHeader.vue'
 </script>

@@ -2,7 +2,7 @@
   <MainLayout></MainLayout>
   <div>
     <div>
-      <AboutSection></AboutSection>
+      <HomeAboutSection></HomeAboutSection>
       <div class="advantages">
         <div class="advantages__box">
           <div class="advantages__text">
@@ -21,31 +21,14 @@
 </template>
 
 <script setup lang="ts">
-import AboutSection from '@/components/home/HomeAboutSection.vue'
-import CardsAbout from '@/components/home/HomeCardsAbout.vue'
+import HomeAboutSection from '@/components/Home/HomeAboutSection.vue'
+import CardsAbout from '@/components/Home/HomeCardsAbout.vue'
 import { ref } from 'vue'
-import HomeTopServices from '@/components/home/HomeTopServices.vue'
+import HomeTopServices from '@/components/Home/HomeTopServices.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
+import { homecarditems, type HomeCardsItems } from '@/mocks/HomeMocks/CardItemsMocks'
 
-const items = ref([
-  {
-    img: 'https://i.pinimg.com/736x/23/1c/6a/231c6a787a2f2d4756bc64bf43b1e915.jpg',
-    title: 'мы делаем это',
-    description:
-      'какая-то информация о том, что мы там предоставляем, днлаем и ид и тп ну ю ноу короче',
-  },
-
-  {
-    img: 'https://i.pinimg.com/originals/50/2c/d4/502cd454e26e17d2e44550ecfdbd944e.jpg',
-    title: 'и еще это',
-    description: 'краткая информаия о том что мы делаем, но уже для этого пункта',
-  },
-  {
-    img: 'https://i.pinimg.com/736x/c0/27/db/c027db5c0ef0ee96149626c8fa82375e.jpg',
-    title: 'и это',
-    description: 'еще одно описание того, чем мы занимаемся, что предоставляем',
-  },
-])
+const items = ref<HomeCardsItems[]>(homecarditems)
 </script>
 
 <style lang="scss" scoped>

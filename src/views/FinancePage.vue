@@ -1,5 +1,4 @@
 <template>
-
   <MainLayout>
     <template #content>
       <v-container>
@@ -8,14 +7,12 @@
       </v-container>
     </template>
   </MainLayout>
-
-
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import TransactionList from '@/components/Finance/TransactionList.vue'
-import Tranz from '@/components/Finance/TranzAdd.vue'
+import Tranz from '@/components/Finance/TransactionAdd.vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { type Transaction } from '@/types/transaction.type'

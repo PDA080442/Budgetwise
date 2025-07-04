@@ -16,7 +16,6 @@ const logout = async () => {
       await logoutReq(refreshToken)
     } catch {}
   }
-  // return router.push({ path: '/entrance' })
 
   localStorage.removeItem('refreshToken')
   localStorage.removeItem('accessToken')

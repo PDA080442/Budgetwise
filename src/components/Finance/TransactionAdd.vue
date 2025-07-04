@@ -36,14 +36,7 @@
             <v-col cols="12" sm="6">
               <v-select
                 v-model="category"
-                :items="[
-                  'Обязательные расходы',
-                  'Расходы на питание',
-                  'Расходы на хозяйственно-бытовые нужды',
-                  'Расходы на предметы личного пользования',
-                  'Расходы на предметы быта',
-                  'Прочее',
-                ]"
+                :items="categories"
                 label="Категория*"
                 :rules="[rules.require]"
                 required
@@ -104,6 +97,15 @@ export default defineComponent({
     const category = ref('')
     const type = ref('')
 
+    const categories = ref([
+      'Обязательные расходы',
+      'Расходы на питание',
+      'Расходы на хозяйственно-бытовые нужды',
+      'Расходы на предметы личного пользования',
+      'Расходы на предметы быта',
+      'Прочее',
+    ])
+
     const types = [
       { title: 'Доход', value: 'income' },
       { title: 'Расход', value: 'expense' },
@@ -154,6 +156,7 @@ export default defineComponent({
     }
 
     return {
+      categories,
       dialog,
       date,
       amount,
