@@ -10,11 +10,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-// images [
-
-// ]
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
 .card {
