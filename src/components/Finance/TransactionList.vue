@@ -44,7 +44,7 @@
           <tr border>
             <td :colspan="columns.length" class="py-4 font-italic">
               <v-sheet rounded="lg" border>
-                <ProductsList :transactionId="item.id" />
+                <ProductsList :transactionId="item.id" :key="item.id" />
               </v-sheet>
             </td>
           </tr>

@@ -58,7 +58,7 @@ const localProducts = ref<Products[]>([])
 onMounted(async () => {
   try {
     const result = await getProduct(props.transactionId)
-    localProducts.value = result
+    localProducts.value = result.filter((product) => product.transaction == props.transactionId)
   } catch (error) {
     console.error('Ошибка:', error)
   }
