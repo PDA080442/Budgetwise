@@ -2,21 +2,21 @@
 
 <template>
   <v-card>
-    <v-data-table :headers="headers" :items="products" item-key="name" class="elevation-5">
+    <v-data-table :headers="headers" :items="localProducts" item-key="name" class="elevation-5">
       <template v-slot:top>
         <v-toolbar class="d-flex">
           <v-toolbar-title>Список товаров</v-toolbar-title>
-          <v-btn
+          <!-- <v-btn
             prepended-icon="mdi-plus"
             text="Добавить товар"
             prepend-icon="mdi-plus"
             border
             class="px-4"
             @click="addProduct"
-          ></v-btn>
+          ></v-btn> -->
         </v-toolbar>
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <div class="d-flex ga-2 justify-start">
           <v-icon icon="mdi-pencil" size="small" @click="editProduct(item.name)"></v-icon>
           <v-icon icon="mdi-delete" size="small" @click="delProduct(item.name)"></v-icon>
@@ -47,15 +47,29 @@
 </template>
 
 <script setup lang="ts">
-import { ProductsMocks } from '@/mocks/FinanceMocks/ProductMocks'
 import type { Products } from '@/types/product.type'
-import { ref } from 'vue'
+import { getProduct } from '@/composables/product.request'
+import { ref, defineProps, onMounted } from 'vue'
 
-const products = ref<Products[]>(ProductsMocks)
+const props = defineProps<{ transactionId: number }>()
+
+const localProducts = ref<Products[]>([])
+
+onMounted(async () => {
+  try {
+    const result = await getProduct(props.transactionId)
+    localProducts.value = result
+  } catch (error) {
+    console.error('Ошибка:', error)
+  }
+})
 
 const dialog = ref(false)
 const editingProduct = ref(false)
 const record = ref<Products>({
+  id: 0,
+  transaction: 0,
+  category: 0,
   name: '',
   product_type: '',
   quantity: 0,
@@ -65,18 +79,21 @@ const record = ref<Products>({
 
 const headers = [
   { title: 'Наименование', value: 'name' },
-  { title: 'Тип продукта', value: 'Product_type' },
-  { title: 'Кол-во товаров', value: 'Quantity' },
-  { title: 'Цена за ед.', value: 'Price' },
-  { title: 'Сумма', value: 'Sum' },
+  { title: 'Тип продукта', value: 'product_type' },
+  { title: 'Кол-во товаров', value: 'quantity' },
+  { title: 'Цена за ед.', value: 'price' },
+  { title: 'Сумма', value: 'sum' },
   { title: 'Редактирование', value: 'actions' },
 ]
 
 function editProduct(name: string) {
   editingProduct.value = true
-  const found = products.value.find((product) => product.name === name)
+  const found = localProducts.value.find((product) => product.name === name)
   if (!found) return
   record.value = {
+    id: found.id,
+    transaction: found.transaction,
+    category: found.category,
     name: found.name,
     product_type: found.product_type,
     quantity: found.quantity,
@@ -87,14 +104,14 @@ function editProduct(name: string) {
 }
 
 function delProduct(name: string) {
-  const index = products.value.findIndex((product) => product.name === name)
-  products.value.splice(index, 1)
+  const index = localProducts.value.findIndex((product) => product.name === name)
+  localProducts.value.splice(index, 1)
 }
 
 function saveProduct() {
   if (editingProduct.value) {
-    const index = products.value.findIndex((product) => product.name === record.value.name)
-    products.value[index] = record.value
+    const index = localProducts.value.findIndex((product) => product.name === record.value.name)
+    localProducts.value[index] = record.value
   }
   dialog.value = false
 }

@@ -4,6 +4,7 @@
       <v-container>
         <TransactionList :transactions="transactions" />
         <Tranz :onSave="saveTransaction" />
+        <!-- <ProductsList v-if="transactions.length" :transactionId="transactions[0].id" /> -->
       </v-container>
     </template>
   </MainLayout>
@@ -11,6 +12,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
+// import ProductsList from '@/components/Finance/ProductList.vue'
 import TransactionList from '@/components/Finance/TransactionList.vue'
 import Tranz from '@/components/Finance/TransactionAdd.vue'
 import axios from 'axios'
@@ -22,8 +24,13 @@ import MainLayout from '@/layouts/MainLayout.vue'
 const transactions = ref<Transaction[]>([])
 
 onMounted(async () => {
-  const result = await getTransaction()
-  console.log(result)
+  try {
+    const result = await getTransaction()
+    transactions.value = result
+    console.log('Траназакции -', result)
+  } catch (error) {
+    console.error('Ошибка:', error)
+  }
 })
 
 const router = useRouter()

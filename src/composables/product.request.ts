@@ -1,9 +1,9 @@
-import type { Products } from '@/types/transaction.type'
+import type { Products } from '@/types/product.type'
 import { useApi } from '@/composables/useApi'
 
 const { call } = useApi('/api/positions')
 
-export async function getProduct(): Promise<Products[]> {
-  const response = await call('/', {}, 'GET')
+export async function getProduct(transactionId: number): Promise<Products[]> {
+  const response = await call(`/?transaction=${transactionId}`, {}, 'GET')
   return response as Products[]
 }

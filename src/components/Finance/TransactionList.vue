@@ -5,7 +5,7 @@
       <!-- <v-card-title>Список транзакций</v-card-title> -->
       <v-data-table
         :headers="headers"
-        :items="transactions"
+        :items="localTransactions"
         show-expand
         item-key="id"
         class="elevation-24"
@@ -13,19 +13,17 @@
         <template v-slot:top>
           <v-toolbar>
             <v-toolbar-title> Список транзакций </v-toolbar-title>
-            <v-btn
+            <!-- <v-btn
               prepended-icon="mdi-plus"
               text="Добавить транзакцию"
               prepend-icon="mdi-plus"
               border
               class="px-4"
               @click="addTransaction"
-            ></v-btn>
+            ></v-btn> -->
           </v-toolbar>
         </template>
-        <template
-          v-slot:[`item.data-table-expand`]="{ item: internalItem, isExpanded, toggleExpand }"
-        >
+        <template v-slot:[`item.data-table-expand`]="{ internalItem, isExpanded, toggleExpand }">
           <v-btn
             :append-icon="isExpanded(internalItem) ? 'mdi-chevron-up' : 'mdi-chevron-down'"
             :text="isExpanded(internalItem) ? 'Свернуть' : 'Подробнее'"
@@ -35,7 +33,8 @@
             @click="toggleExpand(internalItem)"
           />
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template v-slot:[`item.type`]="{ item }">{{ getOperationTypeText(item.type) }}</template>
+        <template v-slot:[`item.actions`]="{ item }">
           <div class="d-flex ga-2 justify-start">
             <v-icon icon="mdi-pencil" size="small" @click="editTransaction(item.id)"></v-icon>
             <v-icon icon="mdi-delete" size="small" @click="delTransaction(item.id)"></v-icon>
@@ -45,7 +44,7 @@
           <tr border>
             <td :colspan="columns.length" class="py-4 font-italic">
               <v-sheet rounded="lg" border>
-                <ProductsList :products="getProductsForTransaction(item)" />
+                <ProductsList :transactionId="item.id" />
               </v-sheet>
             </td>
           </tr>
@@ -76,17 +75,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 
 import ProductsList from '@/components/Finance/ProductList.vue'
-import { TransactionMocks } from '@/mocks/FinanceMocks/TransactionMocks'
-import { ProductsMocks } from '@/mocks/FinanceMocks/ProductMocks'
+// import { TransactionMocks } from '@/mocks/FinanceMocks/TransactionMocks'
 import type { Transaction } from '@/types/transaction.type'
-import type { Products } from '@/types/product.type'
 
-const transactions = ref<Transaction[]>(TransactionMocks)
+const props = defineProps<{ transactions: Transaction[] }>()
+const localTransactions = ref<Transaction[]>([...props.transactions])
 
-// const getOperationTypeText = (t: string) => (t === 'income' ? 'Доход' : 'Расход')
+watch(
+  () => props.transactions,
+  (newList) => {
+    localTransactions.value = [...newList]
+  },
+)
+const getOperationTypeText = (type: string) => (type === 'income' ? 'Доход' : 'Расход')
 
 const dialog = ref(false)
 const editingTransaction = ref(false)
@@ -106,12 +110,9 @@ const headers = [
   { title: 'Редактирование', value: 'actions' },
 ]
 
-const getProductsForTransaction = (transaction: Transaction): Products[] =>
-  transaction.category === 'Продукты' ? ProductsMocks : []
-
 function editTransaction(id: number) {
   editingTransaction.value = true
-  const found = transactions.value.find((transaction) => transaction.id === id)
+  const found = localTransactions.value.find((transaction) => transaction.id === id)
   if (!found) return
   record.value = {
     id: found.id,
@@ -124,14 +125,16 @@ function editTransaction(id: number) {
 }
 
 function delTransaction(id: number) {
-  const index = transactions.value.findIndex((transaction) => transaction.id === id)
-  transactions.value.splice(index, 1)
+  const index = localTransactions.value.findIndex((transaction) => transaction.id === id)
+  localTransactions.value.splice(index, 1)
 }
 
 function saveTransaction() {
   if (editingTransaction.value) {
-    const index = transactions.value.findIndex((transaction) => transaction.id === record.value.id)
-    transactions.value[index] = record.value
+    const index = localTransactions.value.findIndex(
+      (transaction) => transaction.id === record.value.id,
+    )
+    localTransactions.value[index] = record.value
   }
   dialog.value = false
 }
