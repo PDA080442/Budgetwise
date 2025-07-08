@@ -88,6 +88,7 @@ const headers = [
 
 function editProduct(name: string) {
   editingProduct.value = true
+  dialog.value = true
   const found = localProducts.value.find((product) => product.name === name)
   if (!found) return
   record.value = {
@@ -100,7 +101,6 @@ function editProduct(name: string) {
     price: found.price,
     sum: found.sum,
   }
-  dialog.value = true
 }
 
 function delProduct(name: string) {

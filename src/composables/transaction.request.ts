@@ -19,3 +19,12 @@ export async function createTransaction(data: Transaction): Promise<Transaction>
     throw new Error('Не удалось создать транзакцию')
   }
 }
+
+export async function deleteTransaction(id: number) {
+  await call(`/${id}/`, {}, 'DELETE')
+}
+
+export async function saveEditTransaction(id: number, data: Transaction): Promise<Transaction> {
+  const response = await call(`/${id}/`, data, 'PUT')
+  return response as Transaction
+}

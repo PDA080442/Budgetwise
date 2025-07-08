@@ -36,7 +36,7 @@
         <template v-slot:[`item.type`]="{ item }">{{ getOperationTypeText(item.type) }}</template>
         <template v-slot:[`item.actions`]="{ item }">
           <div class="d-flex ga-2 justify-start">
-            <v-icon icon="mdi-pencil" size="small" @click="editTransaction(item.id)"></v-icon>
+            <v-icon icon="mdi-pencil" size="small" @click="edTransaction(item.id)"></v-icon>
             <v-icon icon="mdi-delete" size="small" @click="delTransaction(item.id)"></v-icon>
           </div>
         </template>
@@ -76,10 +76,10 @@
 
 <script setup lang="ts">
 import { ref, defineProps, watch } from 'vue'
-
 import ProductsList from '@/components/Finance/ProductList.vue'
 // import { TransactionMocks } from '@/mocks/FinanceMocks/TransactionMocks'
 import type { Transaction } from '@/types/transaction.type'
+import { deleteTransaction, saveEditTransaction } from '@/composables/transaction.request'
 
 const props = defineProps<{ transactions: Transaction[] }>()
 const localTransactions = ref<Transaction[]>([...props.transactions])
@@ -110,8 +110,9 @@ const headers = [
   { title: 'Редактирование', value: 'actions' },
 ]
 
-function editTransaction(id: number) {
+function edTransaction(id: number) {
   editingTransaction.value = true
+  dialog.value = true
   const found = localTransactions.value.find((transaction) => transaction.id === id)
   if (!found) return
   record.value = {
@@ -121,20 +122,21 @@ function editTransaction(id: number) {
     category: found.category,
     type: found.type,
   }
-  dialog.value = true
 }
 
-function delTransaction(id: number) {
-  const index = localTransactions.value.findIndex((transaction) => transaction.id === id)
+const delTransaction = async (id: number) => {
+  await deleteTransaction(id)
+  const index = localTransactions.value.findIndex((transanction) => transanction.id === id)
   localTransactions.value.splice(index, 1)
 }
 
-function saveTransaction() {
+const saveTransaction = async () => {
   if (editingTransaction.value) {
+    const result = await saveEditTransaction(record.value.id, record.value)
     const index = localTransactions.value.findIndex(
       (transaction) => transaction.id === record.value.id,
     )
-    localTransactions.value[index] = record.value
+    localTransactions.value.splice(index, 1, result)
   }
   dialog.value = false
 }
