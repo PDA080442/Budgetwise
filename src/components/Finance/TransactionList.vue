@@ -2,7 +2,6 @@
 <template>
   <v-container>
     <v-card border rounded="lg">
-      <!-- <v-card-title>Список транзакций</v-card-title> -->
       <v-data-table
         :headers="headers"
         :items="localTransactions"
@@ -33,7 +32,10 @@
             @click="toggleExpand(internalItem)"
           />
         </template>
-        <template v-slot:[`item.type`]="{ item }">{{ getOperationTypeText(item.type) }}</template>
+        <template v-slot:[`item.type`]="{ item }">{{ getTypeText(item.type) }}</template>
+        <template v-slot:[`item.category`]="{ item }">{{
+          getCategoryText(item.category)
+        }}</template>
         <template v-slot:[`item.actions`]="{ item }">
           <div class="d-flex ga-2 justify-start">
             <v-icon icon="mdi-pencil" size="small" @click="edTransaction(item.id)"></v-icon>
@@ -53,21 +55,47 @@
     </v-card>
     <v-dialog v-model="dialog" max-width="500">
       <v-card class="pa-5 text-center" border rounded="lg">
-        <v-card-title> Редактировать транзакцию </v-card-title>
+        <v-card-title>
+          {{ editingTransaction ? 'Редактировать транзакцию' : 'Добавление транзакции' }}
+        </v-card-title>
         <v-card-text>
-          <v-number-input v-model="record.amount" label="Сумма"></v-number-input>
-          <v-text-field v-model="record.date" label="Дата"></v-text-field>
-          <v-text-field v-model="record.category" label="Категория"></v-text-field>
+          <v-number-input
+            v-model="record.amount"
+            label="Сумма"
+            :rules="[rules.require, rules.negative]"
+            required
+          ></v-number-input>
+          <v-text-field
+            v-model="record.date"
+            label="Дата"
+            prepend-icon=""
+            type="date"
+            :rules="[rules.require]"
+            required
+          />
+          <v-select
+            v-model="record.category"
+            label="Категория"
+            :items="categories"
+            :rules="[rules.require]"
+            item-title="title"
+            item-value="value"
+            required
+          ></v-select>
           <v-select
             v-model="record.type"
-            :items="['income', 'expense']"
+            :items="types"
             label="Тип операции"
+            item-title="title"
+            item-value="value"
+            :rules="[rules.require]"
+            required
           ></v-select>
         </v-card-text>
         <v-card-actions>
           <v-btn text="Отмена" variant="plain" @click="dialog = false"> </v-btn>
           <v-spacer></v-spacer>
-          <v-btn text="Сохранить" @click="saveTransaction"></v-btn>
+          <v-btn text="Сохранить" @click="saveTransaction" :disabled="!formValid"></v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -75,11 +103,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, computed } from 'vue'
 import ProductsList from '@/components/Finance/ProductList.vue'
-// import TransactionAdd from './TransactionAdd.vue'
-// import { TransactionMocks } from '@/mocks/FinanceMocks/TransactionMocks'
 import type { Transaction } from '@/types/transaction.type'
+// import { VDateInput } from 'vuetify/labs/VDateInput'
 import {
   deleteTransaction,
   saveEditTransaction,
@@ -95,7 +122,13 @@ watch(
     localTransactions.value = [...newList]
   },
 )
-const getOperationTypeText = (type: string) => (type === 'income' ? 'Доход' : 'Расход')
+const getTypeText = (type: string | number) => (type === '0' || type === 0 ? 'Доход' : 'Расход')
+
+const getCategoryText = (value: string | number) => {
+  value = String(value)
+  const result = categories.find((category) => category.value === value)
+  return result ? result.title : value
+}
 
 const dialog = ref(false)
 const editingTransaction = ref(false)
@@ -103,8 +136,42 @@ const record = ref<Transaction>({
   id: 0,
   amount: 0,
   date: '',
-  category: '',
-  type: 'income',
+  category: '1',
+  type: '0',
+})
+
+const categories = [
+  { title: 'Обязательные расходы', value: '1' },
+  { title: 'Расходы на питание', value: '2' },
+  { title: 'Расходы на хозяйственно-бытовые нужды', value: '3' },
+  { title: 'Расходы на предметы личного пользования', value: '4' },
+  { title: 'Расходы на предметы быта', value: '5' },
+  { title: 'Прочее', value: '6' },
+]
+
+const types = [
+  { title: 'Доход', value: '0' },
+  { title: 'Расход', value: '1' },
+]
+
+const rules = {
+  require: (u: string) => !!u || 'Обязательное поле',
+  negative: (u: string) => {
+    const value = parseFloat(u)
+    return (!isNaN(value) && value > 0) || 'Сумма должна быть положительной'
+  },
+}
+
+// Проверка валидности всей формы
+const formValid = computed(() => {
+  return (
+    rules.require(String(record.value.amount)) === true &&
+    rules.require(record.value.date) === true &&
+    rules.require(record.value.category) === true &&
+    rules.require(record.value.type) === true &&
+    rules.negative(String(record.value.amount)) === true &&
+    rules.require(String(record.value.date)) === true
+  )
 })
 
 const headers = [
@@ -117,7 +184,7 @@ const headers = [
 
 function addTransaction() {
   editingTransaction.value = false
-  record.value = { id: 0, amount: 0, date: '', category: '', type: 'income' }
+  record.value = { id: 0, amount: 0, date: '', category: '', type: '' }
   dialog.value = true
 }
 
@@ -130,8 +197,8 @@ function edTransaction(id: number) {
     id: found.id,
     amount: found.amount,
     date: found.date,
-    category: found.category,
-    type: found.type,
+    category: String(found.category),
+    type: String(found.type),
   }
 }
 
@@ -151,7 +218,7 @@ const saveTransaction = async () => {
   } else {
     const payload = {
       id: record.value.id,
-      amount: record.value.amount,
+      amount: Number(record.value.amount),
       date: record.value.date,
       category: record.value.category,
       type: record.value.type,

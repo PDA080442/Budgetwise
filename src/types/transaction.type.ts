@@ -3,7 +3,5 @@ export interface Transaction {
   amount: number
   date: string
   category: string
-  type: 'income' | 'expense'
+  type: string
 }
-
-

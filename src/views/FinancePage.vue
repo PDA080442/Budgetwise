@@ -3,7 +3,7 @@
     <template #content>
       <v-container>
         <TransactionList :transactions="transactions" />
-        <Tranz :onSave="saveTransaction" />
+        <!-- <Tranz :onSave="saveTransaction" /> -->
         <!-- <ProductsList v-if="transactions.length" :transactionId="transactions[0].id" /> -->
       </v-container>
     </template>
@@ -14,7 +14,7 @@
 import { onMounted, ref } from 'vue'
 // import ProductsList from '@/components/Finance/ProductList.vue'
 import TransactionList from '@/components/Finance/TransactionList.vue'
-import Tranz from '@/components/Finance/TransactionAdd.vue'
+// import Tranz from '@/components/Finance/TransactionAdd.vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { type Transaction } from '@/types/transaction.type'
@@ -65,9 +65,5 @@ const saveTransaction = async (transactionData: Transaction) => {
   }
 }
 
-const formatDateForServer = (dateString: string) => {
-  const parts = dateString.split('.')
-  if (parts.length !== 3) return dateString
-  return `${parts[2]}-${parts[1]}-${parts[0]}`
-}
+
 </script>
