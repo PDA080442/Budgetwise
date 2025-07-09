@@ -26,9 +26,6 @@ const routes: RouteRecordRaw[] = [
     path: '/about',
     name: 'About',
     component: () => import('@/views/ContactPage.vue'),
-    meta: {
-      requireAuth: true,
-    },
   }
 ]
 

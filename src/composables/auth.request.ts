@@ -9,7 +9,8 @@ export async function regdata(formdata: FormData): Promise<void> {
 }
 
 export async function logdata(logindata: LoginData): Promise<AuthTokens> {
-  const tokens: AuthTokens = await call('/login/', logindata, 'POST')
+  // const tokens: AuthTokens = await call('/login/', logindata, 'POST')
+  const tokens = (await call('/login/', logindata, 'POST')) as AuthTokens
 
   localStorage.setItem('accessToken', tokens.access)
   localStorage.setItem('refreshToken', tokens.refresh)
@@ -19,11 +20,11 @@ export async function logdata(logindata: LoginData): Promise<AuthTokens> {
   return tokens as AuthTokens
 }
 
-export async function logoutReq(refreshToken: string): Promise<void> {
+export async function logoutReq(refresh_token: string): Promise<void> {
   await call(
     '/logout/',
     {
-      refreshToken,
+      refresh: refresh_token
     },
     'POST',
   )
