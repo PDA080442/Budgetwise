@@ -6,11 +6,12 @@
     >
       <template v-slot:activator="{ props: activatorProps }">
         <v-btn
-          class="text-none font-weight-regular"
-          prepend-icon="mdi-account"
-          text="Добавление позиций транзакции"
-          variant="tonal"
-          v-bind="activatorProps"
+          prepended-icon="mdi-plus"
+            text="Добавить товар"
+            prepend-icon="mdi-plus"
+            border
+            class="px-4"
+            v-bind="activatorProps"
         ></v-btn>
       </template>
 

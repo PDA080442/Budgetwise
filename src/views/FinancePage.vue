@@ -4,7 +4,6 @@
       <v-container>
         <TransactionList :transactions="transactions" />
         <Tranz :onSave="saveTransaction" />
-        <PositionTransaction />
       </v-container>
     </template>
   </MainLayout>
@@ -19,7 +18,6 @@ import { useRouter } from 'vue-router'
 import { type Transaction } from '@/types/transaction.type'
 import { getTransaction, createTransaction } from '@/composables/transaction.request'
 import MainLayout from '@/layouts/MainLayout.vue'
-import PositionTransaction from '@/components/Finance/PositionTransaction.vue'
 
 const transactions = ref<Transaction[]>([])
 

@@ -3,10 +3,11 @@
     <v-dialog v-model="dialog" max-width="600">
       <template v-slot:activator="{ props: activatorProps }">
         <v-btn
-          class="text-none font-weight-regular"
-          prepend-icon="mdi-pencil"
-          text="Добавить транзакцию"
-          variant="tonal"
+          prepended-icon="mdi-plus"
+              text="Добавить транзакцию"
+              prepend-icon="mdi-plus"
+              border
+              class="px-4"
           v-bind="activatorProps"
         ></v-btn>
       </template>
@@ -83,91 +84,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-export default defineComponent({
-  name: 'TranzForm',
-  props: {
-    onSave: {
-      type: Function,
-      required: true,
-    },
-  },
-  setup(props) {
-    const dialog = ref(false)
-    const date = ref('')
-    const amount = ref('')
-    const category = ref('')
-    const type = ref('')
-
-    const categories = ref([
-      'Обязательные расходы',
-      'Расходы на питание',
-      'Расходы на хозяйственно-бытовые нужды',
-      'Расходы на предметы личного пользования',
-      'Расходы на предметы быта',
-      'Прочее',
-    ])
-
-    const types = [
-      { title: 'Доход', value: 'income' },
-      { title: 'Расход', value: 'expense' },
-    ]
-
-    const rules = {
-      require: (u: string) => !!u || 'Обязательное поле',
-      negative: (u: string) => {
-        const value = parseFloat(u)
-        return (!isNaN(value) && value > 0) || 'Сумма должна быть положительной'
-      },
-      dateFormat: (u: string) => {
-        const datePattern = /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(\d{4})$/
-        return datePattern.test(u) || 'Неверный формат даты. Пример: 25.06.2025'
-      },
-    }
-
-    // Проверка валидности всей формы
-    const formValid = computed(() => {
-      return (
-        rules.require(amount.value) === true &&
-        rules.require(date.value) === true &&
-        rules.require(category.value) === true &&
-        rules.require(type.value) === true &&
-        rules.negative(amount.value) === true &&
-        rules.dateFormat(date.value) === true
-      )
-    })
-
-    const saveTransaction = () => {
-      if (!formValid.value) {
-        alert('Пожалуйста, заполните все поля корректно')
-        return
-      }
-
-      props.onSave({
-        amount: amount.value,
-        date: date.value,
-        category: category.value,
-        type: type.value,
-      })
-
-      amount.value = ''
-      date.value = ''
-      category.value = ''
-      type.value = ''
-      dialog.value = false
-    }
-
-    return {
-      categories,
-      dialog,
-      date,
-      amount,
-      category,
-      type,
-      rules,
-      formValid,
-      saveTransaction,
-      types,
-    }
+const props = defineProps({
+  onSave: {
+    type: Function,
+    required: true,
   },
 })
 
@@ -176,6 +96,15 @@ const amount = ref('')
 const category = ref('')
 const type = ref('')
 const date = ref<Date | null>(null)
+
+const categories = ref([
+  'Обязательные расходы',
+  'Расходы на питание',
+  'Расходы на хозяйственно-бытовые нужды',
+  'Расходы на предметы личного пользования',
+  'Расходы на предметы быта',
+  'Прочее',
+])
 
 const types = [
   { title: 'Доход', value: 'income' },

@@ -13,14 +13,15 @@
         <template v-slot:top>
           <v-toolbar>
             <v-toolbar-title> Список транзакций </v-toolbar-title>
-            <v-btn
+            <!-- <v-btn
               prepended-icon="mdi-plus"
               text="Добавить транзакцию"
               prepend-icon="mdi-plus"
               border
               class="px-4"
-              @click="addTransaction"
-            ></v-btn>
+              @click="TransactionAdd"
+            ></v-btn> -->
+            <TransactionAdd @save="handleTransactionAdded" />
           </v-toolbar>
         </template>
         <template
@@ -83,6 +84,8 @@ import { TransactionMocks } from '@/mocks/FinanceMocks/TransactionMocks'
 import { ProductsMocks } from '@/mocks/FinanceMocks/ProductMocks'
 import type { Transaction } from '@/types/transaction.type'
 import type { Products } from '@/types/product.type'
+import TransactionAdd from '@/components/Finance/TransactionAdd.vue'
+
 
 const transactions = ref<Transaction[]>(TransactionMocks)
 
@@ -121,6 +124,14 @@ function editTransaction(id: number) {
     type: found.type,
   }
   dialog.value = true
+}
+
+function handleTransactionAdded(newTransaction: Transaction) {
+  const newId = Math.max(...transactions.value.map(t => t.id), 0) + 1
+  transactions.value.push({
+    ...newTransaction,
+    id: newId
+  })
 }
 
 function delTransaction(id: number) {

@@ -6,14 +6,15 @@
       <template v-slot:top>
         <v-toolbar class="d-flex">
           <v-toolbar-title>Список товаров</v-toolbar-title>
-          <v-btn
+          <!-- <v-btn
             prepended-icon="mdi-plus"
             text="Добавить товар"
             prepend-icon="mdi-plus"
             border
             class="px-4"
-            @click="addProduct"
-          ></v-btn>
+            @click="PositionTransaction"
+          ></v-btn> -->
+           <PositionTransaction @product-added="handleProductAdded" />
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
@@ -50,6 +51,7 @@
 import { ProductsMocks } from '@/mocks/FinanceMocks/ProductMocks'
 import type { Products } from '@/types/product.type'
 import { ref } from 'vue'
+import PositionTransaction from '@/components/Finance/PositionTransaction.vue'
 
 const products = ref<Products[]>(ProductsMocks)
 
@@ -71,6 +73,10 @@ const headers = [
   { title: 'Сумма', value: 'Sum' },
   { title: 'Редактирование', value: 'actions' },
 ]
+
+function handleProductAdded(newProduct: Products) {
+  products.value.push(newProduct)
+}
 
 function editProduct(name: string) {
   editingProduct.value = true
