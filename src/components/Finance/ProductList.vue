@@ -18,8 +18,8 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <div class="d-flex ga-2 justify-start">
-          <v-icon icon="mdi-pencil" size="small" @click="editProduct(item.name)"></v-icon>
-          <v-icon icon="mdi-delete" size="small" @click="delProduct(item.name)"></v-icon>
+          <v-icon icon="mdi-pencil" size="small" @click="editProduct(item.id)"></v-icon>
+          <v-icon icon="mdi-delete" size="small" @click="delProduct(item.id)"></v-icon>
         </div>
       </template>
       <template v-slot:no-data>
@@ -48,8 +48,9 @@
 
 <script setup lang="ts">
 import type { Products } from '@/types/product.type'
-import { getProduct } from '@/composables/product.request'
+import { addProducts, getProduct, saveEditProduct } from '@/composables/product.request'
 import { ref, defineProps, onMounted } from 'vue'
+import { deleteProduct } from '@/composables/product.request'
 
 const props = defineProps<{ transactionId: number }>()
 
@@ -86,10 +87,10 @@ const headers = [
   { title: 'Редактирование', value: 'actions' },
 ]
 
-function editProduct(name: string) {
+function editProduct(id: number) {
   editingProduct.value = true
   dialog.value = true
-  const found = localProducts.value.find((product) => product.name === name)
+  const found = localProducts.value.find((product) => product.id === id)
   if (!found) return
   record.value = {
     id: found.id,
@@ -103,15 +104,30 @@ function editProduct(name: string) {
   }
 }
 
-function delProduct(name: string) {
-  const index = localProducts.value.findIndex((product) => product.name === name)
+const delProduct = async (id: number) => {
+  await deleteProduct(id)
+  const index = localProducts.value.findIndex((product) => product.id === id)
   localProducts.value.splice(index, 1)
 }
 
-function saveProduct() {
+const saveProduct = async (id: number) => {
   if (editingProduct.value) {
-    const index = localProducts.value.findIndex((product) => product.name === record.value.name)
-    localProducts.value[index] = record.value
+    const result = await saveEditProduct(record.value.id, record.value)
+    const index = localProducts.value.findIndex((transaction) => transaction.id === record.value.id)
+    localProducts.value.splice(index, 1, result)
+  } else {
+    const payload = {
+      id: record.value.id,
+      transaction: record.value.transaction,
+      category: record.value.category,
+      name: record.value.name,
+      product_type: record.value.product_type,
+      quantity: record.value.quantity,
+      price: record.value.price,
+      sum: record.value.sum,
+    }
+    const create = await addProducts(id, payload)
+    localProducts.value.unshift(create)
   }
   dialog.value = false
 }

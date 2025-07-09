@@ -13,14 +13,14 @@
         <template v-slot:top>
           <v-toolbar>
             <v-toolbar-title> Список транзакций </v-toolbar-title>
-            <!-- <v-btn
+            <v-btn
               prepended-icon="mdi-plus"
               text="Добавить транзакцию"
               prepend-icon="mdi-plus"
               border
               class="px-4"
               @click="addTransaction"
-            ></v-btn> -->
+            ></v-btn>
           </v-toolbar>
         </template>
         <template v-slot:[`item.data-table-expand`]="{ internalItem, isExpanded, toggleExpand }">
@@ -77,9 +77,14 @@
 <script setup lang="ts">
 import { ref, defineProps, watch } from 'vue'
 import ProductsList from '@/components/Finance/ProductList.vue'
+// import TransactionAdd from './TransactionAdd.vue'
 // import { TransactionMocks } from '@/mocks/FinanceMocks/TransactionMocks'
 import type { Transaction } from '@/types/transaction.type'
-import { deleteTransaction, saveEditTransaction } from '@/composables/transaction.request'
+import {
+  deleteTransaction,
+  saveEditTransaction,
+  addTransactions,
+} from '@/composables/transaction.request'
 
 const props = defineProps<{ transactions: Transaction[] }>()
 const localTransactions = ref<Transaction[]>([...props.transactions])
@@ -110,6 +115,12 @@ const headers = [
   { title: 'Редактирование', value: 'actions' },
 ]
 
+function addTransaction() {
+  editingTransaction.value = false
+  record.value = { id: 0, amount: 0, date: '', category: '', type: 'income' }
+  dialog.value = true
+}
+
 function edTransaction(id: number) {
   editingTransaction.value = true
   dialog.value = true
@@ -137,6 +148,16 @@ const saveTransaction = async () => {
       (transaction) => transaction.id === record.value.id,
     )
     localTransactions.value.splice(index, 1, result)
+  } else {
+    const payload = {
+      id: record.value.id,
+      amount: record.value.amount,
+      date: record.value.date,
+      category: record.value.category,
+      type: record.value.type,
+    }
+    const create = await addTransactions(payload)
+    localTransactions.value.unshift(create)
   }
   dialog.value = false
 }

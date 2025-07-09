@@ -28,3 +28,8 @@ export async function saveEditTransaction(id: number, data: Transaction): Promis
   const response = await call(`/${id}/`, data, 'PUT')
   return response as Transaction
 }
+
+export async function addTransactions(data: Transaction): Promise<Transaction> {
+  const response = await call('/', data, 'POST')
+  return response as Transaction
+}
