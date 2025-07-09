@@ -8,13 +8,9 @@
   </MainLayout>
 </template>
 
-
 <script lang="ts" setup>
-import MainLayout from '@/layouts/MainLayout.vue';
-
-
+import MainLayout from '@/layouts/MainLayout.vue'
 </script>
-
 
 <style>
 @media (min-width: 1024px) {

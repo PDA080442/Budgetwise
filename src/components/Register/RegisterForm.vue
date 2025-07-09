@@ -109,9 +109,4 @@ const login = () => {
   opacity: 1;
   font-size: 15px;
 }
-
-// .v-btn:hover {
-//   color: #ffffff;
-//   background-color: #0171bc;
-// }
 </style>

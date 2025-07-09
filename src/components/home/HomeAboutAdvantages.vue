@@ -106,5 +106,4 @@ const advantages = ref([
   max-width: 260px;
   word-break: break-all;
 }
-
 </style>

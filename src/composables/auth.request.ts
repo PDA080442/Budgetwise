@@ -1,11 +1,15 @@
 import { useApi } from '@/composables/useApi'
-import type { AuthTokens, FormData, LoginData } from '@/types/auth.type'
+import type { AuthTokens, LoginData } from '@/types/auth.type'
 import axios from 'axios'
 
 const { call } = useApi('/reg')
 
-export async function regdata(formdata: FormData): Promise<void> {
-  await call('/register/', formdata, 'POST')
+export async function regdata(formdata: LoginData): Promise<void> {
+  const payload = {
+    email: formdata.email,
+    password: formdata.password,
+  }
+  await call('/register/', payload, 'POST')
 }
 
 export async function logdata(logindata: LoginData): Promise<AuthTokens> {

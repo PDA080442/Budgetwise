@@ -3,7 +3,9 @@ export interface AuthTokens {
   refresh: string
 }
 
-export interface FormData extends LoginData {
+export interface FormData {
+  email: string
+  password: string
   password2: string
 }
 

@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import AboutAdvantages from './HomeAboutAdvantages.vue'
+import AboutAdvantages from '@/components/Home/HomeAboutAdvantages.vue'
 
 import { ref } from 'vue'
 const title = ref('Email маркетинг под ключ')
