@@ -1,40 +1,21 @@
 <template>
-  <v-card>
+  <v-card rounded="lg">
     <v-data-table :headers="headers" :items="localProducts" item-key="id" class="elevation-5">
       <template v-slot:top>
-        <v-toolbar flat>
+        <v-toolbar>
           <v-toolbar-title>Список товаров</v-toolbar-title>
-          <v-btn prepend-icon="mdi-plus" text @click="addProduct"> Добавить товар </v-btn>
+          <v-btn prepend-icon="mdi-plus" border text="Добавить товар" @click="addProduct"> </v-btn>
         </v-toolbar>
       </template>
-
-      <template v-slot:[`item.name`]="{ item }">
-        {{ item.name }}
-      </template>
-
       <template v-slot:[`item.category`]="{ item }">
         {{ getCategoryText(item.category) }}
       </template>
-
-      <template v-slot:[`item.quantity`]="{ item }">
-        {{ item.quantity }}
-      </template>
-
-      <template v-slot:[`item.price`]="{ item }">
-        {{ item.price }}
-      </template>
-
-      <template v-slot:[`item.sum`]="{ item }">
-        {{ item.sum }}
-      </template>
-
       <template v-slot:[`item.actions`]="{ item }">
         <div class="d-flex ga-2 justify-start">
-          <v-icon small @click="editProduct(item.id)">mdi-pencil</v-icon>
-          <v-icon small @click="delProduct(item.id)">mdi-delete</v-icon>
+          <v-icon icon="mdi-pencil" size="small" @click="editProduct(item.id)"></v-icon>
+          <v-icon icon="mdi-delete" size="small" @click="delProduct(item.id)"></v-icon>
         </div>
       </template>
-
       <template v-slot:no-data>
         <div class="pa-4">В транзакции нет товаров</div>
       </template>
@@ -42,7 +23,7 @@
   </v-card>
 
   <v-dialog v-model="dialog" max-width="500">
-    <v-card>
+    <v-card class="pa-5 text-center" border rounded="lg">
       <v-card-title>
         {{ editingProduct ? 'Редактировать продукт' : 'Добавить продукт' }}
       </v-card-title>
@@ -56,17 +37,16 @@
           item-value="id"
           :rules="[rules.require]"
           required
-        />
-        <v-number-input v-model="record.quantity" label="Количество" />
-        <v-number-input v-model="record.price" label="Цена за ед." />
-        <v-number-input v-model="record.sum" label="Сумма" />
+        >
+        </v-select>
+        <v-number-input v-model="record.quantity" label="Количество"></v-number-input>
+        <v-number-input v-model="record.price" label="Цена за ед."></v-number-input>
+        <v-number-input v-model="record.sum" label="Сумма"></v-number-input>
       </v-card-text>
       <v-card-actions>
-        <v-btn text @click="dialog = false">Отмена</v-btn>
+        <v-btn text="Отмена" @click="dialog = false"></v-btn>
         <v-spacer />
-        <v-btn text @click="saveProduct">
-          {{ editingProduct ? 'Сохранить' : 'Добавить' }}
-        </v-btn>
+        <v-btn text="Сохранить" @click="saveProduct"></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

@@ -124,29 +124,6 @@ watch(
     localTransactions.value = [...newList]
   },
 )
-const getTypeText = (type: string | number) => (type === '0' || type === 0 ? 'Доход' : 'Расход')
-
-const getCategoryText = (value: number) => {
-  const result = categories.value.find((category) => category.id === value)
-  return result ? result.name : value
-}
-
-const dialog = ref(false)
-const editingTransaction = ref(false)
-const record = ref<Transaction>({
-  id: 0,
-  amount: 0,
-  date: '',
-  category: 1,
-  type: '0',
-})
-
-const categories = ref<Category[]>([])
-
-const types = [
-  { title: 'Доход', value: '0' },
-  { title: 'Расход', value: '1' },
-]
 
 onMounted(async () => {
   try {
@@ -156,6 +133,38 @@ onMounted(async () => {
     console.error(error)
   }
 })
+
+const dialog = ref(false)
+const editingTransaction = ref(false)
+const record = ref<Transaction>({
+  id: 0,
+  amount: 0,
+  date: '',
+  category: 1,
+  type: 0,
+})
+
+const categories = ref<Category[]>([])
+
+// const types = [
+//   { title: 'Доход', value: '0' },
+//   { title: 'Расход', value: '1' },
+// ]
+
+const types = computed(() => {
+  const unique = Array.from(new Set(localTransactions.value.map((transaction) => transaction.type)))
+  return unique.map((value) => ({
+    value,
+    title: getTypeText(value),
+  }))
+})
+
+const getTypeText = (type: string | number) => (type === '0' || type === 0 ? 'Доход' : 'Расход')
+
+const getCategoryText = (value: number) => {
+  const result = categories.value.find((category) => category.id === value)
+  return result ? result.name : value
+}
 
 const rules = {
   require: (u: string) => !!u || 'Обязательное поле',
@@ -170,7 +179,7 @@ const formValid = computed(() => {
     rules.require(String(record.value.amount)) === true &&
     rules.require(record.value.date) === true &&
     rules.require(String(record.value.category)) === true &&
-    rules.require(record.value.type) === true &&
+    rules.require(String(record.value.type)) === true &&
     rules.negative(String(record.value.amount)) === true &&
     rules.require(String(record.value.date)) === true
   )
@@ -191,7 +200,7 @@ function addTransaction() {
     amount: 0,
     date: '',
     category: 1,
-    type: '',
+    type: 0,
   }
   dialog.value = true
 }
@@ -206,7 +215,7 @@ function edTransaction(id: number) {
     amount: found.amount,
     date: found.date,
     category: found.category,
-    type: String(found.type),
+    type: found.type,
   }
 }
 
