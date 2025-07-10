@@ -35,6 +35,12 @@ export async function addTransactions(data: Transaction): Promise<Transaction> {
   return response as Transaction
 }
 
+/* Запрос на фильтры */
+export async function searchTransaction(query: string): Promise<Transaction[]> {
+  const response = await call(`/?search=${query}`, {}, 'GET')
+  return response as Transaction[]
+}
+
 /* Запросы на продукты */
 
 export async function getProduct(transactionId: number): Promise<Products[]> {

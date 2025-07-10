@@ -12,8 +12,18 @@
         <template v-slot:top>
           <v-toolbar>
             <v-toolbar-title> Список транзакций </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              clearable
+              label="Поиск"
+              prepend-inner-icon="mdi-magnify"
+              variant="outlined"
+              hide-details
+              single-line
+              class="mx-4"
+            />
             <v-btn
-              prepended-icon="mdi-plus"
               text="Добавить транзакцию"
               prepend-icon="mdi-plus"
               border
@@ -21,6 +31,7 @@
               @click="addTransaction"
             ></v-btn>
           </v-toolbar>
+          <v-divider></v-divider>
         </template>
         <template v-slot:[`item.data-table-expand`]="{ internalItem, isExpanded, toggleExpand }">
           <v-btn
@@ -113,6 +124,8 @@ import {
   deleteTransaction,
   saveEditTransaction,
   addTransactions,
+  getTransaction,
+  searchTransaction,
 } from '@/composables/transaction.request'
 
 const props = defineProps<{ transactions: Transaction[] }>()
@@ -146,17 +159,22 @@ const record = ref<Transaction>({
 
 const categories = ref<Category[]>([])
 
-// const types = [
-//   { title: 'Доход', value: '0' },
-//   { title: 'Расход', value: '1' },
-// ]
-
 const types = computed(() => {
   const unique = Array.from(new Set(localTransactions.value.map((transaction) => transaction.type)))
   return unique.map((value) => ({
     value,
     title: getTypeText(value),
   }))
+})
+
+const search = ref<string>('')
+
+watch(search, async (newValue) => {
+  if (newValue) {
+    localTransactions.value = await searchTransaction(newValue)
+  } else {
+    localTransactions.value = await getTransaction()
+  }
 })
 
 const getTypeText = (type: string | number) => (type === '0' || type === 0 ? 'Доход' : 'Расход')
