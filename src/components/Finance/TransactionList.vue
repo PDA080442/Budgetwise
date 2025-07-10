@@ -13,6 +13,15 @@
           <v-toolbar>
             <v-toolbar-title> Список транзакций </v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-btn
+              text="Добавить транзакцию"
+              prepend-icon="mdi-plus"
+              border
+              class="px-4"
+              @click="addTransaction"
+            ></v-btn>
+          </v-toolbar>
+          <v-toolbar>
             <v-text-field
               v-model="search"
               clearable
@@ -23,13 +32,10 @@
               single-line
               class="mx-4"
             />
-            <v-btn
-              text="Добавить транзакцию"
-              prepend-icon="mdi-plus"
-              border
-              class="px-4"
-              @click="addTransaction"
-            ></v-btn>
+          </v-toolbar>
+          <v-toolbar>
+            <v-text-field v-model="dateAfter" label="Начало" type="date" style="max-width: 200px" />
+            <v-text-field v-model="dateBefore" label="Конец" type="date" style="max-width: 200px" />
           </v-toolbar>
           <v-divider></v-divider>
         </template>
@@ -126,10 +132,28 @@ import {
   addTransactions,
   getTransaction,
   searchTransaction,
+  getTransactionDate,
 } from '@/composables/transaction.request'
 
 const props = defineProps<{ transactions: Transaction[] }>()
 const localTransactions = ref<Transaction[]>([...props.transactions])
+
+const dialog = ref(false)
+const editingTransaction = ref(false)
+const record = ref<Transaction>({
+  id: 0,
+  amount: 0,
+  date: '',
+  category: 1,
+  type: 0,
+})
+
+const categories = ref<Category[]>([])
+
+const search = ref<string>('')
+
+const dateBefore = ref<string>('')
+const dateAfter = ref<string>('')
 
 watch(
   () => props.transactions,
@@ -147,18 +171,6 @@ onMounted(async () => {
   }
 })
 
-const dialog = ref(false)
-const editingTransaction = ref(false)
-const record = ref<Transaction>({
-  id: 0,
-  amount: 0,
-  date: '',
-  category: 1,
-  type: 0,
-})
-
-const categories = ref<Category[]>([])
-
 const types = computed(() => {
   const unique = Array.from(new Set(localTransactions.value.map((transaction) => transaction.type)))
   return unique.map((value) => ({
@@ -167,11 +179,17 @@ const types = computed(() => {
   }))
 })
 
-const search = ref<string>('')
-
 watch(search, async (newValue) => {
   if (newValue) {
     localTransactions.value = await searchTransaction(newValue)
+  } else {
+    localTransactions.value = await getTransaction()
+  }
+})
+
+watch([dateAfter, dateBefore], async ([after, before]) => {
+  if (after && before) {
+    localTransactions.value = await getTransactionDate(after, before)
   } else {
     localTransactions.value = await getTransaction()
   }

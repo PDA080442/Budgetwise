@@ -41,6 +41,14 @@ export async function searchTransaction(query: string): Promise<Transaction[]> {
   return response as Transaction[]
 }
 
+export async function getTransactionDate(
+  dateAfter: string,
+  dateBefore: string,
+): Promise<Transaction[]> {
+  const response = await call(`/?date_after=${dateAfter}&date_before=${dateBefore}`, {}, 'GET')
+  return response as Transaction[]
+}
+
 /* Запросы на продукты */
 
 export async function getProduct(transactionId: number): Promise<Products[]> {
