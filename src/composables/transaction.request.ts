@@ -41,11 +41,16 @@ export async function searchTransaction(query: string): Promise<Transaction[]> {
   return response as Transaction[]
 }
 
-export async function getTransactionDate(
+export async function filterTransactionDate(
   dateAfter: string,
   dateBefore: string,
 ): Promise<Transaction[]> {
   const response = await call(`/?date_after=${dateAfter}&date_before=${dateBefore}`, {}, 'GET')
+  return response as Transaction[]
+}
+
+export async function filterTransactionCategory(category: []): Promise<Transaction[]> {
+  const response = await call(`/?category=${category.join(',')}`, {}, 'GET')
   return response as Transaction[]
 }
 

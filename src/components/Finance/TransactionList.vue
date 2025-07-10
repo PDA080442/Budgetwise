@@ -34,8 +34,32 @@
             />
           </v-toolbar>
           <v-toolbar>
-            <v-text-field v-model="dateAfter" label="Начало" type="date" style="max-width: 200px" />
-            <v-text-field v-model="dateBefore" label="Конец" type="date" style="max-width: 200px" />
+            <v-text-field
+              v-model="dateAfter"
+              label="Начало"
+              type="date"
+              style="max-width: 200px"
+              clearable
+              class="ml-4"
+            />
+            <v-text-field
+              v-model="dateBefore"
+              label="Конец"
+              type="date"
+              style="max-width: 200px"
+              clearable
+            />
+            <v-select
+              v-model="selectCategory"
+              label="Выберите категории"
+              style="max-width: 300px"
+              :items="categories"
+              item-title="name"
+              item-value="id"
+              multiple
+              class="ml-2"
+              clearable
+            />
           </v-toolbar>
           <v-divider></v-divider>
         </template>
@@ -132,7 +156,8 @@ import {
   addTransactions,
   getTransaction,
   searchTransaction,
-  getTransactionDate,
+  filterTransactionDate,
+  filterTransactionCategory,
 } from '@/composables/transaction.request'
 
 const props = defineProps<{ transactions: Transaction[] }>()
@@ -147,13 +172,11 @@ const record = ref<Transaction>({
   category: 1,
   type: 0,
 })
-
 const categories = ref<Category[]>([])
-
 const search = ref<string>('')
-
 const dateBefore = ref<string>('')
 const dateAfter = ref<string>('')
+const selectCategory = ref<[]>([])
 
 watch(
   () => props.transactions,
@@ -189,7 +212,15 @@ watch(search, async (newValue) => {
 
 watch([dateAfter, dateBefore], async ([after, before]) => {
   if (after && before) {
-    localTransactions.value = await getTransactionDate(after, before)
+    localTransactions.value = await filterTransactionDate(after, before)
+  } else {
+    localTransactions.value = await getTransaction()
+  }
+})
+
+watch(selectCategory, async (newSelect) => {
+  if (newSelect.length > 0) {
+    localTransactions.value = await filterTransactionCategory(newSelect)
   } else {
     localTransactions.value = await getTransaction()
   }
