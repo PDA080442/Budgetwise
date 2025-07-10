@@ -3,8 +3,9 @@ export interface Products {
   transaction: number
   category: number
   name: string
-  product_type: string
   quantity: number
   price: number
   sum: number
 }
+
+// за Product type будет отвечать category. Product_type

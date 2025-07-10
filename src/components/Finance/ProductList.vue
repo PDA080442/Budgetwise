@@ -1,134 +1,195 @@
-/* addProduct с ариной как то. Наименьшее колво товаров 1. Наименьшая цена 1. Наименьшая сумма 1 */
-
 <template>
   <v-card>
-    <v-data-table :headers="headers" :items="localProducts" item-key="name" class="elevation-5">
+    <v-data-table :headers="headers" :items="localProducts" item-key="id" class="elevation-5">
       <template v-slot:top>
-        <v-toolbar class="d-flex">
+        <v-toolbar flat>
           <v-toolbar-title>Список товаров</v-toolbar-title>
-          <!-- <v-btn
-            prepended-icon="mdi-plus"
-            text="Добавить товар"
-            prepend-icon="mdi-plus"
-            border
-            class="px-4"
-            @click="addProduct"
-          ></v-btn> -->
+          <v-btn prepend-icon="mdi-plus" text @click="addProduct"> Добавить товар </v-btn>
         </v-toolbar>
       </template>
+
+      <template v-slot:[`item.name`]="{ item }">
+        {{ item.name }}
+      </template>
+
+      <template v-slot:[`item.category`]="{ item }">
+        {{ getCategoryText(item.category) }}
+      </template>
+
+      <template v-slot:[`item.quantity`]="{ item }">
+        {{ item.quantity }}
+      </template>
+
+      <template v-slot:[`item.price`]="{ item }">
+        {{ item.price }}
+      </template>
+
+      <template v-slot:[`item.sum`]="{ item }">
+        {{ item.sum }}
+      </template>
+
       <template v-slot:[`item.actions`]="{ item }">
         <div class="d-flex ga-2 justify-start">
-          <v-icon icon="mdi-pencil" size="small" @click="editProduct(item.id)"></v-icon>
-          <v-icon icon="mdi-delete" size="small" @click="delProduct(item.id)"></v-icon>
+          <v-icon small @click="editProduct(item.id)">mdi-pencil</v-icon>
+          <v-icon small @click="delProduct(item.id)">mdi-delete</v-icon>
         </div>
       </template>
+
       <template v-slot:no-data>
         <div class="pa-4">В транзакции нет товаров</div>
       </template>
     </v-data-table>
   </v-card>
+
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
-      <v-card-title> Редактировать продукт </v-card-title>
+      <v-card-title>
+        {{ editingProduct ? 'Редактировать продукт' : 'Добавить продукт' }}
+      </v-card-title>
       <v-card-text>
-        <v-text-field v-model="record.name" label="Наименование"></v-text-field>
-        <v-text-field v-model="record.product_type" label="Тип товара"></v-text-field>
-        <v-number-input v-model="record.quantity" label="Количество"></v-number-input>
-        <v-number-input v-model="record.price" label="Цена за ед."></v-number-input>
-        <v-number-input v-model="record.sum" label="Сумма"></v-number-input>
+        <v-text-field v-model="record.name" label="Наименование" />
+        <v-select
+          v-model="record.category"
+          label="Тип товара"
+          :items="categories"
+          item-title="name"
+          item-value="id"
+          :rules="[rules.require]"
+          required
+        />
+        <v-number-input v-model="record.quantity" label="Количество" />
+        <v-number-input v-model="record.price" label="Цена за ед." />
+        <v-number-input v-model="record.sum" label="Сумма" />
       </v-card-text>
       <v-card-actions>
-        <v-btn text="Отмена" @click="dialog = false"> </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn text="Сохранить" @click="saveProduct"></v-btn>
+        <v-btn text @click="dialog = false">Отмена</v-btn>
+        <v-spacer />
+        <v-btn text @click="saveProduct">
+          {{ editingProduct ? 'Сохранить' : 'Добавить' }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
-import type { Products } from '@/types/product.type'
-import { addProducts, getProduct, saveEditProduct } from '@/composables/product.request'
 import { ref, defineProps, onMounted } from 'vue'
-import { deleteProduct } from '@/composables/product.request'
+import type { Products } from '@/types/product.type'
+import {
+  getProduct,
+  addProducts,
+  saveEditProduct,
+  deleteProduct,
+} from '@/composables/transaction.request'
+import { getCategories } from '@/composables/category.request'
+import type { Category } from '@/types/category.type'
 
 const props = defineProps<{ transactionId: number }>()
 
 const localProducts = ref<Products[]>([])
+const categories = ref<Category[]>([])
 
 onMounted(async () => {
   try {
     const result = await getProduct(props.transactionId)
-    localProducts.value = result.filter((product) => product.transaction == props.transactionId)
+    localProducts.value = result.filter((product) => product.transaction === props.transactionId)
   } catch (error) {
-    console.error('Ошибка:', error)
+    console.error('Ошибка загрузки товаров:', error)
+  }
+  try {
+    categories.value = await getCategories()
+  } catch (err) {
+    console.error('Ошибка загрузки категорий:', err)
   }
 })
 
+const getCategoryText = (value: number): string => {
+  const found = categories.value.find((category) => category.id === value)
+  return found ? found.name : String(value)
+}
+
 const dialog = ref(false)
 const editingProduct = ref(false)
+
 const record = ref<Products>({
   id: 0,
-  transaction: 0,
-  category: 0,
+  transaction: props.transactionId,
+  category: 1,
   name: '',
-  product_type: '',
-  quantity: 0,
-  price: 0,
-  sum: 0,
+  quantity: 1,
+  price: 1,
+  sum: 1,
 })
 
 const headers = [
   { title: 'Наименование', value: 'name' },
-  { title: 'Тип продукта', value: 'product_type' },
+  { title: 'Тип продукта', value: 'category' },
   { title: 'Кол-во товаров', value: 'quantity' },
   { title: 'Цена за ед.', value: 'price' },
   { title: 'Сумма', value: 'sum' },
   { title: 'Редактирование', value: 'actions' },
 ]
 
-function editProduct(id: number) {
-  editingProduct.value = true
+function addProduct() {
+  editingProduct.value = false
+  record.value = {
+    id: 0,
+    transaction: props.transactionId,
+    category: 1,
+    name: '',
+    quantity: 1,
+    price: 1,
+    sum: 1,
+  }
   dialog.value = true
+}
+
+function editProduct(id: number) {
   const found = localProducts.value.find((product) => product.id === id)
   if (!found) return
+  editingProduct.value = true
   record.value = {
     id: found.id,
     transaction: found.transaction,
     category: found.category,
     name: found.name,
-    product_type: found.product_type,
     quantity: found.quantity,
     price: found.price,
     sum: found.sum,
   }
+  dialog.value = true
 }
 
 const delProduct = async (id: number) => {
-  await deleteProduct(id)
+  await deleteProduct(props.transactionId, id)
   const index = localProducts.value.findIndex((product) => product.id === id)
   localProducts.value.splice(index, 1)
 }
 
-const saveProduct = async (id: number) => {
+async function saveProduct() {
   if (editingProduct.value) {
-    const result = await saveEditProduct(record.value.id, record.value)
-    const index = localProducts.value.findIndex((transaction) => transaction.id === record.value.id)
-    localProducts.value.splice(index, 1, result)
+    const updated = await saveEditProduct(props.transactionId, record.value.id, record.value)
+    const index = localProducts.value.findIndex((product) => product.id === updated.id)
+    localProducts.value.splice(index, 1, updated)
   } else {
     const payload = {
       id: record.value.id,
       transaction: record.value.transaction,
       category: record.value.category,
       name: record.value.name,
-      product_type: record.value.product_type,
       quantity: record.value.quantity,
       price: record.value.price,
       sum: record.value.sum,
     }
-    const create = await addProducts(id, payload)
-    localProducts.value.unshift(create)
+    const created = await addProducts(props.transactionId, payload)
+    localProducts.value.unshift(created)
   }
   dialog.value = false
 }
+
+const rules = {
+  require: (u: unknown) => !!u || 'Обязательное поле',
+}
 </script>
+
+<style scoped></style>

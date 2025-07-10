@@ -1,5 +1,6 @@
 import { useApi } from '@/composables/useApi'
 import type { Transaction } from '@/types/transaction.type'
+import type { Products } from '@/types/product.type'
 
 const { call } = useApi('/api/transactions')
 
@@ -32,4 +33,29 @@ export async function saveEditTransaction(id: number, data: Transaction): Promis
 export async function addTransactions(data: Transaction): Promise<Transaction> {
   const response = await call('/', data, 'POST')
   return response as Transaction
+}
+
+/* Запросы на продукты */
+
+export async function getProduct(transactionId: number): Promise<Products[]> {
+  const response = await call(`/${transactionId}/positions/`, {}, 'GET')
+  return response as Products[]
+}
+
+export async function deleteProduct(transactionId: number, id: number) {
+  await call(`/${transactionId}/positions/${id}/`, {}, 'DELETE')
+}
+
+export async function saveEditProduct(
+  transactionId: number,
+  id: number,
+  data: Products,
+): Promise<Products> {
+  const response = await call(`/${transactionId}/positions/${id}/`, data, 'PUT')
+  return response as Products
+}
+
+export async function addProducts(transactionId: number, data: Products): Promise<Products> {
+  const response = await call(`/${transactionId}/positions/`, data, 'POST')
+  return response as Products
 }

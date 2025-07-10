@@ -78,8 +78,8 @@
             label="Категория"
             :items="categories"
             :rules="[rules.require]"
-            item-title="title"
-            item-value="value"
+            item-title="name"
+            item-value="id"
             required
           ></v-select>
           <v-select
@@ -103,9 +103,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch, computed, onMounted } from 'vue'
 import ProductsList from '@/components/Finance/ProductList.vue'
 import type { Transaction } from '@/types/transaction.type'
+import { getCategories } from '@/composables/category.request'
+import type { Category } from '@/types/category.type'
 // import { VDateInput } from 'vuetify/labs/VDateInput'
 import {
   deleteTransaction,
@@ -124,10 +126,9 @@ watch(
 )
 const getTypeText = (type: string | number) => (type === '0' || type === 0 ? 'Доход' : 'Расход')
 
-const getCategoryText = (value: string | number) => {
-  value = String(value)
-  const result = categories.find((category) => category.value === value)
-  return result ? result.title : value
+const getCategoryText = (value: number) => {
+  const result = categories.value.find((category) => category.id === value)
+  return result ? result.name : value
 }
 
 const dialog = ref(false)
@@ -136,23 +137,25 @@ const record = ref<Transaction>({
   id: 0,
   amount: 0,
   date: '',
-  category: '1',
+  category: 1,
   type: '0',
 })
 
-const categories = [
-  { title: 'Обязательные расходы', value: '1' },
-  { title: 'Расходы на питание', value: '2' },
-  { title: 'Расходы на хозяйственно-бытовые нужды', value: '3' },
-  { title: 'Расходы на предметы личного пользования', value: '4' },
-  { title: 'Расходы на предметы быта', value: '5' },
-  { title: 'Прочее', value: '6' },
-]
+const categories = ref<Category[]>([])
 
 const types = [
   { title: 'Доход', value: '0' },
   { title: 'Расход', value: '1' },
 ]
+
+onMounted(async () => {
+  try {
+    const result = await getCategories()
+    categories.value = result
+  } catch (error) {
+    console.error(error)
+  }
+})
 
 const rules = {
   require: (u: string) => !!u || 'Обязательное поле',
@@ -162,12 +165,11 @@ const rules = {
   },
 }
 
-// Проверка валидности всей формы
 const formValid = computed(() => {
   return (
     rules.require(String(record.value.amount)) === true &&
     rules.require(record.value.date) === true &&
-    rules.require(record.value.category) === true &&
+    rules.require(String(record.value.category)) === true &&
     rules.require(record.value.type) === true &&
     rules.negative(String(record.value.amount)) === true &&
     rules.require(String(record.value.date)) === true
@@ -184,7 +186,13 @@ const headers = [
 
 function addTransaction() {
   editingTransaction.value = false
-  record.value = { id: 0, amount: 0, date: '', category: '', type: '' }
+  record.value = {
+    id: 0,
+    amount: 0,
+    date: '',
+    category: 1,
+    type: '',
+  }
   dialog.value = true
 }
 
@@ -197,7 +205,7 @@ function edTransaction(id: number) {
     id: found.id,
     amount: found.amount,
     date: found.date,
-    category: String(found.category),
+    category: found.category,
     type: String(found.type),
   }
 }

@@ -64,6 +64,4 @@ const saveTransaction = async (transactionData: Transaction) => {
     }
   }
 }
-
-
 </script>
