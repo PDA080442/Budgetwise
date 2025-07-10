@@ -25,7 +25,7 @@
           </v-toolbar>
         </template>
         <template
-          v-slot:[`item.data-table-expand`]="{ item: internalItem, isExpanded, toggleExpand }"
+          v-slot:[`item.data-table-expand`]="{ internalItem, isExpanded, toggleExpand }"
         >
           <v-btn
             :append-icon="isExpanded(internalItem) ? 'mdi-chevron-up' : 'mdi-chevron-down'"
@@ -126,7 +126,15 @@ function editTransaction(id: number) {
   dialog.value = true
 }
 
-function handleTransactionAdded(newTransaction: Transaction) {
+// function handleTransactionAdded(newTransaction: Transaction) {
+//   const newId = Math.max(...transactions.value.map(t => t.id), 0) + 1
+//   transactions.value.push({
+//     ...newTransaction,
+//     id: newId
+//   })
+// }
+
+function handleTransactionAdded(newTransaction: Omit<Transaction, 'id'>) {
   const newId = Math.max(...transactions.value.map(t => t.id), 0) + 1
   transactions.value.push({
     ...newTransaction,

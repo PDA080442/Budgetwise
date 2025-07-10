@@ -33,3 +33,8 @@ export async function logoutReq(refresh_token: string): Promise<void> {
     'POST',
   )
 }
+
+export async function getEmail(): Promise<LoginData> {
+  const response = await call('/profile/', {}, 'GET')
+  return response as LoginData
+}

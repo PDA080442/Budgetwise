@@ -24,16 +24,20 @@
 
         <v-flex>
           <v-col cols="auto">
-            <v-icon  
+            <!-- <v-icon  
               v-if="isAuthenticated"
               @click="confirmLogout" 
               icon="mdi-logout" 
               color="white" 
               size="small"
-            ></v-icon>
+            ></v-icon>  -->
+            <MainUserButton 
+              v-if="isAuthenticated"
+              @logout="confirmLogout"
+            />
             <v-icon 
-              v-else
-              @click="goToLogin" 
+              v-else 
+              @click="goToLogin"  
               icon="mdi-account" 
               color="white" 
               size="small"
@@ -43,17 +47,7 @@
       </div>
     </v-layout>
 
-    <v-dialog v-model="logoutDialog" max-width="400">
-      <v-card>
-        <v-card-title class="text-h5"> Подтверждение </v-card-title>
-        <v-card-text> Вы точно хотите выйти из аккаунта? </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="grey" @click="logoutDialog = false"> Нет </v-btn>
-          <v-btn color="primary" @click="performLogout"> Да </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    
   </header>
 </template>
 
@@ -62,6 +56,7 @@ import { ref, computed} from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'////
 import { logoutReq } from '@/composables/auth.request'///////////////////////
+import MainUserButton from '@/layouts/components/MainUserButton.vue'
 
 const router = useRouter()
 const logoutDialog = ref(false)
@@ -103,29 +98,31 @@ const confirmLogout = () => {
 //   router.push({ path: '/' })
 // }
 
-const performLogout = async () => {
-  try {
-    const refreshToken = localStorage.getItem('refresh_Token')
-    if (refreshToken) {
-      await logoutReq(refreshToken)
-    }
+
+
+// const performLogout = async () => {
+//   try {
+//     const refreshToken = localStorage.getItem('refresh_Token')
+//     if (refreshToken) {
+//       await logoutReq(refreshToken)
+//     }
     
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refresh_Token')
-    delete axios.defaults.headers.common['Authorization']
+//     localStorage.removeItem('accessToken')
+//     localStorage.removeItem('refresh_Token')
+//     delete axios.defaults.headers.common['Authorization']
     
-    logoutDialog.value = false
-    router.push({ path: '/' })
-  } catch (error) {
-    console.error('Ошибка при выходе:', error)
-    // Все равно очищаем токены на клиенте
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refresh_Token')
-    delete axios.defaults.headers.common['Authorization']
-    logoutDialog.value = false
-    router.push({ path: '/' })
-  }
-}
+//     logoutDialog.value = false
+//     router.push({ path: '/' })
+//   } catch (error) {
+//     console.error('Ошибка при выходе:', error)
+//     // Все равно очищаем токены на клиенте
+//     localStorage.removeItem('accessToken')
+//     localStorage.removeItem('refresh_Token')
+//     delete axios.defaults.headers.common['Authorization']
+//     logoutDialog.value = false
+//     router.push({ path: '/' })
+//   }
+// }
 </script>
 
 <style lang="scss" scoped>

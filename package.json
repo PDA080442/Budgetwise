@@ -22,7 +22,7 @@
     "@mdi/font": "^7.4.47",
     "axios": "^1.10.0",
     "nuxt": "^3.17.5",
-    "pinia": "^3.0.1",
+    "pinia": "^3.0.3",
     "saas": "^1.0.0",
     "TypeScript": "npm:typescript@~5.8.0",
     "validator": "^13.15.15",

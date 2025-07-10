@@ -28,24 +28,43 @@ onMounted(async () => {
 
 const router = useRouter()
 
-const saveTransaction = async (transactionData: Transaction) => {
+// const saveTransaction = async (transactionData: Transaction) => {
+//   try {
+//     const token = localStorage.getItem('accessToken') || ''
+//     if (!token) {
+//       router.push({ path: '/entrance' })
+//       throw new Error('Токен не найден')
+//     }
+//     const payload: Transaction = {
+//       amount: Number(transactionData.amount),
+//       date: formatDateForServer(transactionData.date),
+//       category: transactionData.category,
+//       type: transactionData.type,
+//     }
+
+//     const newTransaction = await createTransaction(payload)
+
+//     transactions.value = [newTransaction, ...transactions.value]
+//     console.log('Транзакция успешно сохранена', newTransaction)
+//   } catch (err) {
+
+const saveTransaction = async (transactionData: Omit<Transaction, 'id'>) => {
   try {
     const token = localStorage.getItem('accessToken') || ''
     if (!token) {
       router.push({ path: '/entrance' })
       throw new Error('Токен не найден')
     }
-    const payload: Transaction = {
+    
+    const payload = {
       amount: Number(transactionData.amount),
       date: formatDateForServer(transactionData.date),
-      category: transactionData.category,
+      category: transactionData.category,  // Используем category
       type: transactionData.type,
     }
 
     const newTransaction = await createTransaction(payload)
-
     transactions.value = [newTransaction, ...transactions.value]
-    console.log('Транзакция успешно сохранена', newTransaction)
   } catch (err) {
     console.error('Ошибка сохранения транзакции', err)
 
