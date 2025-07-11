@@ -1,46 +1,76 @@
+import { verifyToken } from '@/composables/verification.request'
+import axios from 'axios'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
+
+import HomePage from '@/views/HomePage.vue'
+import AuthRoutes from './auth'
+
+// TODO: Разбить роуты на модули
 const routes: RouteRecordRaw[] = [
+  ...AuthRoutes,
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/HomePage.vue'),
+    component: () => HomePage,
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: () => import('@/views/RegisterPage.vue'),
+    path: '/finance',
+    name: 'Finance',
+    component: () => import('@/views/FinancePage.vue'),
+    meta: {
+      requireAuth: true,
+    },
   },
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   component: () => import('@/views/LoginPage.vue'),
-  // },
-  // {
-  //   path: '/home',
-  //   name: 'Home',
-  //   component: () => import('@/views/HomePage.vue'),
-  // },
-  // {
-  //   path: '/upcoming',
-  //   name: 'Upcoming',
-  //   component: () => import('@/views/UpcomingPage.vue'),
-  // },
-  // {
-  //   path: '/today',
-  //   name: 'Today',
-  //   component: () => import('@/views/TodayPage.vue'),
-  // },
-  // {
-  //   path: '/calendar',
-  //   name: 'Calendar',
-  //   component: () => import('@/views/CalendarPage.vue'),
-  // },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('@/views/ContactPage.vue'),
+    meta: {
+      requireAuth: true,
+    },
+  },
+  {
+    path: '/accountsettings',
+    name: 'AccountSettings',
+    component: () => import('@/views/SettingsAuth/AccountSettingsPage.vue'),
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
+
+router.beforeEach(async (to, from, next) => {
+  if (!to.meta.requireAuth) return next()
+  const token = localStorage.getItem('accessToken')
+  if (!token) return next({ path: '/entrance' })
+  if (!axios.defaults.headers.common['Authorization']) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  }
+  try {
+    await verifyToken()
+    return next()
+  } catch {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    delete axios.defaults.headers.common['Authorization']
+    return next({ path: '/entrance' })
+  }
+})
+
+// router.beforeEach((to, from, next) => {
+//   if (!to.meta.requireAuth) {
+//     return next()
+//   }
+
+//   const token = localStorage.getItem('accessToken')
+//   if (token) {
+//     return next()
+//   } else {
+//     return next({ name: 'Entrance' })
+//   }
+// })
 
 export default router

@@ -1,9 +1,5 @@
 <template>
-
-
   <div class="content">
-
-
     <div class="box2">
       <div class="advantages__list">
         <ul class="advantages__list__box" v-for="(advantage, index) in advantages" :key="index">
@@ -14,38 +10,28 @@
           </div>
         </ul>
       </div>
-
     </div>
     <div>
-      <div class="traingle">
-
-      </div>
+      <div class="traingle"></div>
 
       <div class="message">
         <div class="box_message">
-          <div class>в нашей компании вы сможете сделать/получить тото тоьто и nl b ng </div>
+          <div class>в нашей компании вы сможете сделать/получить тото тоьто и nl b ng</div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
-
-
-
-
-
-import { ref, VueElement } from 'vue';
+import { ref } from 'vue'
 const advantages = ref([
   'делаем это для того',
   'делаем то, чтобы работало это',
   'занимаемся этим',
   'вааававвавав',
-  'ааававааааапрпр'
+  'ааававааааапрпр',
 ])
-
 </script>
 
 <style lang="scss" scoped>
@@ -55,31 +41,20 @@ const advantages = ref([
 }
 
 .advantages {
-  // height: 10000px;
   &__list {
     font-size: 18px;
     font-family: Montserrat;
     display: inline-block;
     width: 100%;
-    // margin-left: 40px;
-
-    &__box {
-      // height: 1000px;
-    }
-
-
 
     li ::before {
       content: '✓';
-      // position: absolute;
       margin-right: 20px;
     }
 
     &__box {
       max-width: 275px;
       min-width: 265px;
-      // height: 100;
-
 
       .advantage {
         list-style: none;
@@ -100,7 +75,6 @@ const advantages = ref([
 .box2 {
   gap: 10px;
   width: 100%;
-  // height: 1000px;
 }
 
 .message {
@@ -110,12 +84,8 @@ const advantages = ref([
   height: fit-content;
   background-color: rbg(250 250 250);
   display: flex;
-  // position: absolute;
   border-radius: 15px;
   box-shadow: 13px 13px 38px rgba(230, 230, 230, 0.9);
-  // z-index: 2;
-
-
 }
 
 .traingle {
@@ -135,14 +105,6 @@ const advantages = ref([
   padding: 30px;
   max-width: 260px;
   word-break: break-all;
-
-
 }
 
-.liBox {
-  // width: 110%;
-  // position: relative;
-  // margin-left: 20px;
-  // left: 20px;
-}
 </style>

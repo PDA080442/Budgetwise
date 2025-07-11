@@ -7,36 +7,50 @@
 }
 
 #app {
-  max-width: 1920px;
+  /* max-width: 1920px; */
   width: 100%;
   margin: 0 auto;
   /* padding: 2rem; */
   font-weight: normal;
+  /* display: flex; */
+  padding: 0;
+
+
+  
 }
 
 a,
 .green {
   text-decoration: none;
+  color: rgb(255, 255, 255);
   color: hsla(160, 100%, 37%, 1);
   transition: 0.4s;
   padding: 3px;
 }
 
+element.style {
+    max-width: 100%;
+    padding: 0px;
+}
+
+
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    background-color: hsla(197, 50%, 54%, 0.286);
   }
 }
 
 @media (min-width: 1024px) {
   body {
-    display: flex;
-    place-items: center;
+    /* display: flex;*/ 
+    place-items: center; 
+    /* margin: 120px; */
   }
 
   #app {
-    display: flex;
-    padding: 0 0rem;
-
+    display: grid;
+    padding: 0;
+    grid-template-columns: 1fr;
+    padding: 0;
   }
 }

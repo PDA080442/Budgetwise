@@ -1,8 +1,20 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <MainLayout>
+    <template #content>
+      <div class="about">
+        <h1>Команда делитантов широкого профиля</h1>
+      </div>
+    </template>
+  </MainLayout>
 </template>
+
+
+<script lang="ts" setup>
+import MainLayout from '@/layouts/MainLayout.vue';
+
+
+</script>
+
 
 <style>
 @media (min-width: 1024px) {
