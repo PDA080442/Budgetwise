@@ -20,9 +20,8 @@
               prepend-icon="mdi-plus"
               border
               class="px-4"
-              @click="TransactionAdd"
-            ></v-btn> -->
-            <TransactionAdd @save="handleTransactionAdded" />
+              @click="addTransaction"
+            ></v-btn>
           </v-toolbar>
           <v-toolbar>
             <v-text-field
