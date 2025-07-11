@@ -49,8 +49,18 @@ export async function filterTransactionDate(
   return response as Transaction[]
 }
 
-export async function filterTransactionCategory(category: []): Promise<Transaction[]> {
-  const response = await call(`/?category=${category.join(',')}`, {}, 'GET')
+export async function filterTransactionCategory(categoryId: []): Promise<Transaction[]> {
+  const response = await call(`/?category=${categoryId.join(',')}`, {}, 'GET')
+  return response as Transaction[]
+}
+
+export async function filterTransactionType(typeId: number): Promise<Transaction[]> {
+  const response = await call(`/?type=${typeId}`, {}, 'GET')
+  return response as Transaction[]
+}
+
+export async function orderTransaction(orderName: string): Promise<Transaction[]> {
+  const response = await call(`/ordering=${orderName}`, {}, 'GET')
   return response as Transaction[]
 }
 

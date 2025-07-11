@@ -8,6 +8,8 @@
         show-expand
         item-key="id"
         class="elevation-24"
+        multi-sort
+        :sort-by="sortOrder"
       >
         <template v-slot:top>
           <v-toolbar>
@@ -29,10 +31,11 @@
               prepend-inner-icon="mdi-magnify"
               variant="outlined"
               hide-details
-              single-line
+              rounded="lg"
               class="mx-4"
             />
           </v-toolbar>
+          <v-divider></v-divider>
           <v-toolbar>
             <v-text-field
               v-model="dateAfter"
@@ -50,15 +53,25 @@
               clearable
             />
             <v-select
-              v-model="selectCategory"
+              v-model="selectCategories"
               label="Выберите категории"
-              style="max-width: 300px"
+              style="max-width: 343px"
               :items="categories"
               item-title="name"
               item-value="id"
               multiple
               class="ml-2"
               clearable
+            />
+            <v-select
+              v-model="selectTypes"
+              :items="types"
+              item-title="title"
+              item-value="value"
+              label="Доход/Расход"
+              clearable
+              style="max-width: 343px"
+              class="ml-2"
             />
           </v-toolbar>
           <v-divider></v-divider>
@@ -158,6 +171,8 @@ import {
   searchTransaction,
   filterTransactionDate,
   filterTransactionCategory,
+  filterTransactionType,
+  orderTransaction,
 } from '@/composables/transaction.request'
 
 const props = defineProps<{ transactions: Transaction[] }>()
@@ -176,7 +191,9 @@ const categories = ref<Category[]>([])
 const search = ref<string>('')
 const dateBefore = ref<string>('')
 const dateAfter = ref<string>('')
-const selectCategory = ref<[]>([])
+const selectCategories = ref<[]>([])
+const selectTypes = ref<number | null>(null)
+const sortOrder = ref<{ key: string; order: 'asc' | 'desc' }[]>([])
 
 watch(
   () => props.transactions,
@@ -218,9 +235,17 @@ watch([dateAfter, dateBefore], async ([after, before]) => {
   }
 })
 
-watch(selectCategory, async (newSelect) => {
-  if (newSelect.length > 0) {
-    localTransactions.value = await filterTransactionCategory(newSelect)
+watch(selectCategories, async (selectCategory) => {
+  if (selectCategory.length > 0) {
+    localTransactions.value = await filterTransactionCategory(selectCategory)
+  } else {
+    localTransactions.value = await getTransaction()
+  }
+})
+
+watch(selectTypes, async (selectType) => {
+  if (selectType != null) {
+    localTransactions.value = await filterTransactionType(selectType)
   } else {
     localTransactions.value = await getTransaction()
   }
@@ -253,8 +278,8 @@ const formValid = computed(() => {
 })
 
 const headers = [
-  { title: 'Сумма', value: 'amount' },
-  { title: 'Дата', value: 'date' },
+  { title: 'Сумма', value: 'amount', sortable: true },
+  { title: 'Дата', value: 'date', sortable: true },
   { title: 'Категория', value: 'category' },
   { title: 'Тип операции', value: 'type' },
   { title: 'Редактирование', value: 'actions' },
