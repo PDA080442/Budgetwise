@@ -59,8 +59,12 @@ export async function filterTransactionType(typeId: number): Promise<Transaction
   return response as Transaction[]
 }
 
-export async function orderTransaction(orderName: string): Promise<Transaction[]> {
-  const response = await call(`/ordering=${orderName}`, {}, 'GET')
+export async function orderTransaction(
+  field: 'amount' | 'date',
+  direction: 'asc' | 'desc',
+): Promise<Transaction[]> {
+  const order = direction === 'desc' ? `-${field}` : field
+  const response = await call(`/?ordering=${order}`, {}, 'GET')
   return response as Transaction[]
 }
 

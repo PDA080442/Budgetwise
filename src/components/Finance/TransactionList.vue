@@ -8,8 +8,7 @@
         show-expand
         item-key="id"
         class="elevation-24"
-        multi-sort
-        :sort-by="sortOrder"
+        v-model:sort-by="sortOrder"
       >
         <template v-slot:top>
           <v-toolbar>
@@ -251,6 +250,22 @@ watch(selectTypes, async (selectType) => {
   }
 })
 
+watch(sortOrder, async (newSortOrder) => {
+  if (newSortOrder.length > 0) {
+    const headerName = newSortOrder[0].key
+    const direction = newSortOrder[0].order
+    if (headerName === 'amount' || headerName === 'date') {
+      if (direction === 'asc') {
+        localTransactions.value = await orderTransaction(headerName, 'asc')
+      } else {
+        localTransactions.value = await orderTransaction(headerName, 'desc')
+      }
+    }
+  } else {
+    localTransactions.value = await getTransaction()
+  }
+})
+
 const getTypeText = (type: string | number) => (type === '0' || type === 0 ? 'Доход' : 'Расход')
 
 const getCategoryText = (value: number) => {
@@ -280,9 +295,9 @@ const formValid = computed(() => {
 const headers = [
   { title: 'Сумма', value: 'amount', sortable: true },
   { title: 'Дата', value: 'date', sortable: true },
-  { title: 'Категория', value: 'category' },
-  { title: 'Тип операции', value: 'type' },
-  { title: 'Редактирование', value: 'actions' },
+  { title: 'Категория', value: 'category', sortable: false },
+  { title: 'Тип операции', value: 'type', sortable: false },
+  { title: 'Редактирование', value: 'actions', sortable: false },
 ]
 
 function addTransaction() {
