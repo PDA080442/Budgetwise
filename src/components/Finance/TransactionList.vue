@@ -11,9 +11,11 @@
         v-model:sort-by="sortOrder"
       >
         <template v-slot:top>
-          <v-toolbar>
-            <v-toolbar-title> Список транзакций </v-toolbar-title>
-            <v-spacer></v-spacer>
+          <v-toolbar class="d-flex">
+            <v-toolbar-title style="max-width: 300px"> Список транзакций </v-toolbar-title>
+            <v-spacer />
+            <PopupCategory />
+            <v-spacer />
             <v-btn
               text="Добавить транзакцию"
               prepend-icon="mdi-plus"
@@ -161,7 +163,7 @@ import ProductsList from '@/components/Finance/ProductList.vue'
 import type { Transaction } from '@/types/transaction.type'
 import { getCategories } from '@/composables/category.request'
 import type { Category } from '@/types/category.type'
-// import { VDateInput } from 'vuetify/labs/VDateInput'
+import PopupCategory from './PopupCategory.vue'
 import {
   deleteTransaction,
   saveEditTransaction,

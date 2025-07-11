@@ -4,7 +4,7 @@
       <template v-slot:top>
         <v-toolbar>
           <v-toolbar-title>Список товаров</v-toolbar-title>
-          <v-btn prepend-icon="mdi-plus" border text="Добавить товар" @click="addProduct"> </v-btn>
+          <v-btn prepend-icon="mdi-plus" border text="Добавить товар" @click="addProduct"></v-btn>
         </v-toolbar>
       </template>
       <template v-slot:[`item.category`]="{ item }">
@@ -68,6 +68,18 @@ const props = defineProps<{ transactionId: number }>()
 
 const localProducts = ref<Products[]>([])
 const categories = ref<Category[]>([])
+const dialog = ref(false)
+const editingProduct = ref(false)
+
+const record = ref<Products>({
+  id: 0,
+  transaction: props.transactionId,
+  category: 1,
+  name: '',
+  quantity: 1,
+  price: 1,
+  sum: 1,
+})
 
 onMounted(async () => {
   try {
@@ -87,19 +99,6 @@ const getCategoryText = (value: number): string => {
   const found = categories.value.find((category) => category.id === value)
   return found ? found.name : String(value)
 }
-
-const dialog = ref(false)
-const editingProduct = ref(false)
-
-const record = ref<Products>({
-  id: 0,
-  transaction: props.transactionId,
-  category: 1,
-  name: '',
-  quantity: 1,
-  price: 1,
-  sum: 1,
-})
 
 const headers = [
   { title: 'Наименование', value: 'name' },
