@@ -66,7 +66,7 @@
             />
             <v-select
               v-model="selectTypes"
-              :items="types"
+              :items="operationTypes"
               item-title="title"
               item-value="value"
               label="Доход/Расход"
@@ -139,7 +139,7 @@
           ></v-select>
           <v-select
             v-model="record.type"
-            :items="types"
+            :items="operationTypes"
             label="Тип операции"
             item-title="title"
             item-value="value"
@@ -212,13 +212,18 @@ onMounted(async () => {
   }
 })
 
-const types = computed(() => {
-  const unique = Array.from(new Set(localTransactions.value.map((transaction) => transaction.type)))
-  return unique.map((value) => ({
-    value,
-    title: getTypeText(value),
-  }))
-})
+// const types = computed(() => {
+//   const unique = Array.from(new Set(localTransactions.value.map((transaction) => transaction.type)))
+//   return unique.map((value) => ({
+//     value,
+//     title: getTypeText(value),
+//   }))
+// })
+
+const operationTypes = [
+  { value: 0, title: 'Доход' },
+  { value: 1, title: 'Расход' },
+]
 
 watch(search, async (newValue) => {
   if (newValue) {

@@ -1,20 +1,20 @@
 <template>
-  <v-dialog v-model="dialog" max-width="800">
+  <v-dialog v-model="dialog" max-width="1260">
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn text="О категориях" v-bind="activatorProps" border class="mr-20"></v-btn>
     </template>
     <template v-slot:default="{ isActive }">
-      <v-card>
+      <v-card class="pa-5" rounded="lg">
         <v-card-title class="text-black text-center">О категориях</v-card-title>
         <v-card-text>
           <v-list two-line>
-            <v-list-item v-for="category in categories" :key="category.id">
-              <v-list-item-title>
+            <v-list-item v-for="category in categories" :key="category.id" border>
+              <v-list-item-title class="font-weight-black">
                 {{ category.name }}
               </v-list-item-title>
-              <v-list-item-subtitle>
+              <v-card-text class="font-weight-medium">
                 {{ category.description }}
-              </v-list-item-subtitle>
+              </v-card-text>
             </v-list-item>
           </v-list>
         </v-card-text>

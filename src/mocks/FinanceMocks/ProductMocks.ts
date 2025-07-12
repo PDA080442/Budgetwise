@@ -1,25 +1,31 @@
-import type { Products } from '@/types/transaction.type'
+import type { Products } from '@/types/product.type'
 
 export const ProductsMocks: Products[] = [
   {
+    id: 1,
+    transaction: 1,
+    category: 1,
     name: 'Молоко',
-    Product_type: 'Молочная продукция',
-    Quantity: 2,
-    Price: 100,
-    Sum: 200,
+    quantity: 2,
+    price: 100,
+    sum: 200,
   },
   {
+    id: 2,
+    transaction: 2,
+    category: 2,
     name: 'Творог',
-    Product_type: 'Молочная продукция',
-    Quantity: 3,
-    Price: 120,
-    Sum: 360,
+    quantity: 3,
+    price: 120,
+    sum: 360,
   },
   {
+    id: 3,
+    transaction: 3,
+    category: 3,
     name: 'Пиво',
-    Product_type: 'Алкоголь',
-    Quantity: 8,
-    Price: 90,
-    Sum: 560,
+    quantity: 8,
+    price: 90,
+    sum: 560,
   },
 ]
