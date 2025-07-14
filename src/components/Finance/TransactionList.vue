@@ -1,4 +1,3 @@
-// addTransaction с ариной как то
 <template>
   <v-container>
     <v-card border rounded="lg">
@@ -219,19 +218,6 @@ onMounted(async () => {
     console.error(error)
   }
 })
-
-// const types = computed(() => {
-//   const unique = Array.from(new Set(localTransactions.value.map((transaction) => transaction.type)))
-//   return unique.map((value) => ({
-//     value,
-//     title: getTypeText(value),
-//   }))
-// })
-
-// const operationTypes = [
-//   { value: 0, title: 'Доход' },
-//   { value: 1, title: 'Расход' },
-// ]
 
 watch(search, async (newValue) => {
   if (newValue) {

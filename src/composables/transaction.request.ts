@@ -95,7 +95,7 @@ export async function orderTransaction(
 }
 
 /* Запрос Баланса */
-export async function getBalance(): Promise<Balance[]> {
+export async function getBalance(): Promise<Balance> {
   const response = await call('/balance/', {}, 'GET')
-  return response as Balance[]
+  return response as Balance
 }

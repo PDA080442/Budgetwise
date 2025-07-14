@@ -3,7 +3,7 @@
     <div class="about__fashions">
       <h1 class="about__header">{{ title }}</h1>
 
-      <AboutAdvantages></AboutAdvantages>
+      <HomeAboutAdvantages></HomeAboutAdvantages>
 
       <div class="buy_service">Заказать консультацию</div>
     </div>
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import AboutAdvantages from '@/components/Home/HomeAboutAdvantages.vue'
+import HomeAboutAdvantages from '@/components/Home/HomeAboutAdvantages.vue'
 
 import { ref } from 'vue'
 const title = ref('Email маркетинг под ключ')

@@ -8,17 +8,6 @@
         <v-card-title class="text-center">Загрузите или перетащите изображение чека</v-card-title>
         <v-card-text>
           <v-file-input v-model="files" prepend-icon="mdi-upload" accept="image/*"> </v-file-input>
-          <!-- <v-file-upload
-            v-model="files"
-            browse-text="Загрузите с устройства"
-            divider-text="ИЛИ"
-            icon="mdi-upload"
-            title="Перетащите файл сюда"
-            accept="image/*"
-            max-files="1"
-            size-unit="MB"
-          >
-          </v-file-upload> -->
         </v-card-text>
         <v-card-actions>
           <v-btn text="Загрузить" :disabled="!files" @click="onUpload()"></v-btn>
