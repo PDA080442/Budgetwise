@@ -1,6 +1,7 @@
 import { useApi } from '@/composables/useApi'
 import type { Transaction } from '@/types/transaction.type'
 import type { Products } from '@/types/product.type'
+import type { Balance } from '@/types/balance.type'
 
 const { call } = useApi('/api/transactions')
 
@@ -91,4 +92,10 @@ export async function orderTransaction(
   const order = direction === 'desc' ? `-${field}` : field
   const response = await call(`/?ordering=${order}`, {}, 'GET')
   return response as Transaction[]
+}
+
+/* Запрос Баланса */
+export async function getBalance(): Promise<Balance[]> {
+  const response = await call('/balance/', {}, 'GET')
+  return response as Balance[]
 }

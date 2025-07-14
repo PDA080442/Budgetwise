@@ -12,7 +12,7 @@
       >
         <template v-slot:top>
           <v-toolbar class="d-flex">
-            <v-toolbar-title style="max-width: 300px"> Список транзакций </v-toolbar-title>
+            <v-toolbar-title style="max-width: 300px"> Транзакции </v-toolbar-title>
             <v-spacer />
             <PopupCategory />
             <v-spacer />
@@ -23,6 +23,8 @@
               class="px-4"
               @click="addTransaction"
             ></v-btn>
+            <v-spacer />
+            <AddCheck />
           </v-toolbar>
           <v-toolbar>
             <v-text-field
@@ -66,9 +68,9 @@
             />
             <v-select
               v-model="selectTypes"
-              :items="operationTypes"
-              item-title="title"
-              item-value="value"
+              :items="types"
+              item-title="name"
+              item-value="id"
               label="Доход/Расход"
               clearable
               style="max-width: 343px"
@@ -139,10 +141,10 @@
           ></v-select>
           <v-select
             v-model="record.type"
-            :items="operationTypes"
+            :items="types"
             label="Тип операции"
-            item-title="title"
-            item-value="value"
+            item-title="name"
+            item-value="id"
             :rules="[rules.require]"
             required
           ></v-select>
@@ -162,8 +164,11 @@ import { ref, defineProps, watch, computed, onMounted } from 'vue'
 import ProductsList from '@/components/Finance/ProductList.vue'
 import type { Transaction } from '@/types/transaction.type'
 import { getCategories } from '@/composables/category.request'
+import { getTypes } from '@/composables/type.request'
 import type { Category } from '@/types/category.type'
 import PopupCategory from './PopupCategory.vue'
+import type { Types } from '@/types/types.type'
+import AddCheck from './AddCheck.vue'
 import {
   deleteTransaction,
   saveEditTransaction,
@@ -189,6 +194,7 @@ const record = ref<Transaction>({
   type: 0,
 })
 const categories = ref<Category[]>([])
+const types = ref<Types[]>([])
 const search = ref<string>('')
 const dateBefore = ref<string>('')
 const dateAfter = ref<string>('')
@@ -207,6 +213,8 @@ onMounted(async () => {
   try {
     const result = await getCategories()
     categories.value = result
+    const resulttype = await getTypes()
+    types.value = resulttype
   } catch (error) {
     console.error(error)
   }
@@ -220,10 +228,10 @@ onMounted(async () => {
 //   }))
 // })
 
-const operationTypes = [
-  { value: 0, title: 'Доход' },
-  { value: 1, title: 'Расход' },
-]
+// const operationTypes = [
+//   { value: 0, title: 'Доход' },
+//   { value: 1, title: 'Расход' },
+// ]
 
 watch(search, async (newValue) => {
   if (newValue) {

@@ -3,6 +3,7 @@
   <div>
     <div>
       <HomeAboutSection></HomeAboutSection>
+      <BalanceView />
       <div class="advantages">
         <div class="advantages__box">
           <div class="advantages__text">
@@ -27,6 +28,7 @@ import { ref } from 'vue'
 import HomeTopServices from '@/components/Home/HomeTopServices.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
 import { homecarditems, type HomeCardsItems } from '@/mocks/HomeMocks/CardItemsMocks'
+import BalanceView from '@/components/Homepage/BalanceView.vue'
 
 const items = ref<HomeCardsItems[]>(homecarditems)
 </script>
