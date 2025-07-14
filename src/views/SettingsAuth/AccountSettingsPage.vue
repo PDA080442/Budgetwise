@@ -28,8 +28,7 @@
       <!-- {{ initialState }} -->
 
 
- <!-- @submit.prevent="submitForm" -->
-      <v-form>
+      <v-form  @submit.prevent="submitForm">
         <v-col class="font">
           <v-text-field v-model="initialState.name" label="Имя" required
           :rules="[rules.require]"></v-text-field>
@@ -54,7 +53,7 @@
         </v-col>
 
         <div>
-          <v-btn @click="send">сохранить</v-btn>
+          <v-btn type="submitForm">Cохранить</v-btn>
           <v-btn type="reset">сброс</v-btn>
         </div>
       </v-form>
@@ -76,6 +75,11 @@ import { accountSettings } from '@/stores/accountSettings'
 import { storeToRefs } from 'pinia'
 // import AccountSetttingsHeader from './AccountSetttingsHeader.vue'
 // import { emitKeypressEvents } from 'readline'
+
+  export async function getEmail(): Promise<LoginData> {
+  const response = await call('/profile/', {}, 'GET')
+  return response as LoginData
+}
 
 const accSet = accountSettings()
 const { userData, myEmail } = storeToRefs(accSet)
@@ -100,16 +104,16 @@ const rules = {
 //   accSet.setUserData({...initialState.value})
 // }
 
-// function submitForm() {
-//       const formEl = this.$refs.myForm;
-//       if (!formEl.checkValidity()) {
-//         formEl.reportValidity();
-//         return;
+function submitForm() {
+      const formEl = this.$refs.myForm;
+      if (!formEl.checkValidity()) {
+        formEl.reportValidity();
+        return;
 
 
 
 
-//       }}
+      }}
 
 
 

@@ -8,9 +8,9 @@ export const accountSettings = defineStore('user', () => {
   const userData = ref<LoginData>({
     email: 'x@mail.ru',
     password: '123456',
-    name: 'olegbvbnbngb',
+    name: 'oleg',
     lastname: 'kacherga',
-    password2: ''
+    password2: '123456'
   })
 
 
@@ -27,11 +27,13 @@ export const accountSettings = defineStore('user', () => {
     userData.value = payload
   }
 
-  // function getUser() {
-  //   // send request to back
-  //   // get user
+  
 
-  //   // setUserData
+  // function getUser() {
+  //   send request to back
+  //   get user
+
+  //   setUserData
   // }
 
 
@@ -41,7 +43,7 @@ export const accountSettings = defineStore('user', () => {
     setUserData,
     userData,
     myEmail,
-    myName
+    myName,
   }
 })
 
