@@ -10,7 +10,7 @@
 
       <!-- </div> -->
       <div>
-        <v-card-text class="nameHEADER">{{ myEmail }}</v-card-text>
+        <v-card-text class="nameHEADER">{{ myName }}</v-card-text>
         <div class="emailHEADER">
           <v-card-text >{{ myEmail }}</v-card-text>
           <!-- {{ initialState.email }} -->
@@ -28,8 +28,8 @@
       <!-- {{ initialState }} -->
 
 
-
-      <v-form @submit.prevent="submitForm">
+ <!-- @submit.prevent="submitForm" -->
+      <v-form>
         <v-col class="font">
           <v-text-field v-model="initialState.name" label="Имя" required
           :rules="[rules.require]"></v-text-field>
@@ -54,7 +54,7 @@
         </v-col>
 
         <div>
-          <v-btn type="submit">сохранить</v-btn>
+          <v-btn @click="send">сохранить</v-btn>
           <v-btn type="reset">сброс</v-btn>
         </div>
       </v-form>
@@ -79,6 +79,8 @@ import { storeToRefs } from 'pinia'
 
 const accSet = accountSettings()
 const { userData, myEmail } = storeToRefs(accSet)
+const { myName } = storeToRefs(accSet)
+
 
 const initialState = ref<LoginData>({...userData.value})
 
@@ -98,24 +100,19 @@ const rules = {
 //   accSet.setUserData({...initialState.value})
 // }
 
-function submitForm() {
-      const formEl = this.$refs.myForm;
-      if (!formEl.checkValidity()) {
-        formEl.reportValidity(); // Показывает браузерные сообщения об ошибке
-        return;
+// function submitForm() {
+//       const formEl = this.$refs.myForm;
+//       if (!formEl.checkValidity()) {
+//         formEl.reportValidity();
+//         return;
 
 
 
-        
-      }}
+
+//       }}
 
 
-const gggg = ref(0)
 
-
-function coun() {
-  gggg.value = gggg.value+1
-}
 </script>
 
 <style scoped>

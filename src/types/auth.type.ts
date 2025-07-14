@@ -12,5 +12,5 @@ export interface LoginData {
   password: string
   name: string
   lastname: string
-  // password2: string
+  password2: string
 }

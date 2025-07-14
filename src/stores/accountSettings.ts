@@ -9,17 +9,18 @@ export const accountSettings = defineStore('user', () => {
     email: 'x@mail.ru',
     password: '123456',
     name: 'olegbvbnbngb',
-    lastname: 'kacherga'
+    lastname: 'kacherga',
+    password2: ''
   })
 
 
-  const myEmail = computed(() => {
+  const myName = computed(() => {
     return `${userData.value.name} ${userData.value.lastname}`
   })
 
-  // const MyEmail = computed(() => {
-  //   return `${userData.value.name} ${userData.value.lastname}`
-  // })
+  const myEmail = computed(() => {
+    return `${userData.value.email}`
+  })
 
 
   function setUserData(payload: LoginData) {
@@ -39,7 +40,8 @@ export const accountSettings = defineStore('user', () => {
   return {
     setUserData,
     userData,
-    myEmail
+    myEmail,
+    myName
   }
 })
 
