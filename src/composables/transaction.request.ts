@@ -11,17 +11,6 @@ export async function getTransaction(): Promise<Transaction[]> {
   return response as Transaction[]
 }
 
-export async function createTransaction(data: Transaction): Promise<Transaction> {
-  try {
-    const response = await call('/', data, 'POST')
-
-    return response as Transaction
-  } catch (error) {
-    console.error('Ошибка создания транзакции:', error)
-    throw new Error('Не удалось создать транзакцию')
-  }
-}
-
 export async function deleteTransaction(id: number) {
   await call(`/${id}/`, {}, 'DELETE')
 }
