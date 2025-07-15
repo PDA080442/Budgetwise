@@ -1,6 +1,8 @@
 import { useApi } from '@/composables/useApi'
 import type { AuthTokens, FormData, LoginData } from '@/types/auth.type'
 import axios from 'axios'
+import  type { infoProfile } from '@/types/auth.type'
+
 
 const { call } = useApi('/reg')
 
@@ -27,4 +29,23 @@ export async function logoutReq(refreshToken: string): Promise<void> {
     },
     'POST',
   )
+}
+
+//запрос на профиль
+export async function getInfo(): Promise <infoProfile> {
+  const respons = await call('/profile/', {}, 'GET')
+  return respons as infoProfile
+}
+
+
+//отправка ред данных профиля
+export async function postInfo(info: infoProfile): Promise<infoProfile> {
+  try {
+    const response = await call('/profile/', info, 'PUT')
+
+    return response as infoProfile
+  } catch (error) {
+    console.error('Ошибка создания транзакции:', error)
+    throw new Error('Не удалось создать транзакцию')
+  }
 }

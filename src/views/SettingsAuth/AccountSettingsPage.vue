@@ -10,9 +10,9 @@
 
       <!-- </div> -->
       <div>
-        <v-card-text class="nameHEADER">{{ myName }}</v-card-text>
+        <v-card-text class="nameHEADER"> {{ infoProfiles.first_name }} {{ infoProfiles.last_name }} </v-card-text>
         <div class="emailHEADER">
-          <v-card-text >{{ myEmail }}</v-card-text>
+          <v-card-text >{{ infoProfiles.email }}</v-card-text>
           <!-- {{ initialState.email }} -->
         </div>
       </div>
@@ -28,38 +28,45 @@
       <!-- {{ initialState }} -->
 
 
-      <v-form  @submit.prevent="submitForm">
+      <v-form  @submit.prevent="submitForm"  class="boxForm">
         <v-col class="font">
-          <v-text-field v-model="initialState.name" label="Имя" required
+          <v-text-field v-model="infoProfiles.first_name" label="Имя" required
           :rules="[rules.require]"></v-text-field>
         </v-col>
         <v-col class="font">
-          <v-text-field v-model="initialState.lastname" label="Фамилия" required
+          <v-text-field v-model="infoProfiles.last_name" label="Фамилия" required
           :rules="[rules.require]"></v-text-field>
         </v-col>
-        <v-col class="font">
-          <v-text-field v-model="initialState.email" label="Email" required
+        <!-- <v-col class="font">
+          <v-text-field v-model="infoProfiles.email" label="Email" required
           :rules="[rules.require, rules.email]"></v-text-field>
-        </v-col>
+        </v-col> -->
 
-        <v-col class="font">
+
+        </v-form>
+
+      <v-form class="boxForm">
+         <v-col class="font">
           <v-text-field v-model="initialState.password" label="Пароль" type="password" required
             :rules="[rules.require, rules.passwordmin]"></v-text-field>
         </v-col>
 
         <v-col class="font">
-          <v-text-field v-model="initialState.password2" label="Подтвердите пароль" type="password" required
+          <v-text-field v-model="initialState.password2" label="Новый пароль" type="password" required
             :rules="[rules.require, rules.passsame]"></v-text-field>
         </v-col>
-
-        <div>
-          <v-btn type="submitForm">Cохранить</v-btn>
+        <v-col class="font">
+          <v-text-field v-model="initialState.password2" label="Подтвердите новый пароль" type="password" required
+            :rules="[rules.require, rules.passsame]"></v-text-field>
+        </v-col>
+      </v-form>
+       <div>
+          <v-btn @click="postInfo(infoProfiles)">Cохранить</v-btn>
           <v-btn type="reset">сброс</v-btn>
         </div>
-      </v-form>
     </div>
 
-    <!-- <v-btn @click="$router.push('/')">На главную</v-btn> -->
+    <v-btn @click="$router.push('/')">На главную</v-btn>
 
     <!-- <AccountSetttingsHeader></AccountSetttingsHeader> -->
   </div>
@@ -67,21 +74,49 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { isEmail } from 'validator'
 import type { LoginData } from '@/types/auth.type'
-
 import { accountSettings } from '@/stores/accountSettings'
 import { storeToRefs } from 'pinia'
+import { getInfo } from '@/composables/auth.request'
+import { postInfo } from '@/composables/auth.request'
+import type { infoProfile } from '@/types/auth.type'
+
+const infoProfiles = ref<infoProfile>({
+  id: 0,
+  email: '',
+  first_name: '',
+  last_name: ''
+})
+
 // import AccountSetttingsHeader from './AccountSetttingsHeader.vue'
 // import { emitKeypressEvents } from 'readline'
 
-  export async function getEmail(): Promise<LoginData> {
-  const response = await call('/profile/', {}, 'GET')
-  return response as LoginData
-}
+// const call = useApi('')
+
+//   export async function getEmail(): Promise<LoginData> {
+//   const response = await call('/profile/', {}, 'GET')
+//   return response as LoginData
+// }
+
+
+// const names = async () =>{
+//   const response = await getInfo()
+//   infoProfiles.value = response
+// }
+
+onMounted (async () => {
+  try{
+    const result = await getInfo()
+    infoProfiles.value = result
+  } catch(error) {
+    console.error(error)
+  }
+})
 
 const accSet = accountSettings()
+
 const { userData, myEmail } = storeToRefs(accSet)
 const { myName } = storeToRefs(accSet)
 
@@ -247,4 +282,5 @@ function submitForm() {
   font-size: 15px;
   color: rgb(142, 142, 142);
 }
+
 </style>

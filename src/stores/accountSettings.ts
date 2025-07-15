@@ -1,21 +1,28 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import type { LoginData } from '@/types/auth.type'
+import  type { infoProfile } from '@/types/auth.type'
 
 
 export const accountSettings = defineStore('user', () => {
 
-  const userData = ref<LoginData>({
+  const userData = ref<infoProfile>({
     email: 'x@mail.ru',
-    password: '123456',
+    // password: '123456',
     name: 'oleg',
     lastname: 'kacherga',
-    password2: '123456'
+    // password2: '123456'
   })
 
+  const infoProfiles = ref<infoProfile>({
+  id: 0,
+  email: '',
+  first_name: '',
+  last_name: ''
+})
 
   const myName = computed(() => {
-    return `${userData.value.name} ${userData.value.lastname}`
+    return `${infoProfiles.value.first_name} ${infoProfiles.value.last_name}`
   })
 
   const myEmail = computed(() => {
@@ -24,10 +31,10 @@ export const accountSettings = defineStore('user', () => {
 
 
   function setUserData(payload: LoginData) {
-    userData.value = payload
+    infoProfiles.value = payload
   }
 
-  
+
 
   // function getUser() {
   //   send request to back
@@ -40,10 +47,11 @@ export const accountSettings = defineStore('user', () => {
 
 
   return {
-    setUserData,
     userData,
+    setUserData,
     myEmail,
     myName,
+    infoProfiles
   }
 })
 

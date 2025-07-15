@@ -14,3 +14,11 @@ export interface LoginData {
   lastname: string
   password2: string
 }
+
+
+export interface infoProfile {
+  id: number,
+  email: string,
+  first_name: string,
+  last_name: string
+}

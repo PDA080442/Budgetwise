@@ -15,6 +15,7 @@
       </div>
       <div class="services">
         <HomeTopServices></HomeTopServices>
+        <AccountSettingsPage />
       </div>
     </div>
   </div>
@@ -26,6 +27,7 @@ import CardsAbout from '@/components/home/HomeCardsAbout.vue'
 import { ref } from 'vue'
 import HomeTopServices from '@/components/home/HomeTopServices.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
+import AccountSettingsPage from './SettingsAuth/AccountSettingsPage.vue'
 
 const items = ref([
   {
