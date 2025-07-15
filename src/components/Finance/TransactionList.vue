@@ -159,7 +159,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch, computed, onMounted } from 'vue'
+import { ref, defineProps, onMounted, type Ref } from 'vue'
 import ProductsList from '@/components/Finance/ProductList.vue'
 import type { Transaction } from '@/types/transaction.type'
 import { getCategories } from '@/composables/category.request'
@@ -168,17 +168,10 @@ import type { Category } from '@/types/category.type'
 import PopupCategory from './PopupCategory.vue'
 import type { Types } from '@/types/types.type'
 import AddCheck from './AddCheck.vue'
-import {
-  deleteTransaction,
-  saveEditTransaction,
-  addTransactions,
-  getTransaction,
-  searchTransaction,
-  filterTransactionDate,
-  filterTransactionCategory,
-  filterTransactionType,
-  orderTransaction,
-} from '@/composables/transaction.request'
+
+import { useTransactionActions } from '@/services/Actions/Finance/TransactionListActions'
+import { useTransactionRules } from '@/services/Rules/Finance/TransactionListRules'
+import { useTransactionFilters } from '@/services/Filters/Finance/TransactionListFilters'
 
 const props = defineProps<{ transactions: Transaction[] }>()
 const localTransactions = ref<Transaction[]>([...props.transactions])
@@ -201,12 +194,34 @@ const selectCategories = ref<[]>([])
 const selectTypes = ref<number | null>(null)
 const sortOrder = ref<{ key: string; order: 'asc' | 'desc' }[]>([])
 
-watch(
-  () => props.transactions,
-  (newList) => {
-    localTransactions.value = [...newList]
-  },
-)
+const {
+  addTransaction,
+  edTransaction,
+  delTransaction,
+  saveTransaction,
+  getTypeText,
+  getCategoryText,
+} = useTransactionActions({
+  localTransactions,
+  dialog,
+  editingTransaction,
+  record,
+  categories,
+  types,
+})
+
+const { rules, formValid } = useTransactionRules(record)
+
+useTransactionFilters({
+  propsTransactions: props.transactions as unknown as Ref<Transaction[]>,
+  localTransactions,
+  search,
+  dateAfter,
+  dateBefore,
+  selectCategories,
+  selectTypes,
+  sortOrder,
+})
 
 onMounted(async () => {
   try {
@@ -219,80 +234,6 @@ onMounted(async () => {
   }
 })
 
-watch(search, async (newValue) => {
-  if (newValue) {
-    localTransactions.value = await searchTransaction(newValue)
-  } else {
-    localTransactions.value = await getTransaction()
-  }
-})
-
-watch([dateAfter, dateBefore], async ([after, before]) => {
-  if (after && before) {
-    localTransactions.value = await filterTransactionDate(after, before)
-  } else {
-    localTransactions.value = await getTransaction()
-  }
-})
-
-watch(selectCategories, async (selectCategory) => {
-  if (selectCategory.length > 0) {
-    localTransactions.value = await filterTransactionCategory(selectCategory)
-  } else {
-    localTransactions.value = await getTransaction()
-  }
-})
-
-watch(selectTypes, async (selectType) => {
-  if (selectType != null) {
-    localTransactions.value = await filterTransactionType(selectType)
-  } else {
-    localTransactions.value = await getTransaction()
-  }
-})
-
-watch(sortOrder, async (newSortOrder) => {
-  if (newSortOrder.length > 0) {
-    const headerName = newSortOrder[0].key
-    const direction = newSortOrder[0].order
-    if (headerName === 'amount' || headerName === 'date') {
-      if (direction === 'asc') {
-        localTransactions.value = await orderTransaction(headerName, 'asc')
-      } else {
-        localTransactions.value = await orderTransaction(headerName, 'desc')
-      }
-    }
-  } else {
-    localTransactions.value = await getTransaction()
-  }
-})
-
-const getTypeText = (type: string | number) => (type === '0' || type === 0 ? 'Доход' : 'Расход')
-
-const getCategoryText = (value: number) => {
-  const result = categories.value.find((category) => category.id === value)
-  return result ? result.name : value
-}
-
-const rules = {
-  require: (u: string) => !!u || 'Обязательное поле',
-  negative: (u: string) => {
-    const value = parseFloat(u)
-    return (!isNaN(value) && value > 0) || 'Сумма должна быть положительной'
-  },
-}
-
-const formValid = computed(() => {
-  return (
-    rules.require(String(record.value.amount)) === true &&
-    rules.require(record.value.date) === true &&
-    rules.require(String(record.value.category)) === true &&
-    rules.require(String(record.value.type)) === true &&
-    rules.negative(String(record.value.amount)) === true &&
-    rules.require(String(record.value.date)) === true
-  )
-})
-
 const headers = [
   { title: 'Сумма', value: 'amount', sortable: true },
   { title: 'Дата', value: 'date', sortable: true },
@@ -300,59 +241,6 @@ const headers = [
   { title: 'Тип операции', value: 'type', sortable: false },
   { title: 'Редактирование', value: 'actions', sortable: false },
 ]
-
-function addTransaction() {
-  editingTransaction.value = false
-  record.value = {
-    id: 0,
-    amount: 0,
-    date: '',
-    category: 1,
-    type: 0,
-  }
-  dialog.value = true
-}
-
-function edTransaction(id: number) {
-  editingTransaction.value = true
-  dialog.value = true
-  const found = localTransactions.value.find((transaction) => transaction.id === id)
-  if (!found) return
-  record.value = {
-    id: found.id,
-    amount: found.amount,
-    date: found.date,
-    category: found.category,
-    type: found.type,
-  }
-}
-
-const delTransaction = async (id: number) => {
-  await deleteTransaction(id)
-  const index = localTransactions.value.findIndex((transanction) => transanction.id === id)
-  localTransactions.value.splice(index, 1)
-}
-
-const saveTransaction = async () => {
-  if (editingTransaction.value) {
-    const result = await saveEditTransaction(record.value.id, record.value)
-    const index = localTransactions.value.findIndex(
-      (transaction) => transaction.id === record.value.id,
-    )
-    localTransactions.value.splice(index, 1, result)
-  } else {
-    const payload = {
-      id: record.value.id,
-      amount: Number(record.value.amount),
-      date: record.value.date,
-      category: record.value.category,
-      type: record.value.type,
-    }
-    const create = await addTransactions(payload)
-    localTransactions.value.unshift(create)
-  }
-  dialog.value = false
-}
 </script>
 
 <style scoped></style>
