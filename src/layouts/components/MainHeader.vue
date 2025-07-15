@@ -68,7 +68,8 @@ const isAuthenticated = computed(() => {
 const navItems = computed(() => {
   const baseItems = [
     { name: 'Главная', href: '/' },
-    { name: 'О нас', href: '/about' }
+    { name: 'О нас', href: '/about' },
+    { name: 'Советы', href: '/faq' }
   ]
   
   if (isAuthenticated.value) {
@@ -157,5 +158,13 @@ const confirmLogout = () => {
 }
 .search {
   color: white;
+}
+
+.l-header-container {
+  position: fixed; 
+  top: 0;          
+  left: 0;         
+  width: 100%;   
+  z-index: 1000;
 }
 </style>
