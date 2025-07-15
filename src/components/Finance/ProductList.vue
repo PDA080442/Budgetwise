@@ -55,14 +55,11 @@
 <script setup lang="ts">
 import { ref, defineProps, onMounted } from 'vue'
 import type { Products } from '@/types/product.type'
-import {
-  getProduct,
-  addProducts,
-  saveEditProduct,
-  deleteProduct,
-} from '@/composables/transaction.request'
+import { getProduct } from '@/composables/transaction.request'
 import { getCategories } from '@/composables/category.request'
 import type { Category } from '@/types/category.type'
+import { useProductActions } from '@/services/Actions/Finance/ProductListActions'
+import { useProductRules } from '@/services/Rules/Finance/ProductListRules'
 
 const props = defineProps<{ transactionId: number }>()
 
@@ -81,6 +78,17 @@ const record = ref<Products>({
   sum: 1,
 })
 
+const { addProduct, editProduct, delProduct, saveProduct, getCategoryText } = useProductActions({
+  propsTransactionId: props.transactionId,
+  localProducts,
+  dialog,
+  editingProduct,
+  record,
+  categories,
+})
+
+const { rules } = useProductRules()
+
 onMounted(async () => {
   try {
     const result = await getProduct(props.transactionId)
@@ -95,11 +103,6 @@ onMounted(async () => {
   }
 })
 
-const getCategoryText = (value: number): string => {
-  const found = categories.value.find((category) => category.id === value)
-  return found ? found.name : String(value)
-}
-
 const headers = [
   { title: 'Наименование', value: 'name' },
   { title: 'Тип продукта', value: 'category' },
@@ -108,67 +111,6 @@ const headers = [
   { title: 'Сумма', value: 'sum' },
   { title: 'Редактирование', value: 'actions' },
 ]
-
-function addProduct() {
-  editingProduct.value = false
-  record.value = {
-    id: 0,
-    transaction: props.transactionId,
-    category: 1,
-    name: '',
-    quantity: 1,
-    price: 1,
-    sum: 1,
-  }
-  dialog.value = true
-}
-
-function editProduct(id: number) {
-  const found = localProducts.value.find((product) => product.id === id)
-  if (!found) return
-  editingProduct.value = true
-  record.value = {
-    id: found.id,
-    transaction: found.transaction,
-    category: found.category,
-    name: found.name,
-    quantity: found.quantity,
-    price: found.price,
-    sum: found.sum,
-  }
-  dialog.value = true
-}
-
-const delProduct = async (id: number) => {
-  await deleteProduct(props.transactionId, id)
-  const index = localProducts.value.findIndex((product) => product.id === id)
-  localProducts.value.splice(index, 1)
-}
-
-async function saveProduct() {
-  if (editingProduct.value) {
-    const updated = await saveEditProduct(props.transactionId, record.value.id, record.value)
-    const index = localProducts.value.findIndex((product) => product.id === updated.id)
-    localProducts.value.splice(index, 1, updated)
-  } else {
-    const payload = {
-      id: record.value.id,
-      transaction: record.value.transaction,
-      category: record.value.category,
-      name: record.value.name,
-      quantity: record.value.quantity,
-      price: record.value.price,
-      sum: record.value.sum,
-    }
-    const created = await addProducts(props.transactionId, payload)
-    localProducts.value.unshift(created)
-  }
-  dialog.value = false
-}
-
-const rules = {
-  require: (u: unknown) => !!u || 'Обязательное поле',
-}
 </script>
 
 <style scoped></style>

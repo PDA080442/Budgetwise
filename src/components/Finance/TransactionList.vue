@@ -159,7 +159,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, onMounted, type Ref } from 'vue'
+import { ref, defineProps, watch, onMounted } from 'vue'
 import ProductsList from '@/components/Finance/ProductList.vue'
 import type { Transaction } from '@/types/transaction.type'
 import { getCategories } from '@/composables/category.request'
@@ -168,10 +168,18 @@ import type { Category } from '@/types/category.type'
 import PopupCategory from './PopupCategory.vue'
 import type { Types } from '@/types/types.type'
 import AddCheck from './AddCheck.vue'
+import {
+  getTransaction,
+  searchTransaction,
+  filterTransactionDate,
+  filterTransactionCategory,
+  filterTransactionType,
+  orderTransaction,
+} from '@/composables/transaction.request'
 
 import { useTransactionActions } from '@/services/Actions/Finance/TransactionListActions'
 import { useTransactionRules } from '@/services/Rules/Finance/TransactionListRules'
-import { useTransactionFilters } from '@/services/Filters/Finance/TransactionListFilters'
+// import { useTransactionFilters } from '@/services/Filters/Finance/TransactionListFilters'
 
 const props = defineProps<{ transactions: Transaction[] }>()
 const localTransactions = ref<Transaction[]>([...props.transactions])
@@ -212,16 +220,12 @@ const {
 
 const { rules, formValid } = useTransactionRules(record)
 
-useTransactionFilters({
-  propsTransactions: props.transactions as unknown as Ref<Transaction[]>,
-  localTransactions,
-  search,
-  dateAfter,
-  dateBefore,
-  selectCategories,
-  selectTypes,
-  sortOrder,
-})
+watch(
+  () => props.transactions,
+  (newList) => {
+    localTransactions.value = [...newList]
+  },
+)
 
 onMounted(async () => {
   try {
@@ -231,6 +235,54 @@ onMounted(async () => {
     types.value = resulttype
   } catch (error) {
     console.error(error)
+  }
+})
+
+watch(search, async (newValue) => {
+  if (newValue) {
+    localTransactions.value = await searchTransaction(newValue)
+  } else {
+    localTransactions.value = await getTransaction()
+  }
+})
+
+watch([dateAfter, dateBefore], async ([after, before]) => {
+  if (after && before) {
+    localTransactions.value = await filterTransactionDate(after, before)
+  } else {
+    localTransactions.value = await getTransaction()
+  }
+})
+
+watch(selectCategories, async (selectCategory) => {
+  if (selectCategory.length > 0) {
+    localTransactions.value = await filterTransactionCategory(selectCategory)
+  } else {
+    localTransactions.value = await getTransaction()
+  }
+})
+
+watch(selectTypes, async (selectType) => {
+  if (selectType != null) {
+    localTransactions.value = await filterTransactionType(selectType)
+  } else {
+    localTransactions.value = await getTransaction()
+  }
+})
+
+watch(sortOrder, async (newSortOrder) => {
+  if (newSortOrder.length > 0) {
+    const headerName = newSortOrder[0].key
+    const direction = newSortOrder[0].order
+    if (headerName === 'amount' || headerName === 'date') {
+      if (direction === 'asc') {
+        localTransactions.value = await orderTransaction(headerName, 'asc')
+      } else {
+        localTransactions.value = await orderTransaction(headerName, 'desc')
+      }
+    }
+  } else {
+    localTransactions.value = await getTransaction()
   }
 })
 
