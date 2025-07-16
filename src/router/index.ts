@@ -39,6 +39,11 @@ const routes: RouteRecordRaw[] = [
       requireAuth: true,
     },
   },
+  {
+    path: '/accountsettings',
+    name: 'AccountSettings',
+    component: () => import('@/views/SettingsAuth/AccountSettingsPage.vue'),
+  },
 ]
 
 const router = createRouter({
