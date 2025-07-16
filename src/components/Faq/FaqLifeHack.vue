@@ -1,4 +1,5 @@
 <template>
+    
     <FaqCarousel />
     <v-container>
         <FaqAbout />
@@ -97,7 +98,6 @@ iframe {
 .content {
     font-size: 1.4rem;
     line-height: 1.6;
-    padding: 0 16px 16px;
     text-align: center;
 }
 

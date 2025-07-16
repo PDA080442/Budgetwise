@@ -1,10 +1,10 @@
 <template>
-  <MainLayout />
-  <Pie
-    ref="chartRef"
-    :data="chartData"
-    :options="chartOptions"
-  />
+  <NewLayout>
+
+      <v-container class="diagram">
+        <Pie ref="chartRef" :data="chartData" :options="chartOptions" />
+      </v-container>
+  </NewLayout>
 </template>
 
 
@@ -12,7 +12,8 @@
 import MainLayout from '@/layouts/MainLayout.vue'
 import { ref, onMounted } from 'vue'
 import { Pie } from 'vue-chartjs'
-import { 
+import NewLayout from '@/layouts/NewLayout.vue'
+import {
   Chart as ChartJS,
   type ChartData,
   type ChartOptions,
@@ -51,3 +52,8 @@ onMounted(() => {
 })
 </script>
 
+<style lang="scss" scoped>
+.diagram {
+  margin: 40px;
+}
+</style>

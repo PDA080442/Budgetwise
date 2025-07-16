@@ -45,7 +45,7 @@ const showNextFact = () => {
     max-width: 750px;
     margin: auto;
     padding: 24px;
-    background-color: aliceblue;
+    background-color: rgb(255, 255, 255);
     min-height: 400px;
     position: relative;
 

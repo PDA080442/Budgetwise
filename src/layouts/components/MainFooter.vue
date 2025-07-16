@@ -1,5 +1,5 @@
 <template>
-  <v-footer class="text-center d-flex flex-column ga-2 py-4" color="primary">
+  <v-footer class="text-center d-flex flex-column ga-2 py-4" color="primary" style="height: auto; padding: 0px;">
     <div class="d-flex ga-3">
       <v-btn
         v-for="icon in icons"
@@ -25,9 +25,8 @@
 </template>
 <script setup>
   const icons = [
-    'mdi-facebook',
+    'mdi-telegram',
     'mdi-vk',
-    'mdi-linkedin',
     'mdi-instagram',
   ]
 </script>

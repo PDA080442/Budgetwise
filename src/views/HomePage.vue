@@ -1,6 +1,5 @@
 <template>
   <NewLayout>
-    <div>
       <div>
         <HomeAboutSection></HomeAboutSection>
         <BalanceView />
@@ -18,7 +17,6 @@
           <HomeTopServices></HomeTopServices>
         </div>
       </div>
-    </div>
   </NewLayout>
 </template>
 

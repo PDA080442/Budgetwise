@@ -1,35 +1,57 @@
 <template>
   <v-app style="height: 100vh; display: flex">
-    <v-navigation-drawer
-      app
-      permanent
-      :rail="true"
-      expand-on-hover
-      width="280"
-      rail-width="55"
-      class="elevation-2"
-    >
-      <v-list>
-        <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-          title="John Leider"
-          class="sticky-section"
-        >
+    <v-navigation-drawer app permanent :rail="true" expand-on-hover width="280" rail-width="55" class="elevation-2">
+      <v-list v-if="isAuthenticated">
+        <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg" title="John Leider"
+          :subtitle="userStore.userData.email || 'Почта не указана'" class="sticky-section">
+          <!-- <p class="text-caption mt-1"></p> -->
         </v-list-item>
       </v-list>
 
       <v-divider class="sticky-section" />
 
+      <template v-slot:append>
+        <v-list density="compact" nav>
+          <v-list-item v-for="item in setItems" :key="item.title" :prepend-icon="item.icon" :title="item.title"
+            v-if="isAuthenticated" class="nav-item" />
+
+          <v-list-item v-for="item in outItems" :key="item.title" :prepend-icon="item.icon" :title="item.title"
+            v-if="isAuthenticated" @click="confirmLogout" class="nav-item" />
+        </v-list>
+
+
+        <v-list density="compact" nav>
+          <v-list-item v-for="item in inItems" :key="item.title" :prepend-icon="item.icon" :to="item.routeName"
+            v-if="!isAuthenticated" :title="item.title" class="nav-item" />
+        </v-list>
+      </template>
+
+
       <v-list density="compact" nav class="menu-list sticky-section">
-        <v-list-item
-          v-for="item in menuItems"
-          :key="item.title"
-          :prepend-icon="item.icon"
-          :title="item.title"
-          :to="item.routeName"
-          class="nav-item"
-        />
+        <v-list-item v-for="item in menuItems" :key="item.title" :prepend-icon="item.icon" :title="item.title"
+          :to="item.routeName" class="nav-item" />
       </v-list>
+      <v-spacer></v-spacer>
+
+
+      <v-dialog v-model="logoutDialog" max-width="400">
+        <v-card>
+          <v-card-title class="text-h5"> Подтверждение </v-card-title>
+          <v-card-text> Вы точно хотите выйти из аккаунта? </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="grey" @click="logoutDialog = false"> Нет </v-btn>
+            <v-btn color="primary" @click="performLogout"> Да </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+
+
+
+
+
+
     </v-navigation-drawer>
 
     <div class="app-content-wrapper">
@@ -38,9 +60,6 @@
           <v-btn prepend-icon="mdi-home" @click="homepage" class="toolbar-text">BudgetWise</v-btn>
         </v-toolbar-title>
         <v-spacer />
-        <v-btn icon @click="account">
-          <v-icon>mdi-account-circle</v-icon>
-        </v-btn>
       </v-app-bar>
 
       <v-main class="main-scrollable">
@@ -50,10 +69,22 @@
           </div>
         </v-container>
 
-        <v-footer padless>
-          <v-col class="text-center footer-text" cols="12">
-            © {{ new Date().getFullYear() }} Финучет
-          </v-col>
+        <v-footer class="text-center d-flex flex-column ga-2 py-4" color="primary" style="height: auto; padding: 0px;">
+          <div class="d-flex ga-3">
+            <v-btn v-for="icon in icons" :key="icon" :icon="icon" density="comfortable" variant="text"></v-btn>
+          </div>
+
+          <v-divider class="my-2" thickness="2" width="50"></v-divider>
+
+          <div class="text-caption font-weight-regular opacity-60">
+            Пишите! Звоните! С радостью, сломаем ваш проект!
+          </div>
+
+          <v-divider></v-divider>
+
+          <div>
+            {{ new Date().getFullYear() }} — <strong>Хацкеры 2.0</strong>
+          </div>
         </v-footer>
       </v-main>
     </div>
@@ -61,19 +92,119 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import router from '@/router'
+import { ref, computed, onMounted } from 'vue'
+import axios from 'axios'
+import { logoutReq } from '@/composables/auth.request'
+import { useUserStore } from '@/stores/userStore'
+import { useRouter } from 'vue-router'
+
+const userStore = useUserStore()
+
+
+const router = useRouter()
+
+onMounted(() => {
+  userStore.loadUserEmail();
+});
+
+const isAuthenticated = computed(() => {
+  return !!localStorage.getItem('accessToken')
+})
+const logoutDialog = ref(false)
+const confirmLogout = () => {
+  logoutDialog.value = true
+}
+
+// const performLogout = async () => {
+//   try {
+//     const refreshToken = localStorage.getItem('refresh_Token')
+//     if (refreshToken) {
+//       await logoutReq(refreshToken)
+//     }
+
+//     localStorage.removeItem('accessToken')
+//     localStorage.removeItem('refresh_Token')
+//     delete axios.defaults.headers.common['Authorization']
+
+//     logoutDialog.value = false
+//     await router.push({ path: '/' })
+//   } catch (error) {
+//     console.error('Ошибка при выходе:', error)
+//     localStorage.removeItem('accessToken')
+//     localStorage.removeItem('refresh_Token')
+//     delete axios.defaults.headers.common['Authorization']
+//     logoutDialog.value = false
+//     router.push({ path: '/' })
+//   }
+// }
+
+
+const performLogout = async () => {
+  try {
+    const refreshToken = localStorage.getItem('refresh_Token');
+    
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refresh_Token');
+    delete axios.defaults.headers.common['Authorization'];
+    
+    if (refreshToken) {
+      try {
+        await logoutReq(refreshToken);
+      } catch (error) {
+        console.error('Ошибка при выходе на сервере:', error);
+      }
+    }
+    logoutDialog.value = false;
+
+    await router.push('/');
+    
+    //  кАрОче... допом перезагружаем страницу для полного сброса состояния (можно ли так?...)
+    window.location.reload();
+    
+  } catch (error) {
+    console.error('Критическая ошибка при выходе:', error);
+    // На всякий случай делаем hard redirect
+    window.location.href = '/';
+  }
+}
+
 
 const homepage = () => {
   router.push('/')
 }
 
-const menuItems = [
-  { title: 'Главная', icon: 'mdi-home', routeName: '/' },
-  { title: 'Финансы', icon: 'mdi-currency-usd', routeName: '/finance' },
-  { title: 'О нас', icon: 'mdi-information', routeName: '/about' },
-  { title: 'Тест', icon: 'mdi-flask', routeName: '/test' },
+
+const menuItems = computed(() => {
+  const baseItems = [
+    { title: 'Главная', icon: 'mdi-home', routeName: '/' },
+    { title: 'Советы', icon: 'mdi-flask', routeName: '/faq' },
+    { title: 'О нас', icon: 'mdi-information', routeName: '/about' },
+  ]
+  if (isAuthenticated.value) {
+    return [...baseItems,
+    { title: 'Финансы', icon: 'mdi-currency-usd', routeName: '/finance' }]
+  }
+  return baseItems
+
+})
+
+const outItems = [
+  { title: 'Выйти', icon: 'mdi-logout' },
 ]
+
+const setItems = [
+  { title: 'Настройки аккаунта', icon: 'mdi-wrench' },
+]
+
+const inItems =  [
+    { title: 'Вход', icon: 'mdi-account', routeName: '/entrance' },
+  ] 
+
+
+const icons = [
+  'mdi-instagram',
+]
+
 </script>
 
 <style scoped>
@@ -89,6 +220,7 @@ body,
 .v-application {
   font-family: 'Roboto', sans-serif;
   height: 100%;
+  background-color: aliceblue;
 }
 
 .app-content-wrapper {
@@ -129,14 +261,27 @@ body,
 .nav-item {
   border-radius: 8px;
   transition: background-color 0.2s;
+  color: rgb(24, 103, 192);
+  transition: .25s;
 }
+
+
+
 .nav-item:hover,
 .nav-item.v-list-item--active {
-  background-color: #cae9ff;
+  background-color: rgb(24, 103, 192);
+
+  color: #fff
 }
 
 .footer-text {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.6);
+}
+
+.bottom-menu {
+  margin-top: auto;
+  /* Это прижмет блок к низу */
+  /* position: sticky; */
 }
 </style>

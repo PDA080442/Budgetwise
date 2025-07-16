@@ -51,12 +51,6 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'////
 import { useUserStore } from '@/stores/userStore'
 
-// const user = {
-//   initials: 'JD',
-//   fullName: 'John Doe',
-//   email: 'john.doe@doe.com',
-// }
-
 const userStore = useUserStore()
 onMounted(() => {
   userStore.loadUserEmail();

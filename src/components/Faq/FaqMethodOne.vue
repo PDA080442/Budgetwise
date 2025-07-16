@@ -26,8 +26,7 @@
                 </v-col>
 
                 <v-col cols="12" md="3" sm="4" class="d-flex justify-center">
-                    <v-img :src="item[0].img" height="300px" contain class="mt-2" alt="">
-                    </v-img>
+                    <FaqDiagram/>
                 </v-col>
 
             </v-row>
@@ -43,6 +42,7 @@
 <script lang="ts" setup>
 import { faq1, type Faq1, faqlist, type FaqList } from '@/mocks/FaqMocks/FaqMocks';
 import { ref } from 'vue';
+import FaqDiagram from './FaqDiagram.vue';
 
 
 const item = ref<Faq1[]>(faq1)
@@ -50,7 +50,18 @@ const item = ref<Faq1[]>(faq1)
 const itemlist = ref<FaqList[]>(faqlist)
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+.video-container {
+    margin: 10px auto;
+    max-width: 640px;
+    text-align: center;
+    padding: 10px;
+}
+
+iframe {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
 .title {
     white-space: normal;

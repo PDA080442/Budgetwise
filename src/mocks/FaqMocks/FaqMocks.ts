@@ -4,10 +4,13 @@ export interface TopFaq {
     text: string
 }
 
+
+import budgetPigImg from '../../assets/img/header/budget_pig.png'
+
 export const topfaq: TopFaq[] = [
     {
         title: 'К разбазариванию запрещено: распределяем бюджет на месяц!"',
-        img: 'https://akm-img-a-in.tosshub.com/businesstoday/images/story/202107/my-glam-sixteen_nine.jpg',
+        img:budgetPigImg,
         text: 'Помните, у Стругацких в «Понедельник начинается в субботу» был администратор, который повторял: «Все заприходовано и к разбазариванию запрещено»? Этот принцип мешал работать остальным персонажам повести. Но для планирования бюджета он подходит идеально.',
     },
 
