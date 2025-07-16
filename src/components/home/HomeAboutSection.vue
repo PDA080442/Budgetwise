@@ -32,6 +32,7 @@ const title = ref('Email маркетинг под ключ')
   max-width: 1920px;
   margin: 50px auto 0;
   padding: 0 20px;
+  margin-bottom: 90px;
 
   &__container {
     max-width: 1515px;

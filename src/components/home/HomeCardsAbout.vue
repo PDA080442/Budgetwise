@@ -31,9 +31,7 @@ const { card } = defineProps<CardProps>()
 
 <style lang="scss" scoped>
 .card {
-  width: 310px;
-  min-height: 400px;
-  max-height: 500px;
+  width: 300px;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -51,7 +49,7 @@ const { card } = defineProps<CardProps>()
 
   &__text {
     font-family: Montserrat;
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 400;
     line-height: 20px;
   }
@@ -59,7 +57,7 @@ const { card } = defineProps<CardProps>()
   &__title {
     font-family: Montserrat;
     font-weight: 600;
-    font-size: 23px;
+    font-size: 25px;
   }
 }
 .card_img {
