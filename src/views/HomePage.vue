@@ -24,6 +24,7 @@
 
 <script setup lang="ts">
 import HomeAboutSection from '@/components/Home/HomeAboutSection.vue'
+
 import CardsAbout from '@/components/Home/HomeCardsAbout.vue'
 import { ref } from 'vue'
 import HomeTopServices from '@/components/Home/HomeTopServices.vue'
