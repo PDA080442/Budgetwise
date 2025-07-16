@@ -8,21 +8,28 @@
       hide-default-footer
     >
       <template v-slot:top>
-        <v-toolbar flat class="awesome-toolbar">
-          <v-toolbar-title>Список товаров</v-toolbar-title>
+        <v-toolbar flat dense class="awesome-toolbar styled-toolbar">
+          <v-toolbar-title class="text-h6 font-weight-bold">Список товаров</v-toolbar-title>
           <v-spacer />
-          <v-btn border @click="addProduct">
-            <v-icon size="large">mdi-plus</v-icon>
+          <v-btn class="styled-add-btn" @click="addProduct">
+            <v-icon size="24">mdi-plus</v-icon>
           </v-btn>
         </v-toolbar>
       </template>
 
       <template v-slot:[`item.category`]="{ item }">
-        <v-chip class="awesome-chip" small>{{ getCategoryText(item.category) }}</v-chip>
+        <v-chip
+          :color="getCategoryColor(item.category)"
+          :border="`${getCategoryColor(item.category)} thin opacity-25`"
+          class="awesome-chip"
+          small
+        >
+          {{ getCategoryText(item.category) }}
+        </v-chip>
       </template>
 
       <template v-slot:[`item.sum`]="{ item }">
-        <span class="sum-cell">{{ item.sum }}</span>
+        <span class="sum-cell">{{ formatCurrency(item.sum) }}</span>
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
@@ -74,7 +81,7 @@
       <v-card-actions>
         <v-btn text @click="dialog = false">Отмена</v-btn>
         <v-spacer />
-        <v-btn class="awesome-btn" @click="saveProduct">Сохранить</v-btn>
+        <v-btn class="awesome-btn styled-add-btn" @click="saveProduct">Сохранить</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -117,6 +124,22 @@ const { addProduct, editProduct, delProduct, saveProduct, getCategoryText } = us
 
 const { rules } = useProductRules()
 
+const categoryColors: Record<number, string> = {
+  1: '#F44336',
+  2: '#2196F3',
+  3: '#4CAF50',
+  4: '#FF9800',
+  5: '#9C27B0',
+}
+
+function getCategoryColor(categoryId: number): string {
+  return categoryColors[categoryId] || '#000000'
+}
+
+function formatCurrency(val: number): string {
+  return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(val)
+}
+
 onMounted(async () => {
   try {
     const result = await getProduct(props.transactionId)
@@ -144,29 +167,60 @@ const headers = [
 <style scoped>
 .awesome-card {
   background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
-  border: 2px solid #3f51b5;
+  border-radius: 12px;
 }
-.awesome-toolbar {
-  background-color: transparent;
+
+.awesome-toolbar.styled-toolbar {
+  background-color: rgb(var(--v-theme-primary)) !important;
+  border-radius: 12px;
   padding: 0 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.awesome-toolbar .v-toolbar-title {
+  color: #fff;
+}
+
+.styled-add-btn {
+  background-color: #fff;
+  color: #764ba2;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+}
+
+.styled-add-btn:hover {
+  background-color: #ececff;
+  transform: translateY(-2px);
 }
 
 .awesome-table .v-data-table-header th {
-  background-color: primary !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
   color: #ffffff !important;
 }
+
 .awesome-table tbody tr:hover {
   background-color: #e3f2fd;
 }
+
 .awesome-chip {
-  background-color: #e8eaf6;
   border-radius: 12px;
   font-weight: 500;
 }
+
 .sum-cell {
   font-weight: bold;
   color: #1e88e5;
 }
+
 .icon-hover:hover {
   transform: scale(1.2);
   transition: transform 0.2s;

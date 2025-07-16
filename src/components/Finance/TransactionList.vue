@@ -47,11 +47,14 @@
           </span>
         </template>
         <template v-slot:[`item.category`]="{ item }">
-          <div class="d-flex align-center">
-            <v-chip class="mr-2" rounded="xl" :color="getCategoryColor(item.category)" small tile />
-            <span>{{ getCategoryText(item.category) }}</span>
-          </div>
+          <v-chip
+            :color="getCategoryColor(item.category)"
+            :border="`${getCategoryColor(item.category)} thin opacity-25`"
+            size="large"
+            :text="getCategoryText(item.category)"
+          />
         </template>
+
         <template v-slot:[`item.amount`]="{ item }">
           <span class="text-primary font-weight-bold">
             {{ formatCurrency(item.amount) }}

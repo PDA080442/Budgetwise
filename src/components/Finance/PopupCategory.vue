@@ -1,7 +1,19 @@
 <template>
   <v-dialog v-model="dialog" max-width="1260" transition="dialog-transition">
     <template #activator="{ props }">
-      <v-btn color="primary" text border class="mr-20" v-bind="props"> О категориях </v-btn>
+      <v-btn
+        color="primary"
+        width="250px"
+        height="50px"
+        rounded="xl"
+        text
+        border
+        class="mr-20"
+        style="font-size: 20px"
+        v-bind="props"
+      >
+        О категориях
+      </v-btn>
     </template>
 
     <v-card class="pa-5 elevation-10 category-card" rounded="lg">
