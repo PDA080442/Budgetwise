@@ -2,6 +2,8 @@ import { useApi } from '@/composables/useApi'
 import type { AuthTokens, FormData, LoginData } from '@/types/auth.type'
 import axios from 'axios'
 import  type { infoProfile } from '@/types/auth.type'
+import type { changePassword } from '@/types/auth.type'
+
 
 
 const { call } = useApi('/reg')
@@ -45,7 +47,26 @@ export async function postInfo(info: infoProfile): Promise<infoProfile> {
 
     return response as infoProfile
   } catch (error) {
-    console.error('Ошибка создания транзакции:', error)
-    throw new Error('Не удалось создать транзакцию')
+    console.error('Ошибка сохранения:', error)
+    throw new Error('Не удалось сохранить')
   }
+}
+
+
+//запрос пароля
+export async function getPassword(): Promise <changePassword> {
+  const respons = await call('/profile/change-password/', {}, 'GET')
+  return respons as changePassword
+}
+
+//отправка и сохранение пароля
+export async function postPassword(info: changePassword): Promise<changePassword> {
+  try{
+    const response = await call('/profile/change-password/', info, 'POST')
+    return response as changePassword
+  } catch (error) {
+    console.error('Ошибка сохранения:', error)
+    throw new Error('Не удалось сохранить')
+  }
+
 }

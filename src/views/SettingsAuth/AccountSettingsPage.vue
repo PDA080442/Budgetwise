@@ -1,6 +1,9 @@
 <template>
+  <!-- <v-btn class="cros" icon="$close" size="25px" variant="text" variant-size="15px"> -->
+      <!-- </v-btn> -->
   <div class="bigBox">
-    <div class="person">
+
+    <div class="boxPerson">
       <div class="avatar">
         <img src="https://i.pinimg.com/736x/27/f3/ae/27f3aed3ecf3a325cd4107b0326722d1.jpg" alt="Original"
           class="original">
@@ -19,11 +22,10 @@
       <div>
 
       </div>
-      <v-btn class="cros" icon="$close" size="25px" variant="text" variant-size="15px">
-      </v-btn>
+
     </div>
 
-    <div>
+    <div class="boxForm">
 
       <!-- {{ initialState }} -->
 
@@ -42,31 +44,37 @@
           :rules="[rules.require, rules.email]"></v-text-field>
         </v-col> -->
 
-
+<div>
+          <v-btn @click="postInfo(infoProfiles)">Cохранить</v-btn>
+          <v-btn type="reset">сброс</v-btn>
+        </div>
         </v-form>
 
       <v-form class="boxForm">
          <v-col class="font">
-          <v-text-field v-model="initialState.password" label="Пароль" type="password" required
+          <v-text-field v-model="changePasswords.old_password" label="Пароль" type="password" required
+            :rules="[rules.require]"></v-text-field>
+        </v-col>
+
+        <v-col class="font">
+          <v-text-field v-model="changePasswords.new_password" label="Новый пароль" type="password" required
             :rules="[rules.require, rules.passwordmin]"></v-text-field>
         </v-col>
-
         <v-col class="font">
-          <v-text-field v-model="initialState.password2" label="Новый пароль" type="password" required
+          <v-text-field v-model="initialState.new_password2" label="Подтвердите новый пароль" type="password" required
             :rules="[rules.require, rules.passsame]"></v-text-field>
         </v-col>
-        <v-col class="font">
-          <v-text-field v-model="initialState.password2" label="Подтвердите новый пароль" type="password" required
-            :rules="[rules.require, rules.passsame]"></v-text-field>
-        </v-col>
-      </v-form>
-       <div>
-          <v-btn @click="postInfo(infoProfiles)">Cохранить</v-btn>
+<div>
+          <v-btn @click="postPassword(changePasswords)">Cохранить</v-btn>
           <v-btn type="reset">сброс</v-btn>
         </div>
+      </v-form>
+
     </div>
 
-    <v-btn @click="$router.push('/')">На главную</v-btn>
+    <!-- <v-btn @click="$router.push('/')">На главную</v-btn> -->
+
+
 
     <!-- <AccountSetttingsHeader></AccountSetttingsHeader> -->
   </div>
@@ -82,6 +90,10 @@ import { storeToRefs } from 'pinia'
 import { getInfo } from '@/composables/auth.request'
 import { postInfo } from '@/composables/auth.request'
 import type { infoProfile } from '@/types/auth.type'
+import type { changePassword } from '@/types/auth.type'
+import { postPassword } from '@/composables/auth.request'
+
+
 
 const infoProfiles = ref<infoProfile>({
   id: 0,
@@ -89,6 +101,14 @@ const infoProfiles = ref<infoProfile>({
   first_name: '',
   last_name: ''
 })
+
+const changePasswords = ref<changePassword>({
+  old_password: '',
+  new_password: ''
+})
+
+
+
 
 // import AccountSetttingsHeader from './AccountSetttingsHeader.vue'
 // import { emitKeypressEvents } from 'readline'
@@ -129,7 +149,8 @@ const rules = {
   require: (u: string) => !!u || 'Поле нужно заполнить',
   email: (u: string) => isEmail(u) || 'Введен неправильный mail',
   passwordmin: (u: string) => u?.length >= 6 || 'Минимальная длина - 6 символов',
-  passsame: (u: string) => u === initialState.value.password || 'Пароли не совпадают',
+  passsame: (u: string) => u === changePasswords.value.new_password || 'Пароли не совпадают',
+  // truePassword: (u: string) => u === changePasswords.value.old_password || 'Введен неверный пароль'
 }
 
 
@@ -157,15 +178,15 @@ function submitForm() {
 <style scoped>
 .bigBox {
   background-color: aliceblue;
-  width: 500px;
-  height: 850px;
+  width: 2000px;
+  height: 1250px;
   margin: auto;
   margin-top: 90px;
   box-shadow: 15px 15px 30px rgb(214, 214, 214);
   border-radius: 30px;
 }
 
-.person {
+.boxPerson {
   width: 100%;
   min-height: 200px;
   border-bottom: 1px solid rgb(174, 174, 174);
@@ -283,4 +304,7 @@ function submitForm() {
   color: rgb(142, 142, 142);
 }
 
+.boxForm {
+  border-bottom: 1px solid rgb(58, 58, 116);
+}
 </style>

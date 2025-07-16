@@ -15,7 +15,7 @@
       </div>
       <div class="services">
         <HomeTopServices></HomeTopServices>
-        <AccountSettingsPage />
+        <!-- <AccountSettingsPage /> -->
       </div>
     </div>
   </div>
