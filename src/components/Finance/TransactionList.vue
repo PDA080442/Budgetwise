@@ -1,4 +1,3 @@
-// addTransaction с ариной как то
 <template>
   <v-container>
     <v-card border rounded="lg">
@@ -8,13 +7,14 @@
         show-expand
         item-key="id"
         class="elevation-24"
-        multi-sort
-        :sort-by="sortOrder"
+        v-model:sort-by="sortOrder"
       >
         <template v-slot:top>
-          <v-toolbar>
-            <v-toolbar-title> Список транзакций </v-toolbar-title>
-            <v-spacer></v-spacer>
+          <v-toolbar class="d-flex">
+            <v-toolbar-title style="max-width: 300px"> Транзакции </v-toolbar-title>
+            <v-spacer />
+            <PopupCategory />
+            <v-spacer />
             <v-btn
               text="Добавить транзакцию"
               prepend-icon="mdi-plus"
@@ -22,6 +22,8 @@
               class="px-4"
               @click="addTransaction"
             ></v-btn>
+            <v-spacer />
+            <AddCheck />
           </v-toolbar>
           <v-toolbar>
             <v-text-field
@@ -66,8 +68,8 @@
             <v-select
               v-model="selectTypes"
               :items="types"
-              item-title="title"
-              item-value="value"
+              item-title="name"
+              item-value="id"
               label="Доход/Расход"
               clearable
               style="max-width: 343px"
@@ -140,8 +142,8 @@
             v-model="record.type"
             :items="types"
             label="Тип операции"
-            item-title="title"
-            item-value="value"
+            item-title="name"
+            item-value="id"
             :rules="[rules.require]"
             required
           ></v-select>
@@ -157,16 +159,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch, computed, onMounted } from 'vue'
+import { ref, defineProps, watch, onMounted } from 'vue'
 import ProductsList from '@/components/Finance/ProductList.vue'
 import type { Transaction } from '@/types/transaction.type'
 import { getCategories } from '@/composables/category.request'
+import { getTypes } from '@/composables/type.request'
 import type { Category } from '@/types/category.type'
-// import { VDateInput } from 'vuetify/labs/VDateInput'
+import PopupCategory from './PopupCategory.vue'
+import type { Types } from '@/types/types.type'
+import AddCheck from './AddCheck.vue'
 import {
-  deleteTransaction,
-  saveEditTransaction,
-  addTransactions,
   getTransaction,
   searchTransaction,
   filterTransactionDate,
@@ -174,6 +176,10 @@ import {
   filterTransactionType,
   orderTransaction,
 } from '@/composables/transaction.request'
+
+import { useTransactionActions } from '@/services/Actions/Finance/TransactionListActions'
+import { useTransactionRules } from '@/services/Rules/Finance/TransactionListRules'
+// import { useTransactionFilters } from '@/services/Filters/Finance/TransactionListFilters'
 
 const props = defineProps<{ transactions: Transaction[] }>()
 const localTransactions = ref<Transaction[]>([...props.transactions])
@@ -188,12 +194,31 @@ const record = ref<Transaction>({
   type: 0,
 })
 const categories = ref<Category[]>([])
+const types = ref<Types[]>([])
 const search = ref<string>('')
 const dateBefore = ref<string>('')
 const dateAfter = ref<string>('')
 const selectCategories = ref<[]>([])
 const selectTypes = ref<number | null>(null)
 const sortOrder = ref<{ key: string; order: 'asc' | 'desc' }[]>([])
+
+const {
+  addTransaction,
+  edTransaction,
+  delTransaction,
+  saveTransaction,
+  getTypeText,
+  getCategoryText,
+} = useTransactionActions({
+  localTransactions,
+  dialog,
+  editingTransaction,
+  record,
+  categories,
+  types,
+})
+
+const { rules, formValid } = useTransactionRules(record)
 
 watch(
   () => props.transactions,
@@ -206,17 +231,11 @@ onMounted(async () => {
   try {
     const result = await getCategories()
     categories.value = result
+    const resulttype = await getTypes()
+    types.value = resulttype
   } catch (error) {
     console.error(error)
   }
-})
-
-const types = computed(() => {
-  const unique = Array.from(new Set(localTransactions.value.map((transaction) => transaction.type)))
-  return unique.map((value) => ({
-    value,
-    title: getTypeText(value),
-  }))
 })
 
 watch(search, async (newValue) => {
@@ -251,92 +270,29 @@ watch(selectTypes, async (selectType) => {
   }
 })
 
-const getTypeText = (type: string | number) => (type === '0' || type === 0 ? 'Доход' : 'Расход')
-
-const getCategoryText = (value: number) => {
-  const result = categories.value.find((category) => category.id === value)
-  return result ? result.name : value
-}
-
-const rules = {
-  require: (u: string) => !!u || 'Обязательное поле',
-  negative: (u: string) => {
-    const value = parseFloat(u)
-    return (!isNaN(value) && value > 0) || 'Сумма должна быть положительной'
-  },
-}
-
-const formValid = computed(() => {
-  return (
-    rules.require(String(record.value.amount)) === true &&
-    rules.require(record.value.date) === true &&
-    rules.require(String(record.value.category)) === true &&
-    rules.require(String(record.value.type)) === true &&
-    rules.negative(String(record.value.amount)) === true &&
-    rules.require(String(record.value.date)) === true
-  )
+watch(sortOrder, async (newSortOrder) => {
+  if (newSortOrder.length > 0) {
+    const headerName = newSortOrder[0].key
+    const direction = newSortOrder[0].order
+    if (headerName === 'amount' || headerName === 'date') {
+      if (direction === 'asc') {
+        localTransactions.value = await orderTransaction(headerName, 'asc')
+      } else {
+        localTransactions.value = await orderTransaction(headerName, 'desc')
+      }
+    }
+  } else {
+    localTransactions.value = await getTransaction()
+  }
 })
 
 const headers = [
   { title: 'Сумма', value: 'amount', sortable: true },
   { title: 'Дата', value: 'date', sortable: true },
-  { title: 'Категория', value: 'category' },
-  { title: 'Тип операции', value: 'type' },
-  { title: 'Редактирование', value: 'actions' },
+  { title: 'Категория', value: 'category', sortable: false },
+  { title: 'Тип операции', value: 'type', sortable: false },
+  { title: 'Редактирование', value: 'actions', sortable: false },
 ]
-
-function addTransaction() {
-  editingTransaction.value = false
-  record.value = {
-    id: 0,
-    amount: 0,
-    date: '',
-    category: 1,
-    type: 0,
-  }
-  dialog.value = true
-}
-
-function edTransaction(id: number) {
-  editingTransaction.value = true
-  dialog.value = true
-  const found = localTransactions.value.find((transaction) => transaction.id === id)
-  if (!found) return
-  record.value = {
-    id: found.id,
-    amount: found.amount,
-    date: found.date,
-    category: found.category,
-    type: found.type,
-  }
-}
-
-const delTransaction = async (id: number) => {
-  await deleteTransaction(id)
-  const index = localTransactions.value.findIndex((transanction) => transanction.id === id)
-  localTransactions.value.splice(index, 1)
-}
-
-const saveTransaction = async () => {
-  if (editingTransaction.value) {
-    const result = await saveEditTransaction(record.value.id, record.value)
-    const index = localTransactions.value.findIndex(
-      (transaction) => transaction.id === record.value.id,
-    )
-    localTransactions.value.splice(index, 1, result)
-  } else {
-    const payload = {
-      id: record.value.id,
-      amount: Number(record.value.amount),
-      date: record.value.date,
-      category: record.value.category,
-      type: record.value.type,
-    }
-    const create = await addTransactions(payload)
-    localTransactions.value.unshift(create)
-  }
-  dialog.value = false
-}
 </script>
 
 <style scoped></style>

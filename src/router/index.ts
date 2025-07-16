@@ -2,7 +2,6 @@ import { verifyToken } from '@/composables/verification.request'
 import axios from 'axios'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-
 import HomePage from '@/views/HomePage.vue'
 import AuthRoutes from './auth'
 
@@ -31,7 +30,15 @@ const routes: RouteRecordRaw[] = [
     path: '/faq',
     name: 'Faq',
     component: () => import('@/views/FaqPage.vue'),
-  }
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('@/views/TestPage.vue'),
+    meta: {
+      requireAuth: true,
+    },
+  },
 ]
 
 const router = createRouter({

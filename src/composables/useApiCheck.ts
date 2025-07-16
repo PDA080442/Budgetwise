@@ -17,8 +17,8 @@ export function useApi(url = '') {
       method, // e.g. 'get', 'post', 'put', 'delete', etc.
       url: fullUrl, // e.g. '/api/users'
       data, // for request body on POST/PUT/PATCH
-      headers: { 
-        'Content-Type': 'application/json',
+      headers: {
+        'Content-Type': 'multipart/form-data',
       },
     })
 

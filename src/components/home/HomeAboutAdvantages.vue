@@ -12,8 +12,6 @@
       </div>
     </div>
     <div>
-      <div class="traingle"></div>
-
       <div class="message">
         <div class="box_message">
           <div class>в нашей компании вы сможете сделать/получить тото тоьто и nl b ng</div>

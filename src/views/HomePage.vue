@@ -1,23 +1,25 @@
 <template>
-  <MainLayout></MainLayout>
-  <div>
+  <NewLayout>
     <div>
-      <HomeAboutSection></HomeAboutSection>
-      <div class="advantages">
-        <div class="advantages__box">
-          <div class="advantages__text">
-            ну короче мы можем вам предоставить или сделать следующие пункты и тп
-          </div>
-          <div class="box_for_cards">
-            <cardsAbout v-for="(card, index) in items" :card="card" :key="index"></cardsAbout>
+      <div>
+        <HomeAboutSection></HomeAboutSection>
+        <BalanceView />
+        <div class="advantages">
+          <div class="advantages__box">
+            <div class="advantages__text">
+              ну короче мы можем вам предоставить или сделать следующие пункты и тп
+            </div>
+            <div class="box_for_cards">
+              <cardsAbout v-for="(card, index) in items" :card="card" :key="index"></cardsAbout>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="services">
-        <HomeTopServices></HomeTopServices>
+        <div class="services">
+          <HomeTopServices></HomeTopServices>
+        </div>
       </div>
     </div>
-  </div>
+  </NewLayout>
 </template>
 
 <script setup lang="ts">
@@ -25,8 +27,9 @@ import HomeAboutSection from '@/components/Home/HomeAboutSection.vue'
 import CardsAbout from '@/components/Home/HomeCardsAbout.vue'
 import { ref } from 'vue'
 import HomeTopServices from '@/components/Home/HomeTopServices.vue'
-import MainLayout from '@/layouts/MainLayout.vue'
+import NewLayout from '@/layouts/NewLayout.vue'
 import { homecarditems, type HomeCardsItems } from '@/mocks/HomeMocks/CardItemsMocks'
+import BalanceView from '@/components/Homepage/BalanceView.vue'
 
 const items = ref<HomeCardsItems[]>(homecarditems)
 </script>
