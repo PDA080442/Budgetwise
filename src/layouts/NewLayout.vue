@@ -14,8 +14,7 @@
           prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
           title="John Leider"
           class="sticky-section"
-        >
-        </v-list-item>
+        />
       </v-list>
 
       <v-divider class="sticky-section" />
@@ -38,9 +37,23 @@
           <v-btn prepend-icon="mdi-home" @click="homepage" class="toolbar-text">BudgetWise</v-btn>
         </v-toolbar-title>
         <v-spacer />
-        <v-btn icon @click="account">
-          <v-icon>mdi-account-circle</v-icon>
-        </v-btn>
+
+        <!-- Account Menu -->
+        <v-menu offset-y>
+          <template v-slot:activator="{ props }">
+            <v-btn icon v-bind="props">
+              <v-icon>mdi-account-circle</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item @click="goToProfile">
+              <v-list-item-title>Настройки профиля</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="logout">
+              <v-list-item-title>Выйти из аккаунта</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-app-bar>
 
       <v-main class="main-scrollable">
@@ -61,11 +74,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { logoutReq } from '@/composables/auth.request'
 import router from '@/router'
+import axios from 'axios'
 
 const homepage = () => {
   router.push('/')
+}
+
+const goToProfile = () => {
+  router.push('/profile')
+}
+
+const logout = async () => {
+  const refreshToken = localStorage.getItem('refreshToken')
+  const accessToken = localStorage.getItem('accessToken')
+  if (refreshToken && accessToken) {
+    await logoutReq(refreshToken, accessToken)
+    // localStorage.removeItem('refreshToken')
+    // localStorage.removeItem('accessToken')
+    // delete axios.defaults.headers.common['Authorization']
+    // router.push({ path: '/entrance' })
+    // console.log(localStorage)
+  }
 }
 
 const menuItems = [

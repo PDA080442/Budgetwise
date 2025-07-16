@@ -23,6 +23,6 @@ export async function logdata(logindata: LoginData): Promise<AuthTokens> {
   return tokens as AuthTokens
 }
 
-export async function logoutReq(refreshToken: string): Promise<void> {
-  await call('/logout/', { refreshToken }, 'POST')
+export async function logoutReq(refreshToken: string, accessToken: string): Promise<void> {
+  await call('/logout/', { refreshToken, accessToken }, 'POST')
 }

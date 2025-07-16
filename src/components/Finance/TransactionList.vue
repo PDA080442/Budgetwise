@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <v-card border rounded="lg">
+    <div class="d-flex justify-center mb-10">
+      <PopupCategory />
+    </div>
+    <v-card border rounded="lg" style="border: 2px solid primary">
       <v-data-table
         :headers="headers"
         :items="localTransactions"
@@ -13,17 +16,11 @@
           <v-toolbar class="d-flex">
             <v-toolbar-title style="max-width: 300px"> Транзакции </v-toolbar-title>
             <v-spacer />
-            <PopupCategory />
-            <v-spacer />
-            <v-btn
-              text="Добавить транзакцию"
-              prepend-icon="mdi-plus"
-              border
-              class="px-4"
-              @click="addTransaction"
-            ></v-btn>
-            <v-spacer />
             <AddCheck />
+            <v-spacer />
+            <v-btn @click="addTransaction" border>
+              <v-icon size="large">mdi-plus</v-icon>
+            </v-btn>
           </v-toolbar>
           <v-toolbar>
             <v-text-field
@@ -88,19 +85,41 @@
             @click="toggleExpand(internalItem)"
           />
         </template>
-        <template v-slot:[`item.type`]="{ item }">{{ getTypeText(item.type) }}</template>
-        <template v-slot:[`item.category`]="{ item }">{{
-          getCategoryText(item.category)
-        }}</template>
+        <template v-slot:[`item.type`]="{ item }">
+          <span :style="{ color: getTypeColor(item.type), fontWeight: '700' }">
+            {{ getTypeText(item.type) }}
+          </span>
+        </template>
+        <template v-slot:[`item.category`]="{ item }">
+          <div class="d-flex align-center">
+            <v-chip class="mr-2" rounded="xl" :color="getCategoryColor(item.category)" small tile />
+            <span>{{ getCategoryText(item.category) }}</span>
+          </div>
+        </template>
+        <template v-slot:[`item.amount`]="{ item }">
+          <span class="text-primary font-weight-bold">
+            {{ formatCurrency(item.amount) }}
+          </span>
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <div class="d-flex ga-2 justify-start">
-            <v-icon icon="mdi-pencil" size="small" @click="edTransaction(item.id)"></v-icon>
-            <v-icon icon="mdi-delete" size="small" @click="delTransaction(item.id)"></v-icon>
+            <v-icon
+              color="primary"
+              icon="mdi-pencil"
+              size="large"
+              @click="edTransaction(item.id)"
+            ></v-icon>
+            <v-icon
+              color="red"
+              icon="mdi-delete"
+              size="large"
+              @click="delTransaction(item.id)"
+            ></v-icon>
           </div>
         </template>
         <template v-slot:expanded-row="{ columns, item }">
           <tr border>
-            <td :colspan="columns.length" class="py-4 font-italic">
+            <td :colspan="columns.length" class="pa-4">
               <v-sheet rounded="lg" border>
                 <ProductsList :transactionId="item.id" :key="item.id" />
               </v-sheet>
@@ -202,6 +221,31 @@ const selectCategories = ref<[]>([])
 const selectTypes = ref<number | null>(null)
 const sortOrder = ref<{ key: string; order: 'asc' | 'desc' }[]>([])
 
+const categoryColors: Record<number, string> = {
+  1: '#F44336', // красный
+  2: '#2196F3', // синий
+  3: '#4CAF50', // зелёный
+  4: '#FF9800', // оранжевый
+  5: '#9C27B0', // фиолетовый
+}
+
+function getCategoryColor(categoryId: number): string {
+  return categoryColors[categoryId] || '#000000' // серый по умолчанию
+}
+
+const typeColors: Record<number, string> = {
+  0: '#00b909', // доход
+  1: 'red', // расход
+}
+
+function getTypeColor(typeId: number): string {
+  return typeColors[typeId] || 'inherit'
+}
+
+function formatCurrency(val: number): string {
+  return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(val)
+}
+
 const {
   addTransaction,
   edTransaction,
@@ -295,4 +339,7 @@ const headers = [
 ]
 </script>
 
-<style scoped></style>
+<style scoped>
+* {
+}
+</style>
