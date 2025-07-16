@@ -1,11 +1,9 @@
 <template>
-  <MainLayout>
-    <template #content>
+  <NewLayout>
       <v-container>
         <TransactionList :transactions="transactions" />
       </v-container>
-    </template>
-  </MainLayout>
+  </NewLayout>
 </template>
 
 <script lang="ts" setup>
@@ -14,6 +12,8 @@ import TransactionList from '@/components/Finance/TransactionList.vue'
 import { type Transaction } from '@/types/transaction.type'
 import { getTransaction } from '@/composables/transaction.request'
 import MainLayout from '@/layouts/MainLayout.vue'
+
+import NewLayout from '@/layouts/NewLayout.vue'
 
 const transactions = ref<Transaction[]>([])
 
