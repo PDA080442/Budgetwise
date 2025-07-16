@@ -1,4 +1,3 @@
-// src/mocks/HomeMocks/TopServicesMocks.ts
 export interface TopServices {
   image: string
   title: string

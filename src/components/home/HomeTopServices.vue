@@ -48,7 +48,6 @@ const items = ref<TopServices[]>(topservices)
   }
 
   .card {
-    /* базовый размер карточки */
     min-width: 420px;
     max-width: 420px;
     background: #fff;
@@ -59,7 +58,6 @@ const items = ref<TopServices[]>(topservices)
     grid-template-columns: 1fr auto;
     grid-template-rows: auto 1fr auto;
     row-gap: 16px;
-    /* указать, чтобы lower content (цена+кнопка) всегда прижаты вниз, если текст короткий: */
     height: 100%;
 
     &__title {

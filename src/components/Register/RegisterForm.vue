@@ -1,6 +1,6 @@
 <template>
-  <v-container class="d-flex justify-center">
-    <v-card class="pa-6">
+  <v-container fluid class="register-page d-flex align-center justify-center">
+    <v-card class="register-card elevation-12 pa-10">
       <v-card-title class="titleform">Регистрация</v-card-title>
 
       <v-card-text>
@@ -8,37 +8,40 @@
           <v-text-field
             v-model="formdata.email"
             label="Email"
+            variant="outlined"
+            type="email"
             :rules="[rules.require, rules.email]"
             required
-            hide-details="auto"
+            class="mb-6"
+            prepend-inner-icon="mdi-email-outline"
           />
-
           <v-text-field
             label="Пароль"
             type="password"
             v-model="formdata.password"
+            variant="outlined"
             :rules="[rules.require, rules.passwordmin]"
             required
+            class="mb-6"
+            prepend-inner-icon="mdi-lock-outline"
           />
-
           <v-text-field
             label="Подтвердите пароль"
             type="password"
             v-model="formdata.password2"
+            variant="outlined"
             :rules="[rules.require, rules.passsame]"
             required
+            prepend-inner-icon="mdi-lock-check-outline"
           />
         </v-form>
       </v-card-text>
-
-      <v-divider />
-      <v-card-actions>
-        <v-spacer />
-        <v-btn class="reg__btn d-flex justify-center" @click="submit">Зарегистрироваться </v-btn>
-      </v-card-actions>
-      <v-card-actions class="justify-center px-0">
-        <v-card-text clas>Есть аккаунт?</v-card-text>
-        <v-btn class="log__btn d-flex justify-center" @click="login">Войти в аккаунт</v-btn>
+      <v-divider class="my-6" />
+      <v-card-actions class="d-flex flex-column">
+        <v-btn class="reg__btn mb-4" block height="56" @click="submit">Зарегистрироваться</v-btn>
+        <v-btn class="log__btn" block height="56" variant="text" @click="login">
+          Есть аккаунт? Войти
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -52,7 +55,7 @@ import { regdata } from '@/composables/auth.request'
 import type { FormData } from '@/types/auth.type'
 
 const form = ref()
-const valid = ref(form)
+const valid = ref(false)
 const router = useRouter()
 
 const formdata = reactive<FormData>({
@@ -69,10 +72,9 @@ const rules = {
 }
 
 const submit = async () => {
-  if (!form.value.validate()) return
+  if (!form.value?.validate()) return
   try {
     await regdata(formdata)
-
     router.push({ path: '/entrance' })
   } catch (err) {
     console.error(err)
@@ -85,28 +87,82 @@ const login = () => {
 </script>
 
 <style scoped lang="scss">
-.v-card {
-  border-radius: 25px;
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 24px;
   font-family: 'Montserrat', sans-serif;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/images/mesh-gradient.svg') center/cover no-repeat;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+}
+
+.register-card {
+  width: 100%;
+  max-width: 520px;
+  border-radius: 24px;
+  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .titleform {
   text-align: center;
-  font-size: 25px;
-  font-weight: 300;
+  font-size: 32px;
+  font-weight: 800;
   color: #0171bc;
+  margin-bottom: 20px;
 }
 
-.reg__btn {
-  color: #ffffff;
-  background-color: #0171bc;
-  font-size: 15px;
+.subtitle {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 24px;
+  color: #5e6e7c;
+}
+
+.v-input__control,
+.v-input__slot {
+  transition: background-color 0.25s ease;
+}
+
+.v-input--focused .v-input__slot {
+  background-color: #e3f2fd !important;
+}
+
+.v-input__slot {
+  background-color: #f5f8fb !important;
+  border-radius: 12px !important;
+  padding-left: 4px !important;
+}
+
+.reg__btn,
+.log__btn {
+  background: linear-gradient(135deg, #0171bc 0%, #29b6f6 100%) !important;
+  color: #fff !important;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 12px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(1, 113, 188, 0.3);
+  }
 }
 
 .log__btn {
-  color: #ffffff;
-  background-color: #0171bc;
-  opacity: 1;
-  font-size: 15px;
+  background: transparent !important;
+  color: #0171bc !important;
 }
 </style>
