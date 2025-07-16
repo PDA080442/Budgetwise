@@ -172,17 +172,7 @@ const headers = [
   transition: transform 0.2s;
   cursor: pointer;
 }
-.dialog-card {
-  border: 2px solid #3f51b5;
-}
-.dialog-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #3f51b5;
-}
-.awesome-input >>> .v-input__control {
-  border-bottom: 2px solid #3f51b5 !important;
-}
+
 .no-data {
   color: #757575;
   font-style: italic;

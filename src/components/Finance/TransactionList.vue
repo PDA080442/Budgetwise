@@ -13,31 +13,22 @@
         v-model:sort-by="sortOrder"
       >
         <template v-slot:top>
-          <v-toolbar class="d-flex">
-            <v-toolbar-title style="max-width: 300px"> Транзакции </v-toolbar-title>
+          <v-toolbar flat dense class="styled-toolbar">
+            <v-toolbar-title class="text-h5 font-weight-bold">Транзакции</v-toolbar-title>
             <v-spacer />
+
             <AddCheck />
-            <v-spacer />
-            <v-btn icon @click="filtersDrawer = true">
-              <v-icon>mdi-filter</v-icon>
+
+            <v-btn icon @click="filtersDrawer = true" class="mx-2 styled-icon-btn">
+              <v-icon size="24">mdi-filter-variant</v-icon>
             </v-btn>
-            <v-spacer />
-            <v-btn @click="addTransaction" border>
-              <v-icon size="large">mdi-plus</v-icon>
+
+            <v-btn @click="addTransaction" class="styled-add-btn">
+              <v-icon size="24">mdi-plus</v-icon>
             </v-btn>
           </v-toolbar>
-          <v-toolbar>
-            <v-text-field
-              v-model="search"
-              clearable
-              label="Поиск"
-              prepend-inner-icon="mdi-magnify"
-              variant="outlined"
-              hide-details
-              rounded="lg"
-              class="mx-4"
-            />
-          </v-toolbar>
+          <!-- Вместо <v-toolbar> с v-text-field: -->
+          <TransactionSearch v-model="search" />
           <v-divider></v-divider>
         </template>
         <template v-slot:[`item.data-table-expand`]="{ internalItem, isExpanded, toggleExpand }">
@@ -172,7 +163,8 @@ import type { Category } from '@/types/category.type'
 import PopupCategory from './PopupCategory.vue'
 import type { Types } from '@/types/types.type'
 import AddCheck from './AddCheck.vue'
-import TransactionFilters from '@/layouts/TransactionFilters.vue'
+import TransactionFilters from './TransactionFilters.vue'
+import TransactionSearch from './TransactionSearch.vue'
 
 import {
   getTransaction,
@@ -328,6 +320,45 @@ const headers = [
 </script>
 
 <style scoped>
-* {
+.styled-toolbar {
+  background-color: rgb(var(--v-theme-primary)) !important;
+  border-radius: 12px;
+  padding: 0 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+
+.styled-toolbar .v-toolbar-title {
+  color: #fff;
+}
+
+.styled-icon-btn .v-icon {
+  color: #fff;
+  transition: transform 0.2s;
+}
+
+.styled-icon-btn:hover .v-icon {
+  transform: scale(1.1);
+}
+
+.styled-add-btn {
+  background-color: #fff;
+  color: #764ba2;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+}
+
+.styled-add-btn:hover {
+  background-color: #ececff;
+  transform: translateY(-2px);
 }
 </style>
