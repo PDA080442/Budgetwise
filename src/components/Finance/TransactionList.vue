@@ -18,6 +18,10 @@
             <v-spacer />
             <AddCheck />
             <v-spacer />
+            <v-btn icon @click="filtersDrawer = true">
+              <v-icon>mdi-filter</v-icon>
+            </v-btn>
+            <v-spacer />
             <v-btn @click="addTransaction" border>
               <v-icon size="large">mdi-plus</v-icon>
             </v-btn>
@@ -32,45 +36,6 @@
               hide-details
               rounded="lg"
               class="mx-4"
-            />
-          </v-toolbar>
-          <v-divider></v-divider>
-          <v-toolbar>
-            <v-text-field
-              v-model="dateAfter"
-              label="Начало"
-              type="date"
-              style="max-width: 200px"
-              clearable
-              class="ml-4"
-            />
-            <v-text-field
-              v-model="dateBefore"
-              label="Конец"
-              type="date"
-              style="max-width: 200px"
-              clearable
-            />
-            <v-select
-              v-model="selectCategories"
-              label="Выберите категории"
-              style="max-width: 343px"
-              :items="categories"
-              item-title="name"
-              item-value="id"
-              multiple
-              class="ml-2"
-              clearable
-            />
-            <v-select
-              v-model="selectTypes"
-              :items="types"
-              item-title="name"
-              item-value="id"
-              label="Доход/Расход"
-              clearable
-              style="max-width: 343px"
-              class="ml-2"
             />
           </v-toolbar>
           <v-divider></v-divider>
@@ -128,6 +93,26 @@
         </template>
       </v-data-table>
     </v-card>
+    <v-navigation-drawer
+      v-model="filtersDrawer"
+      location="end"
+      temporary
+      transition="slide-x-reverse-transition"
+      style="backdrop-filter: blur(4px)"
+      :width="500"
+    >
+      <TransactionFilters
+        v-model:dateAfter="dateAfter"
+        v-model:dateBefore="dateBefore"
+        v-model:selectCategories="selectCategories"
+        v-model:selectTypes="selectTypes"
+        :categories="categories"
+        :types="types"
+        @apply="filtersDrawer = false"
+        @close="filtersDrawer = false"
+      />
+    </v-navigation-drawer>
+
     <v-dialog v-model="dialog" max-width="500">
       <v-card class="pa-5 text-center" border rounded="lg">
         <v-card-title>
@@ -187,6 +172,8 @@ import type { Category } from '@/types/category.type'
 import PopupCategory from './PopupCategory.vue'
 import type { Types } from '@/types/types.type'
 import AddCheck from './AddCheck.vue'
+import TransactionFilters from '@/layouts/TransactionFilters.vue'
+
 import {
   getTransaction,
   searchTransaction,
@@ -220,6 +207,7 @@ const dateAfter = ref<string>('')
 const selectCategories = ref<[]>([])
 const selectTypes = ref<number | null>(null)
 const sortOrder = ref<{ key: string; order: 'asc' | 'desc' }[]>([])
+const filtersDrawer = ref(false)
 
 const categoryColors: Record<number, string> = {
   1: '#F44336', // красный

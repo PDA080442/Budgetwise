@@ -1,126 +1,158 @@
-// src/components/Finance/FilterSidebar.vue
+<!-- src/components/Finance/TransactionFilters.vue -->
 <template>
-  <v-navigation-drawer v-model="visible" right temporary>
-    <v-toolbar flat>
-      <v-toolbar-title>Фильтры</v-toolbar-title>
+  <v-sheet
+    class="pa-0"
+    style="
+      --v-navigation-drawer-width: 400px;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    "
+  >
+    <!-- Заголовок с кнопкой закрытия -->
+    <v-toolbar
+      flat
+      dense
+      class="px-4"
+      style="
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        background: linear-gradient(120deg, #42a5f5, #478ed1);
+        color: white;
+      "
+    >
+      <v-toolbar-title class="text-h6">Фильтры</v-toolbar-title>
       <v-spacer />
-      <v-btn icon @click="emit('update:visible', false)">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
     </v-toolbar>
-    <v-divider />
-    <v-form>
+
+    <v-card flat class="pa-4" style="box-shadow: none; background: transparent">
+      <!-- Дата "с" -->
       <v-text-field
-        v-model="search"
+        v-model="dateAfterLocal"
+        prepend-inner-icon="mdi-calendar-start"
+        label="Начало"
+        type="date"
         clearable
-        label="Поиск"
-        prepend-inner-icon="mdi-magnify"
+        class="mb-4"
+        density="comfortable"
         variant="outlined"
-        hide-details
-        rounded="lg"
-        class="mx-4"
       />
-      <v-text-field v-model="dateAfter" label="Начало" type="date" clearable class="mx-4" />
-      <v-text-field v-model="dateBefore" label="Конец" type="date" clearable class="mx-4" />
+
+      <!-- Дата "по" -->
+      <v-text-field
+        v-model="dateBeforeLocal"
+        prepend-inner-icon="mdi-calendar-end"
+        label="Конец"
+        type="date"
+        clearable
+        class="mb-4"
+        density="comfortable"
+        variant="outlined"
+      />
+
+      <!-- Категории: мультивыбор -->
       <v-select
-        v-model="selectCategories"
-        label="Выберите категории"
+        v-model="selectCategoriesLocal"
         :items="categories"
         item-title="name"
         item-value="id"
+        label="Категории"
         multiple
         clearable
-        class="mx-4"
+        class="mb-4"
+        density="comfortable"
+        variant="outlined"
       />
+
+      <!-- Тип операции -->
       <v-select
-        v-model="selectTypes"
+        v-model="selectTypesLocal"
         :items="types"
         item-title="name"
         item-value="id"
         label="Доход/Расход"
         clearable
-        class="mx-4"
+        class="mb-4"
+        density="comfortable"
+        variant="outlined"
       />
-    </v-form>
-  </v-navigation-drawer>
+
+      <!-- Кнопки Сбросить / Применить -->
+      <div class="d-flex justify-center mt-6">
+        <v-btn text @click="onReset">Сбросить</v-btn>
+      </div>
+    </v-card>
+  </v-sheet>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
+import { ref, watch } from 'vue'
+import type { Category } from '@/types/category.type'
+import type { Types } from '@/types/types.type'
 
-const props = defineProps({
-  visible: Boolean,
-  search: String,
-  dateAfter: String,
-  dateBefore: String,
-  selectCategories: Array,
-  selectTypes: [Number, null],
-  categories: Array,
-  types: Array,
-})
+// Пропсы — camelCase!
+const props = defineProps<{
+  dateAfter: string
+  dateBefore: string
+  selectCategories: number[]
+  selectTypes: number | null
+  categories: Category[]
+  types: Types[]
+}>()
 
-const emit = defineEmits([
-  'update:visible',
-  'update:search',
-  'update:dateAfter',
-  'update:dateBefore',
-  'update:selectCategories',
-  'update:selectTypes',
-])
+// Эмиссии для v-model — camelCase!
+const emit = defineEmits<{
+  (e: 'update:dateAfter', v: string): void
+  (e: 'update:dateBefore', v: string): void
+  (e: 'update:selectCategories', v: number[]): void
+  (e: 'update:selectTypes', v: number | null): void
+  (e: 'reset'): void
+  (e: 'apply'): void
+  (e: 'close'): void
+}>()
+
+// Локальные копии, чтобы не мутировать props напрямую
+const dateAfterLocal = ref(props.dateAfter)
+const dateBeforeLocal = ref(props.dateBefore)
+const selectCategoriesLocal = ref(props.selectCategories)
+const selectTypesLocal = ref(props.selectTypes)
+
+// При изменении локальных — шлём наружу
+watch(dateAfterLocal, (v) => emit('update:dateAfter', v))
+watch(dateBeforeLocal, (v) => emit('update:dateBefore', v))
+watch(selectCategoriesLocal, (v) => emit('update:selectCategories', v))
+watch(selectTypesLocal, (v) => emit('update:selectTypes', v))
+
+// Если props меняются извне — синхронизируем локальные
+watch(
+  () => props.dateAfter,
+  (v) => (dateAfterLocal.value = v),
+)
+watch(
+  () => props.dateBefore,
+  (v) => (dateBeforeLocal.value = v),
+)
+watch(
+  () => props.selectCategories,
+  (v) => (selectCategoriesLocal.value = v),
+)
+watch(
+  () => props.selectTypes,
+  (v) => (selectTypesLocal.value = v),
+)
+
+// Сброс всех фильтров локально и во внешнем стейте
+function onReset() {
+  dateAfterLocal.value = ''
+  dateBeforeLocal.value = ''
+  selectCategoriesLocal.value = []
+  selectTypesLocal.value = null
+  emit('update:dateAfter', '')
+  emit('update:dateBefore', '')
+  emit('update:selectCategories', [])
+  emit('update:selectTypes', null)
+  emit('reset')
+}
 </script>
 
-<template v-slot:top>
-  <template>
-    <v-container>
-      <div class="d-flex justify-center mb-10">
-        <PopupCategory />
-      </div>
-      <v-card border rounded="lg">
-        <v-data-table ...>
-          <template v-slot:top>
-            <v-toolbar class="d-flex">
-              <v-toolbar-title style="max-width: 300px"> Транзакции </v-toolbar-title>
-              <v-spacer />
-              <AddCheck />
-              <v-spacer />
-              <v-btn @click="addTransaction" border>
-                <v-icon size="large">mdi-plus</v-icon>
-              </v-btn>
-              <!-- Кнопка открытия сайдбара фильтров -->
-              <v-btn icon @click="showFilters = true">
-                <v-icon>mdi-filter-variant</v-icon>
-              </v-btn>
-            </v-toolbar>
-
-            <!-- Удаляем здесь существующие блоки фильтров и <v-divider> -->
-
-            <!-- Подключаем новый компонент сайдбара -->
-            <FilterSidebar
-              v-model:visible="showFilters"
-              v-model:search="search"
-              v-model:dateAfter="dateAfter"
-              v-model:dateBefore="dateBefore"
-              v-model:selectCategories="selectCategories"
-              v-model:selectTypes="selectTypes"
-              :categories="categories"
-              :types="types"
-            />
-          </template>
-          ...
-        </v-data-table>
-      </v-card>
-      <!-- остальной код без изменений -->
-    </v-container>
-  </template>
-
-  <script setup lang="ts">
-    import { ref, defineProps, watch, onMounted } from 'vue'
-    // ... другие импорты
-    import FilterSidebar from '@/components/Finance/FilterSidebar.vue'
-
-    const showFilters = ref(false)
-    // остальные refs: search, dateAfter, dateBefore, selectCategories, selectTypes
-
-    // остальная логика без изменений
-  </script>
-</template>
+<style scoped>
+/* Добавьте любые дополнительные правки, если нужно */
+</style>
