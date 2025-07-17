@@ -182,12 +182,6 @@ const headers = [
 }
 
 .styled-add-btn {
-  background-color: #fff;
-  color: #764ba2;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
   display: flex;
   align-items: center;
   justify-content: center;

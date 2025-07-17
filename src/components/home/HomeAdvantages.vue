@@ -22,7 +22,7 @@ const items = ref<HomeCardsItems[]>(homecarditems)
   width: 100%;
   margin: 100px 0 0;
   padding: 0;
-  height: 700px;
+  height: 650px;
 }
 
 .advantages__box {

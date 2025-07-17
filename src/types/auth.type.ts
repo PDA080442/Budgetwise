@@ -20,11 +20,10 @@ export interface LoginData {
   changePasswords: string
 }
 
-
 export interface infoProfile {
-  id: number,
-  email: string,
-  first_name: string,
+  id: number
+  email: string
+  first_name: string
   last_name: string
 }
 

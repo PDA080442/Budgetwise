@@ -1,10 +1,24 @@
 <template>
   <v-app style="height: 100vh; display: flex">
-    <v-navigation-drawer app permanent :rail="true" expand-on-hover width="280" rail-width="55" class="elevation-2">
+    <v-navigation-drawer
+      app
+      permanent
+      :rail="true"
+      expand-on-hover
+      width="280"
+      rail-width="55"
+      class="elevation-2"
+    >
       <v-list>
-        <v-list-item 
-          :title="isAuthenticated ? `${infoProfiles.first_name} ${infoProfiles.last_name}` || 'Пользователь' : 'Гость'"
-          :subtitle="isAuthenticated ? userStore.userData.email || 'Почта не указана' : 'Войдите в аккаунт'" 
+        <v-list-item
+          :title="
+            isAuthenticated
+              ? `${infoProfiles.first_name} ${infoProfiles.last_name}` || 'Пользователь'
+              : 'Гость'
+          "
+          :subtitle="
+            isAuthenticated ? userStore.userData.email || 'Почта не указана' : 'Войдите в аккаунт'
+          "
           class="sticky-section"
         >
           <template v-slot:prepend>
@@ -22,22 +36,49 @@
 
       <template v-slot:append>
         <v-list density="compact" nav>
-          <v-list-item v-for="item in setItems" :key="item.title" :prepend-icon="item.icon" :title="item.title" :to="item.routeName"
-            v-if="isAuthenticated" class="nav-item" />
+          <v-list-item
+            v-for="item in setItems"
+            :key="item.title"
+            :prepend-icon="item.icon"
+            :title="item.title"
+            :to="item.routeName"
+            v-if="isAuthenticated"
+            class="nav-item"
+          />
 
-          <v-list-item v-for="item in outItems" :key="item.title" :prepend-icon="item.icon" :title="item.title"
-            v-if="isAuthenticated" @click="confirmLogout" class="nav-item" />
+          <v-list-item
+            v-for="item in outItems"
+            :key="item.title"
+            :prepend-icon="item.icon"
+            :title="item.title"
+            v-if="isAuthenticated"
+            @click="confirmLogout"
+            class="nav-item"
+          />
         </v-list>
 
         <v-list density="compact" nav>
-          <v-list-item v-for="item in inItems" :key="item.title" :prepend-icon="item.icon" :to="item.routeName"
-            v-if="!isAuthenticated" :title="item.title" class="nav-item" />
+          <v-list-item
+            v-for="item in inItems"
+            :key="item.title"
+            :prepend-icon="item.icon"
+            :to="item.routeName"
+            v-if="!isAuthenticated"
+            :title="item.title"
+            class="nav-item"
+          />
         </v-list>
       </template>
 
       <v-list density="compact" nav class="menu-list sticky-section">
-        <v-list-item v-for="item in menuItems" :key="item.title" :prepend-icon="item.icon" :title="item.title"
-          :to="item.routeName" class="nav-item" />
+        <v-list-item
+          v-for="item in menuItems"
+          :key="item.title"
+          :prepend-icon="item.icon"
+          :title="item.title"
+          :to="item.routeName"
+          class="nav-item"
+        />
       </v-list>
       <v-spacer></v-spacer>
 
@@ -69,9 +110,19 @@
           </div>
         </v-container>
 
-        <v-footer class="text-center d-flex flex-column ga-2 py-4" color="primary" style="height: auto; padding: 0px;">
+        <v-footer
+          class="text-center d-flex flex-column ga-2 py-4"
+          color="primary"
+          style="height: auto; padding: 0px"
+        >
           <div class="d-flex ga-3">
-            <v-btn v-for="icon in icons" :key="icon" :icon="icon" density="comfortable" variant="text"></v-btn>
+            <v-btn
+              v-for="icon in icons"
+              :key="icon"
+              :icon="icon"
+              density="comfortable"
+              variant="text"
+            ></v-btn>
           </div>
 
           <v-divider class="my-2" thickness="2" width="50"></v-divider>
@@ -82,9 +133,7 @@
 
           <v-divider></v-divider>
 
-          <div>
-            {{ new Date().getFullYear() }} — <strong>Хацкеры 2.0</strong>
-          </div>
+          <div>{{ new Date().getFullYear() }} — <strong>Хацкеры 2.0</strong></div>
         </v-footer>
       </v-main>
     </div>
@@ -104,14 +153,14 @@ const userStore = useUserStore()
 const router = useRouter()
 
 onMounted(() => {
-  userStore.loadUserEmail();
-});
+  userStore.loadUserEmail()
+})
 
 const infoProfiles = ref<infoProfile>({
   id: 0,
   email: '',
   first_name: '',
-  last_name: ''
+  last_name: '',
 })
 
 const avatarText = computed(() => {
@@ -123,15 +172,15 @@ const avatarText = computed(() => {
 
 const getRandomColor = () => {
   const colors = [
-    'primary', 
-    'secondary', 
-    'error', 
-    'warning', 
-    'info', 
+    'primary',
+    'secondary',
+    'error',
+    'warning',
+    'info',
     'success',
     'purple',
     'teal',
-    'orange'
+    'orange',
   ]
   return colors[Math.floor(Math.random() * colors.length)]
 }
@@ -155,30 +204,28 @@ const confirmLogout = () => {
 
 const performLogout = async () => {
   try {
-    const refreshToken = localStorage.getItem('refresh_Token');
-    
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refresh_Token');
-    delete axios.defaults.headers.common['Authorization'];
-    
+    const refreshToken = localStorage.getItem('refresh_Token')
+
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refresh_Token')
+    delete axios.defaults.headers.common['Authorization']
+
     if (refreshToken) {
       try {
-        await logoutReq(refreshToken);
+        await logoutReq(refreshToken)
       } catch (error) {
-        console.error('Ошибка при выходе на сервере:', error);
+        console.error('Ошибка при выходе на сервере:', error)
       }
     }
-    logoutDialog.value = false;
+    logoutDialog.value = false
 
-    await router.push('/');
-    window.location.reload();
-    
+    await router.push('/')
+    window.location.reload()
   } catch (error) {
-    console.error('Критическая ошибка при выходе:', error);
-    window.location.href = '/';
+    console.error('Критическая ошибка при выходе:', error)
+    window.location.href = '/'
   }
 }
-
 
 const homepage = () => {
   router.push('/')
@@ -188,30 +235,22 @@ const menuItems = computed(() => {
   const baseItems = [
     { title: 'Главная', icon: 'mdi-home', routeName: '/' },
     { title: 'Советы', icon: 'mdi-flask', routeName: '/faq' },
-    { title: 'О нас', icon: 'mdi-information', routeName: '/about' },
   ]
   if (isAuthenticated.value) {
-    return [...baseItems,
-    { title: 'Финансы', icon: 'mdi-currency-usd', routeName: '/finance' }]
+    return [...baseItems, { title: 'Финансы', icon: 'mdi-currency-usd', routeName: '/finance' }]
   }
   return baseItems
 })
 
-const outItems = [
-  { title: 'Выйти', icon: 'mdi-logout' },
-]
+const outItems = [{ title: 'Выйти', icon: 'mdi-logout' }]
 
 const setItems = [
   { title: 'Настройки аккаунта', icon: 'mdi-wrench', routeName: '/accountsettings' },
 ]
 
-const inItems =  [
-    { title: 'Вход', icon: 'mdi-account', routeName: '/entrance' },
-  ] 
+const inItems = [{ title: 'Вход', icon: 'mdi-account', routeName: '/entrance' }]
 
-const icons = [
-  'mdi-instagram',
-]
+const icons = ['mdi-instagram']
 </script>
 
 <style scoped>
@@ -269,13 +308,13 @@ body,
   border-radius: 8px;
   transition: background-color 0.2s;
   color: rgb(24, 103, 192);
-  transition: .25s;
+  transition: 0.25s;
 }
 
 .nav-item:hover,
 .nav-item.v-list-item--active {
   background-color: rgb(24, 103, 192);
-  color: #fff
+  color: #fff;
 }
 
 .footer-text {

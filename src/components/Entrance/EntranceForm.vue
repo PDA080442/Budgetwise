@@ -58,6 +58,12 @@ const router = useRouter()
 const logindata = reactive<LoginData>({
   email: '',
   password: '',
+  name: '',
+  lastname: '',
+  new_password: '',
+  new_password2: '',
+  old_password: '',
+  changePasswords: '',
 })
 
 const serverErrors = reactive<{ email?: string; main?: string }>({})

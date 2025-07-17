@@ -26,7 +26,7 @@ const items = ref<TopServices[]>(topservices)
 
 <style lang="scss" scoped>
 .module3 {
-  padding: 40px 68px;
+  padding: 20px 68px;
   font-family: Montserrat;
   &__title {
     font-size: 36px;

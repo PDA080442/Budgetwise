@@ -24,38 +24,33 @@
 
         <v-flex>
           <v-col cols="auto">
-            <!-- <v-icon  
+            <!-- <v-icon
               v-if="isAuthenticated"
-              @click="confirmLogout" 
-              icon="mdi-logout" 
-              color="white" 
+              @click="confirmLogout"
+              icon="mdi-logout"
+              color="white"
               size="small"
             ></v-icon>  -->
-            <MainUserButton 
-              v-if="isAuthenticated"
-              @logout="confirmLogout"
-            />
-            <v-icon 
-              v-else 
-              @click="goToLogin"  
-              icon="mdi-account" 
-              color="white" 
+            <MainUserButton v-if="isAuthenticated" @logout="confirmLogout" />
+            <v-icon
+              v-else
+              @click="goToLogin"
+              icon="mdi-account"
+              color="white"
               size="small"
             ></v-icon>
           </v-col>
         </v-flex>
       </div>
     </v-layout>
-
-    
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref, computed} from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'////
-import { logoutReq } from '@/composables/auth.request'///////////////////////
+import axios from 'axios' ////
+import { logoutReq } from '@/composables/auth.request' ///////////////////////
 import MainUserButton from '@/layouts/components/MainUserButton.vue'
 
 const router = useRouter()
@@ -68,15 +63,17 @@ const isAuthenticated = computed(() => {
 const navItems = computed(() => {
   const baseItems = [
     { name: 'Главная', href: '/' },
-    { name: 'О нас', href: '/about' },
-    { name: 'Советы', href: '/faq' }
+    { name: 'Советы', href: '/faq' },
   ]
-  
+
   if (isAuthenticated.value) {
-    return [...baseItems, { 
-      name: 'Мои финансы', 
-      href: '/finance' 
-    }]
+    return [
+      ...baseItems,
+      {
+        name: 'Мои финансы',
+        href: '/finance',
+      },
+    ]
   }
   return baseItems
 })
@@ -99,19 +96,17 @@ const confirmLogout = () => {
 //   router.push({ path: '/' })
 // }
 
-
-
 // const performLogout = async () => {
 //   try {
 //     const refreshToken = localStorage.getItem('refresh_Token')
 //     if (refreshToken) {
 //       await logoutReq(refreshToken)
 //     }
-    
+
 //     localStorage.removeItem('accessToken')
 //     localStorage.removeItem('refresh_Token')
 //     delete axios.defaults.headers.common['Authorization']
-    
+
 //     logoutDialog.value = false
 //     router.push({ path: '/' })
 //   } catch (error) {
@@ -161,10 +156,10 @@ const confirmLogout = () => {
 }
 
 .l-header-container {
-  position: fixed; 
-  top: 0;          
-  left: 0;         
-  width: 100%;   
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   z-index: 1000;
 }
 </style>
