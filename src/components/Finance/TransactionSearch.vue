@@ -1,5 +1,4 @@
 <template>
-  <!-- компактная обёртка без внешних отступов -->
   <v-card flat class="pa-0 flex-grow-1 search-card" elevation="0">
     <v-text-field
       v-model="searchLocal"
@@ -30,11 +29,8 @@ watch(
 </script>
 
 <style scoped>
-/* фон + блюр такие же, что и у верхнего тулбара */
 .search-card {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(4px);
 }
-
-/* если нужно, чтобы поле не растягивалось на гигантских экранах */
 </style>

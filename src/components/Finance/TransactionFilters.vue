@@ -1,4 +1,3 @@
-<!-- src/components/Finance/TransactionFilters.vue -->
 <template>
   <v-sheet
     class="pa-0"
@@ -8,22 +7,12 @@
       border-bottom-left-radius: 8px;
     "
   >
-    <!-- Заголовок с кнопкой закрытия -->
-    <v-toolbar
-      flat
-      dense
-      class="px-4"
-      style="
-        background-color: #1867c0;
-        color: white;
-      "
-    >
+    <v-toolbar flat dense class="px-4" style="background-color: #1867c0; color: white">
       <v-toolbar-title class="text-h6">Фильтры</v-toolbar-title>
       <v-spacer />
     </v-toolbar>
 
     <v-card flat class="pa-4" style="box-shadow: none; background: transparent">
-      <!-- Дата "с" -->
       <v-text-field
         v-model="dateAfterLocal"
         prepend-inner-icon="mdi-calendar-start"
@@ -35,7 +24,6 @@
         variant="outlined"
       />
 
-      <!-- Дата "по" -->
       <v-text-field
         v-model="dateBeforeLocal"
         prepend-inner-icon="mdi-calendar-end"
@@ -47,7 +35,6 @@
         variant="outlined"
       />
 
-      <!-- Категории: мультивыбор -->
       <v-select
         v-model="selectCategoriesLocal"
         :items="categories"
@@ -61,7 +48,6 @@
         variant="outlined"
       />
 
-      <!-- Тип операции -->
       <v-select
         v-model="selectTypesLocal"
         :items="types"
@@ -74,7 +60,6 @@
         variant="outlined"
       />
 
-      <!-- Кнопки Сбросить / Применить -->
       <div class="d-flex justify-center mt-6">
         <v-btn text @click="onReset">Сбросить</v-btn>
       </div>
@@ -87,7 +72,6 @@ import { ref, watch } from 'vue'
 import type { Category } from '@/types/category.type'
 import type { Types } from '@/types/types.type'
 
-// Пропсы — camelCase!
 const props = defineProps<{
   dateAfter: string
   dateBefore: string
@@ -97,7 +81,6 @@ const props = defineProps<{
   types: Types[]
 }>()
 
-// Эмиссии для v-model — camelCase!
 const emit = defineEmits<{
   (e: 'update:dateAfter', v: string): void
   (e: 'update:dateBefore', v: string): void
@@ -108,19 +91,16 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-// Локальные копии, чтобы не мутировать props напрямую
 const dateAfterLocal = ref(props.dateAfter)
 const dateBeforeLocal = ref(props.dateBefore)
 const selectCategoriesLocal = ref(props.selectCategories)
 const selectTypesLocal = ref(props.selectTypes)
 
-// При изменении локальных — шлём наружу
 watch(dateAfterLocal, (v) => emit('update:dateAfter', v))
 watch(dateBeforeLocal, (v) => emit('update:dateBefore', v))
 watch(selectCategoriesLocal, (v) => emit('update:selectCategories', v))
 watch(selectTypesLocal, (v) => emit('update:selectTypes', v))
 
-// Если props меняются извне — синхронизируем локальные
 watch(
   () => props.dateAfter,
   (v) => (dateAfterLocal.value = v),
@@ -138,7 +118,6 @@ watch(
   (v) => (selectTypesLocal.value = v),
 )
 
-// Сброс всех фильтров локально и во внешнем стейте
 function onReset() {
   dateAfterLocal.value = ''
   dateBeforeLocal.value = ''
@@ -152,6 +131,4 @@ function onReset() {
 }
 </script>
 
-<style scoped>
-/* Добавьте любые дополнительные правки, если нужно */
-</style>
+<style scoped></style>

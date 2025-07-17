@@ -1,8 +1,6 @@
 <template>
   <v-container>
-    <div class="d-flex justify-center mb-10">
-      <PopupCategory />
-    </div>
+    <div class="d-flex justify-center mb-10"></div>
     <v-card class="Transaction__card" rounded="lg" style="border: 2px solid primary">
       <v-data-table
         :headers="headers"
@@ -58,22 +56,44 @@
             @click="toggleExpand(internalItem)"
           />
         </template>
+
         <template v-slot:[`item.type`]="{ item }">
           <span :style="{ color: getTypeColor(item.type), fontWeight: '700' }">
             {{ getTypeText(item.type) }}
           </span>
         </template>
         <template v-slot:[`item.category`]="{ item }">
-          <v-chip
-            :color="getCategoryColor(item.category)"
-            :border="`${getCategoryColor(item.category)} thin opacity-25`"
-            size="large"
-            :text="getCategoryText(item.category)"
-          />
+          <v-container>
+            <v-tooltip
+              class="tooltip"
+              location="top"
+              open-on-hover
+              width="500"
+              elevated="24"
+              content-class="bg-primary text-subtitle-1 rounded-xl pa-5"
+            >
+              <template #activator="{ props }">
+                <v-chip
+                  v-bind="props"
+                  :color="getCategoryColor(item.category)"
+                  :border="`${getCategoryColor(item.category)} thin opacity-25`"
+                  size="large"
+                  :text="getCategoryText(item.category)"
+                  class="cursor-pointer"
+                />
+              </template>
+              <span class="font-weight-medium">
+                {{
+                  categories.find((c) => c.id === item.category)?.description ||
+                  'Нет описания категории'
+                }}
+              </span>
+            </v-tooltip>
+          </v-container>
         </template>
 
         <template v-slot:[`item.amount`]="{ item }">
-          <span class="text-primary font-weight-bold">
+          <span class="font-weight-bold">
             {{ formatCurrency(item.amount) }}
           </span>
         </template>
@@ -180,7 +200,6 @@ import type { Transaction } from '@/types/transaction.type'
 import { getCategories } from '@/composables/category.request'
 import { getTypes } from '@/composables/type.request'
 import type { Category } from '@/types/category.type'
-import PopupCategory from './PopupCategory.vue'
 import type { Types } from '@/types/types.type'
 import AddCheck from './AddCheck.vue'
 import TransactionFilters from './TransactionFilters.vue'
@@ -197,7 +216,6 @@ import {
 
 import { useTransactionActions } from '@/services/Actions/Finance/TransactionListActions'
 import { useTransactionRules } from '@/services/Rules/Finance/TransactionListRules'
-// import { useTransactionFilters } from '@/services/Filters/Finance/TransactionListFilters'
 
 const props = defineProps<{ transactions: Transaction[] }>()
 const localTransactions = ref<Transaction[]>([...props.transactions])
@@ -222,20 +240,20 @@ const sortOrder = ref<{ key: string; order: 'asc' | 'desc' }[]>([])
 const filtersDrawer = ref(false)
 
 const categoryColors: Record<number, string> = {
-  1: '#F44336', // красный
-  2: '#2196F3', // синий
-  3: '#4CAF50', // зелёный
-  4: '#FF9800', // оранжевый
-  5: '#9C27B0', // фиолетовый
+  1: '#F44336',
+  2: '#2196F3',
+  3: '#4CAF50',
+  4: '#FF9800',
+  5: '#9C27B0',
 }
 
 function getCategoryColor(categoryId: number): string {
-  return categoryColors[categoryId] || '#000000' // серый по умолчанию
+  return categoryColors[categoryId] || '#000000'
 }
 
 const typeColors: Record<number, string> = {
-  0: '#00b909', // доход
-  1: 'red', // расход
+  0: '#00b909',
+  1: 'red',
 }
 
 function getTypeColor(typeId: number): string {
@@ -381,5 +399,9 @@ const headers = [
 .styled-add-btn:hover {
   background-color: #ececff;
   transform: translateY(-2px);
+}
+
+.v-tooltip__content {
+  background-color: #fff;
 }
 </style>

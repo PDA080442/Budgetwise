@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="register-page d-flex align-center justify-center">
-    <v-card class="register-card elevation-12 pa-10">
+    <v-card class="register-card elevation-5 pa-10">
       <v-card-title class="titleform">Регистрация</v-card-title>
 
       <v-card-text>
@@ -164,5 +164,6 @@ const login = () => {
 .log__btn {
   background: transparent !important;
   color: #0171bc !important;
+  font-size: 14px;
 }
 </style>

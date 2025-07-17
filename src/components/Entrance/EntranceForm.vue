@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="register-page d-flex align-center justify-center">
-    <v-card class="register-card elevation-12 pa-10">
+    <v-card class="register-card elevation-5 pa-10">
       <v-card-title class="titleform">Вход</v-card-title>
 
       <v-alert v-if="serverErrors.main" type="error" class="mb-4">
@@ -157,5 +157,6 @@ const goToRegistration = () => router.push({ path: '/register' })
 .log__btn {
   background: transparent !important;
   color: #0171bc !important;
+  font-size: 14px;
 }
 </style>
