@@ -1,6 +1,10 @@
 import { useApi } from '@/composables/useApi'
 import type { AuthTokens, LoginData } from '@/types/auth.type'
 import axios from 'axios'
+import  type { infoProfile } from '@/types/auth.type'
+import type { changePassword } from '@/types/auth.type'
+
+
 
 const { call } = useApi('/reg')
 
@@ -13,7 +17,7 @@ export async function regdata(formdata: LoginData): Promise<void> {
 }
 
 export async function logdata(logindata: LoginData): Promise<AuthTokens> {
-  const tokens: AuthTokens = await call('/login/', logindata, 'POST')
+  const tokens = (await call('/login/', logindata, 'POST')) as AuthTokens
 
   localStorage.setItem('accessToken', tokens.access)
   localStorage.setItem('refreshToken', tokens.refresh)
@@ -23,6 +27,56 @@ export async function logdata(logindata: LoginData): Promise<AuthTokens> {
   return tokens as AuthTokens
 }
 
-export async function logoutReq(refreshToken: string, accessToken: string): Promise<void> {
-  await call('/logout/', { refreshToken, accessToken }, 'POST')
+
+export async function logoutReq(refresh_token: string): Promise<void> {
+  await call(
+    '/logout/',
+    {
+      refresh: refresh_token
+    },
+    'POST',
+  )
+}
+
+//запрос на профиль
+export async function getInfo(): Promise <infoProfile> {
+  const respons = await call('/profile/', {}, 'GET')
+  return respons as infoProfile
+}
+
+
+//отправка ред данных профиля
+export async function postInfo(info: infoProfile): Promise<infoProfile> {
+  try {
+    const response = await call('/profile/', info, 'PUT')
+
+    return response as infoProfile
+  } catch (error) {
+    console.error('Ошибка сохранения:', error)
+    throw new Error('Не удалось сохранить')
+  }
+}
+
+
+//запрос пароля
+export async function getPassword(): Promise <changePassword> {
+  const respons = await call('/profile/change-password/', {}, 'GET')
+  return respons as changePassword
+}
+
+//отправка и сохранение пароля
+export async function postPassword(info: changePassword): Promise<changePassword> {
+  try{
+    const response = await call('/profile/change-password/', info, 'POST')
+    return response as changePassword
+  } catch (error) {
+    console.error('Ошибка сохранения:', error)
+    throw new Error('Не удалось сохранить')
+  }
+}
+
+export async function getEmail(): Promise<LoginData> {
+  const response = await call('/profile/', {}, 'GET')
+  return response as LoginData
+
 }

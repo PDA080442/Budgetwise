@@ -7,3 +7,5 @@ export interface Products {
   price: number
   sum: number
 }
+
+// за Product type будет отвечать category. Product_type

@@ -1,8 +1,18 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <NewLayout>
+
+      <FaqLifeHack></FaqLifeHack>
+  </NewLayout>
+
+
 </template>
+
+<script lang="ts" setup>
+import MainLayout from '@/layouts/MainLayout.vue'
+import FaqLifeHack from '@/components/Faq/FaqLifeHack.vue'
+import NewLayout from '@/layouts/NewLayout.vue';
+
+</script>
 
 <style>
 @media (min-width: 1024px) {

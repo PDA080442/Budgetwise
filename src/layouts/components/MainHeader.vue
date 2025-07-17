@@ -24,50 +24,66 @@
 
         <v-flex>
           <v-col cols="auto">
-            <v-btn @click.prevent="confirmLogout" icon="mdi-account" color="blue" size="small">
-            </v-btn>
+            <!-- <v-icon  
+              v-if="isAuthenticated"
+              @click="confirmLogout" 
+              icon="mdi-logout" 
+              color="white" 
+              size="small"
+            ></v-icon>  -->
+            <MainUserButton 
+              v-if="isAuthenticated"
+              @logout="confirmLogout"
+            />
+            <v-icon 
+              v-else 
+              @click="goToLogin"  
+              icon="mdi-account" 
+              color="white" 
+              size="small"
+            ></v-icon>
           </v-col>
         </v-flex>
       </div>
     </v-layout>
 
-    <v-dialog v-model="logoutDialog" max-width="400">
-      <v-card>
-        <v-card-title class="text-h5"> Подтверждение </v-card-title>
-        <v-card-text> Вы точно хотите выйти из аккаунта? </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="grey" @click="logoutDialog = false"> Нет </v-btn>
-          <v-btn color="primary" @click="performLogout"> Да </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue'
+import { ref, computed} from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'////
+import { logoutReq } from '@/composables/auth.request'///////////////////////
+import MainUserButton from '@/layouts/components/MainUserButton.vue'
 
-const date = shallowRef()
 const router = useRouter()
-
 const logoutDialog = ref(false)
 
-const navItems = ref([
-  {
-    name: 'Главная',
-    href: '/',
-  },
-  {
-    name: 'Финансы',
-    href: '/finance',
-  },
-  {
-    name: 'О нас',
-    href: '/about',
-  },
-])
+const isAuthenticated = computed(() => {
+  return !!localStorage.getItem('accessToken')
+})
+
+const navItems = computed(() => {
+  const baseItems = [
+    { name: 'Главная', href: '/' },
+    { name: 'О нас', href: '/about' },
+    { name: 'Советы', href: '/faq' }
+  ]
+  
+  if (isAuthenticated.value) {
+    return [...baseItems, { 
+      name: 'Мои финансы', 
+      href: '/finance' 
+    }]
+  }
+  return baseItems
+})
+
+const goToLogin = () => {
+  router.push({ path: '/entrance' })
+}
 
 const search = ref('')
 
@@ -75,13 +91,39 @@ const confirmLogout = () => {
   logoutDialog.value = true
 }
 
-const performLogout = () => {
-  localStorage.removeItem('accessToken')
-  localStorage.removeItem('refreshToken')
+// const performLogout = () => {
+//   localStorage.removeItem('accessToken')
+//   localStorage.removeItem('refreshToken')
 
-  logoutDialog.value = false
-  router.push({ name: 'Entrance' })
-}
+//   logoutDialog.value = false
+//   router.push({ path: '/' })
+// }
+
+
+
+// const performLogout = async () => {
+//   try {
+//     const refreshToken = localStorage.getItem('refresh_Token')
+//     if (refreshToken) {
+//       await logoutReq(refreshToken)
+//     }
+    
+//     localStorage.removeItem('accessToken')
+//     localStorage.removeItem('refresh_Token')
+//     delete axios.defaults.headers.common['Authorization']
+    
+//     logoutDialog.value = false
+//     router.push({ path: '/' })
+//   } catch (error) {
+//     console.error('Ошибка при выходе:', error)
+//     // Все равно очищаем токены на клиенте
+//     localStorage.removeItem('accessToken')
+//     localStorage.removeItem('refresh_Token')
+//     delete axios.defaults.headers.common['Authorization']
+//     logoutDialog.value = false
+//     router.push({ path: '/' })
+//   }
+// }
 </script>
 
 <style lang="scss" scoped>
@@ -92,6 +134,8 @@ const performLogout = () => {
   background-color: #0171bc;
   font-family: 'Montserrat', sans-serif;
   width: 100%;
+  padding-left: 20px;
+  padding-right: 10px;
 
   a {
     font-size: 25px;
@@ -114,5 +158,13 @@ const performLogout = () => {
 }
 .search {
   color: white;
+}
+
+.l-header-container {
+  position: fixed; 
+  top: 0;          
+  left: 0;         
+  width: 100%;   
+  z-index: 1000;
 }
 </style>

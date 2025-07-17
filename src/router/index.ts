@@ -25,9 +25,11 @@ const routes: RouteRecordRaw[] = [
     path: '/about',
     name: 'About',
     component: () => import('@/views/ContactPage.vue'),
-    meta: {
-      requireAuth: true,
-    },
+  },
+  {
+    path: '/faq',
+    name: 'Faq',
+    component: () => import('@/views/FaqPage.vue'),
   },
   {
     path: '/test',
@@ -36,6 +38,11 @@ const routes: RouteRecordRaw[] = [
     meta: {
       requireAuth: true,
     },
+  },
+  {
+    path: '/accountsettings',
+    name: 'AccountSettings',
+    component: () => import('@/views/SettingsAuth/AccountSettingsPage.vue'),
   },
 ]
 
