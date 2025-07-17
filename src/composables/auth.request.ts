@@ -17,7 +17,6 @@ export async function regdata(formdata: LoginData): Promise<void> {
 }
 
 export async function logdata(logindata: LoginData): Promise<AuthTokens> {
-  // const tokens: AuthTokens = await call('/login/', logindata, 'POST')
   const tokens = (await call('/login/', logindata, 'POST')) as AuthTokens
 
   localStorage.setItem('accessToken', tokens.access)
@@ -73,6 +72,7 @@ export async function postPassword(info: changePassword): Promise<changePassword
     console.error('Ошибка сохранения:', error)
     throw new Error('Не удалось сохранить')
   }
+}
 
 export async function getEmail(): Promise<LoginData> {
   const response = await call('/profile/', {}, 'GET')

@@ -1,23 +1,19 @@
 <template>
   <!-- <v-btn class="cros" icon="$close" size="25px" variant="text" variant-size="15px"> -->
-      <!-- </v-btn> -->
+  <!-- </v-btn> -->
+   <NewLayout>
   <div class="bigBox">
 
     <div class="boxPerson">
       <div class="avatar">
-        <img src="https://i.pinimg.com/736x/27/f3/ae/27f3aed3ecf3a325cd4107b0326722d1.jpg" alt="Original"
-          class="original">
-        <img src="@/assets/img/header/add_a_photo_42dp_000000.png" alt="Hover" class="hover">
-      </div>
-      <!-- <div class="avatarIcon"> -->
 
-      <!-- </div> -->
+      </div>
       <div>
         <v-card-text class="nameHEADER"> {{ infoProfiles.first_name }} {{ infoProfiles.last_name }} </v-card-text>
         <div class="emailHEADER">
-          <v-card-text >{{ infoProfiles.email }}</v-card-text>
-          <!-- {{ initialState.email }} -->
+          <v-card-text class="emailHEADER">{{ infoProfiles.email }}</v-card-text>
         </div>
+
       </div>
       <div>
 
@@ -26,49 +22,55 @@
     </div>
 
     <div class="boxForm">
+      <div class="settOf">
+        Параметры личных данных пользователя
+      </div>
 
-      <!-- {{ initialState }} -->
 
-
-      <v-form  @submit.prevent="submitForm"  class="boxForm">
-        <v-col class="font">
-          <v-text-field v-model="infoProfiles.first_name" label="Имя" required
-          :rules="[rules.require]"></v-text-field>
-        </v-col>
-        <v-col class="font">
-          <v-text-field v-model="infoProfiles.last_name" label="Фамилия" required
-          :rules="[rules.require]"></v-text-field>
-        </v-col>
-        <!-- <v-col class="font">
-          <v-text-field v-model="infoProfiles.email" label="Email" required
-          :rules="[rules.require, rules.email]"></v-text-field>
-        </v-col> -->
-
-<div>
-          <v-btn @click="postInfo(infoProfiles)">Cохранить</v-btn>
-          <v-btn type="reset">сброс</v-btn>
-        </div>
-        </v-form>
-
-      <v-form class="boxForm">
-         <v-col class="font">
-          <v-text-field v-model="changePasswords.old_password" label="Пароль" type="password" required
+      <!-- <div class="forms form1"> -->
+        <v-form @submit.prevent="submitForm">
+          <!-- <v-col > -->
+          <v-text-field class="inputName form" v-model="infoProfiles.first_name" label="Имя" required
             :rules="[rules.require]"></v-text-field>
-        </v-col>
+          <!-- </v-col>
+        <v-col class="font"> -->
+          <v-text-field class="inputLastname form" v-model="infoProfiles.last_name" label="Фамилия" required
+            :rules="[rules.require]"></v-text-field>
+          <!-- </v-col> -->
 
-        <v-col class="font">
-          <v-text-field v-model="changePasswords.new_password" label="Новый пароль" type="password" required
-            :rules="[rules.require, rules.passwordmin]"></v-text-field>
-        </v-col>
-        <v-col class="font">
-          <v-text-field v-model="initialState.new_password2" label="Подтвердите новый пароль" type="password" required
-            :rules="[rules.require, rules.passsame]"></v-text-field>
-        </v-col>
-<div>
-          <v-btn @click="postPassword(changePasswords)">Cохранить</v-btn>
-          <v-btn type="reset">сброс</v-btn>
-        </div>
-      </v-form>
+          <div>
+            <v-btn @click="postInfo(infoProfiles)">Cохранить</v-btn>
+            <v-btn type="reset">сброс</v-btn>
+          </div>
+        </v-form>
+      <!-- </div> -->
+      <div class="settOf">
+        Изменение пароля
+      </div>
+
+
+      <div class="forms">
+        <v-form>
+          <v-col class="font">
+            <v-text-field class="inputOldPassword form" v-model="changePasswords.old_password" label="Пароль"
+              type="password" required :rules="[rules.require]"></v-text-field>
+          </v-col>
+
+          <v-col class="font">
+            <v-text-field class="inputNewPassword form" v-model="changePasswords.new_password" label="Новый пароль"
+              type="password" required :rules="[rules.require, rules.passwordmin]"></v-text-field>
+          </v-col>
+          <v-col class="font">
+            <v-text-field class="inputNewPassword2 form" v-model="initialState.new_password2"
+              label="Подтвердите новый пароль" type="password" required
+              :rules="[rules.require, rules.passsame]"></v-text-field>
+          </v-col>
+          <div>
+            <v-btn @click="postPassword(changePasswords)">Cохранить</v-btn>
+            <v-btn type="reset">сброс</v-btn>
+          </div>
+        </v-form>
+      </div>
 
     </div>
 
@@ -78,6 +80,7 @@
 
     <!-- <AccountSetttingsHeader></AccountSetttingsHeader> -->
   </div>
+  </NewLayout>
 
 </template>
 
@@ -92,6 +95,7 @@ import { postInfo } from '@/composables/auth.request'
 import type { infoProfile } from '@/types/auth.type'
 import type { changePassword } from '@/types/auth.type'
 import { postPassword } from '@/composables/auth.request'
+import NewLayout from '@/layouts/NewLayout.vue'
 
 
 
@@ -126,11 +130,11 @@ const changePasswords = ref<changePassword>({
 //   infoProfiles.value = response
 // }
 
-onMounted (async () => {
-  try{
+onMounted(async () => {
+  try {
     const result = await getInfo()
     infoProfiles.value = result
-  } catch(error) {
+  } catch (error) {
     console.error(error)
   }
 })
@@ -141,7 +145,7 @@ const { userData, myEmail } = storeToRefs(accSet)
 const { myName } = storeToRefs(accSet)
 
 
-const initialState = ref<LoginData>({...userData.value})
+const initialState = ref<LoginData>({ ...userData.value })
 
 
 
@@ -154,28 +158,115 @@ const rules = {
 }
 
 
-// function sendForm() {
-//   console.log(initialState.value)
+function sendForm() {
+  console.log(initialState.value)
 
-//   accSet.setUserData({...initialState.value})
-// }
+  accSet.setUserData({ ...initialState.value })
+}
 
 function submitForm() {
-      const formEl = this.$refs.myForm;
-      if (!formEl.checkValidity()) {
-        formEl.reportValidity();
-        return;
+  const formEl = this.$refs.myForm;
+  if (!formEl.checkValidity()) {
+    formEl.reportValidity();
+    return;
 
 
 
 
-      }}
+  }
+}
 
 
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+
+.settOf {
+  font-family: 'Roboto';
+  font-size: 35px;
+  font-weight: 600;
+  margin: 50px;
+}
+
+.form1 {
+  margin-top: 70px;
+  border-bottom: 2px solid;
+}
+
+.inputName::before {
+  content: 'ИМЯ ПОЛЬЗОВАТЕЛЯ';
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 30px;
+  font-size: 25px;
+  // font-weight: 600;
+  // font-family: monospace;
+}
+
+.inputName {
+  // font-family: monospace;
+}
+
+.inputLastname::before {
+  content: 'ФАМИЛИЯ ПОЛЬЗОВАТЕЛЯ';
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 30px;
+  font-size: 25px;
+  // font-weight: 600;
+}
+
+.inputOldPassword::before {
+  content: 'ПАРОЛЬ ОТ АККАУНТА';
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 30px;
+  font-size: 25px;
+  // font-weight: 600;
+}
+
+.inputNewPassword::before {
+  content: 'НОВЫЙ ПАРОЛЬ';
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 30px;
+  font-size: 25px;
+  // font-weight: 600;
+}
+
+.inputNewPassword2::before {
+  content: 'ПОВТОРИТЕ НОВЫЙ ПАРОЛЬ';
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 30px;
+  font-size: 25px;
+  // font-weight: 600;
+}
+
+.form {
+  height: 50px;
+}
+
+/* .font {
+  height: 150px;
+} */
+
+.v-input {
+  height: 120px;
+}
+
+.v-field__input {
+  height: 40px;
+  font-size: 50px;
+}
+
+.v-field__overlay {
+  font-size: 50px;
+}
+
 .bigBox {
   background-color: aliceblue;
   width: 2000px;
@@ -183,29 +274,58 @@ function submitForm() {
   margin: auto;
   margin-top: 90px;
   box-shadow: 15px 15px 30px rgb(214, 214, 214);
-  border-radius: 30px;
+  // border-radius: 30px;
+  /* display: inline-block; */
+  display: flex;
+  border-radius: 25px;
+  box-shadow: 20px 20px 38px rgb(180, 178, 178);
 }
 
 .boxPerson {
-  width: 100%;
-  min-height: 200px;
-  border-bottom: 1px solid rgb(174, 174, 174);
-  padding: 20px;
-  position: relative;
-  display: flex;
+  width: 30%;
+  height: 100%;
+  // border-bottom: 1px solid rgb(174, 174, 174);
+  /* padding: 20px; */
+  /* position: relative; */
+  /* display: flex; */
+  // background-color: rgb(212, 120, 120);
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  border-right: 2px solid black;
+  box-shadow: 10px 10px 38px rgb(180, 178, 178);
+}
+
+.boxForm {
+  /* display: flex; */
+  height: 100%;
+  width: 70%;
+  // background-color: rgb(100, 100, 198);
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
 }
 
 .avatar {
-  width: 70px;
-  height: 70px;
+  width: 110px;
+  height: 110px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 20px;
+  margin-top: 60px;
+  margin-left: 30px;
   /* background-image: url(https://i.pinimg.com/736x/27/f3/ae/27f3aed3ecf3a325cd4107b0326722d1.jpg); */
   opacity: 0.9;
   background-size: cover;
   position: relative;
   display: inline-block;
+  background-color: antiquewhite;
+  border-radius: 50%;
+}
+
+
+.forms {
+  height: 30%;
+  width: 77%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* .avatarIcon{
@@ -219,13 +339,22 @@ function submitForm() {
 } */
 
 .nameHEADER {
-  position: absolute;
+  /* position: absolute; */
   bottom: 0;
   left: 0;
-  margin: 0 0 13px 15px;
-  font-family: Monsserrat;
+  margin-left: 20px;
+  font-family: Roboto;
   font-weight: 600;
-  font-size: 23px;
+  font-size: 45px;
+}
+
+.emailHEADER {
+  font-family: Monsserrat;
+  font-size: 30px;
+  color: grey;
+  margin-top: -25px;
+  margin-left: 20px;
+  padding: 0;
 }
 
 
@@ -291,20 +420,5 @@ function submitForm() {
 .avatar:hover .hover {
   opacity: 1;
   opacity: 0.6;
-}
-
-.emailHEADER {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  margin: 0px 0 0px 17px;
-  font-family: Monsserrat;
-  font-weight: 400;
-  font-size: 15px;
-  color: rgb(142, 142, 142);
-}
-
-.boxForm {
-  border-bottom: 1px solid rgb(58, 58, 116);
 }
 </style>

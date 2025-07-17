@@ -1,10 +1,20 @@
 <template>
   <v-app style="height: 100vh; display: flex">
     <v-navigation-drawer app permanent :rail="true" expand-on-hover width="280" rail-width="55" class="elevation-2">
-      <v-list v-if="isAuthenticated">
-        <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg" title="John Leider"
-          :subtitle="userStore.userData.email || 'Почта не указана'" class="sticky-section">
-          <!-- <p class="text-caption mt-1"></p> -->
+      <v-list>
+        <v-list-item 
+          :title="isAuthenticated ? `${infoProfiles.first_name} ${infoProfiles.last_name}` || 'Пользователь' : 'Гость'"
+          :subtitle="isAuthenticated ? userStore.userData.email || 'Почта не указана' : 'Войдите в аккаунт'" 
+          class="sticky-section"
+        >
+          <template v-slot:prepend>
+            <v-avatar v-if="isAuthenticated" :color="getRandomColor()">
+              <span class="text-white">{{ avatarText }}</span>
+            </v-avatar>
+            <v-avatar v-else color="grey-lighten-1">
+              <v-icon color="white">mdi-account</v-icon>
+            </v-avatar>
+          </template>
         </v-list-item>
       </v-list>
 
@@ -12,13 +22,12 @@
 
       <template v-slot:append>
         <v-list density="compact" nav>
-          <v-list-item v-for="item in setItems" :key="item.title" :prepend-icon="item.icon" :title="item.title"
+          <v-list-item v-for="item in setItems" :key="item.title" :prepend-icon="item.icon" :title="item.title" :to="item.routeName"
             v-if="isAuthenticated" class="nav-item" />
 
           <v-list-item v-for="item in outItems" :key="item.title" :prepend-icon="item.icon" :title="item.title"
             v-if="isAuthenticated" @click="confirmLogout" class="nav-item" />
         </v-list>
-
 
         <v-list density="compact" nav>
           <v-list-item v-for="item in inItems" :key="item.title" :prepend-icon="item.icon" :to="item.routeName"
@@ -26,13 +35,11 @@
         </v-list>
       </template>
 
-
       <v-list density="compact" nav class="menu-list sticky-section">
         <v-list-item v-for="item in menuItems" :key="item.title" :prepend-icon="item.icon" :title="item.title"
           :to="item.routeName" class="nav-item" />
       </v-list>
       <v-spacer></v-spacer>
-
 
       <v-dialog v-model="logoutDialog" max-width="400">
         <v-card>
@@ -45,13 +52,6 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-
-
-
-
-
-
-
     </v-navigation-drawer>
 
     <div class="app-content-wrapper">
@@ -97,15 +97,53 @@ import axios from 'axios'
 import { logoutReq } from '@/composables/auth.request'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
+import type { infoProfile } from '@/types/auth.type'
+import { getInfo } from '@/composables/auth.request'
 
 const userStore = useUserStore()
-
-
 const router = useRouter()
 
 onMounted(() => {
   userStore.loadUserEmail();
 });
+
+const infoProfiles = ref<infoProfile>({
+  id: 0,
+  email: '',
+  first_name: '',
+  last_name: ''
+})
+
+const avatarText = computed(() => {
+  if (infoProfiles.value.first_name && infoProfiles.value.last_name) {
+    return `${infoProfiles.value.first_name[0]}${infoProfiles.value.last_name[0]}`.toUpperCase()
+  }
+  return '-'
+})
+
+const getRandomColor = () => {
+  const colors = [
+    'primary', 
+    'secondary', 
+    'error', 
+    'warning', 
+    'info', 
+    'success',
+    'purple',
+    'teal',
+    'orange'
+  ]
+  return colors[Math.floor(Math.random() * colors.length)]
+}
+
+onMounted(async () => {
+  try {
+    const result = await getInfo()
+    infoProfiles.value = result
+  } catch (error) {
+    console.error(error)
+  }
+})
 
 const isAuthenticated = computed(() => {
   return !!localStorage.getItem('accessToken')
@@ -114,30 +152,6 @@ const logoutDialog = ref(false)
 const confirmLogout = () => {
   logoutDialog.value = true
 }
-
-// const performLogout = async () => {
-//   try {
-//     const refreshToken = localStorage.getItem('refresh_Token')
-//     if (refreshToken) {
-//       await logoutReq(refreshToken)
-//     }
-
-//     localStorage.removeItem('accessToken')
-//     localStorage.removeItem('refresh_Token')
-//     delete axios.defaults.headers.common['Authorization']
-
-//     logoutDialog.value = false
-//     await router.push({ path: '/' })
-//   } catch (error) {
-//     console.error('Ошибка при выходе:', error)
-//     localStorage.removeItem('accessToken')
-//     localStorage.removeItem('refresh_Token')
-//     delete axios.defaults.headers.common['Authorization']
-//     logoutDialog.value = false
-//     router.push({ path: '/' })
-//   }
-// }
-
 
 const performLogout = async () => {
   try {
@@ -157,22 +171,17 @@ const performLogout = async () => {
     logoutDialog.value = false;
 
     await router.push('/');
-    
-    //  кАрОче... допом перезагружаем страницу для полного сброса состояния (можно ли так?...)
     window.location.reload();
     
   } catch (error) {
     console.error('Критическая ошибка при выходе:', error);
-    // На всякий случай делаем hard redirect
     window.location.href = '/';
   }
 }
 
-
 const homepage = () => {
   router.push('/')
 }
-
 
 const menuItems = computed(() => {
   const baseItems = [
@@ -185,7 +194,6 @@ const menuItems = computed(() => {
     { title: 'Финансы', icon: 'mdi-currency-usd', routeName: '/finance' }]
   }
   return baseItems
-
 })
 
 const outItems = [
@@ -193,18 +201,16 @@ const outItems = [
 ]
 
 const setItems = [
-  { title: 'Настройки аккаунта', icon: 'mdi-wrench' },
+  { title: 'Настройки аккаунта', icon: 'mdi-wrench', routeName: '/accountsettings' },
 ]
 
 const inItems =  [
     { title: 'Вход', icon: 'mdi-account', routeName: '/entrance' },
   ] 
 
-
 const icons = [
   'mdi-instagram',
 ]
-
 </script>
 
 <style scoped>
@@ -265,12 +271,9 @@ body,
   transition: .25s;
 }
 
-
-
 .nav-item:hover,
 .nav-item.v-list-item--active {
   background-color: rgb(24, 103, 192);
-
   color: #fff
 }
 
@@ -281,7 +284,5 @@ body,
 
 .bottom-menu {
   margin-top: auto;
-  /* Это прижмет блок к низу */
-  /* position: sticky; */
 }
 </style>
