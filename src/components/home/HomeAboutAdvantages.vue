@@ -4,14 +4,15 @@
       <li
         v-for="(advantage, index) in advantages"
         :key="index"
-        :class="{ 'advantages__item--active': index === activeIndex }"
         class="advantages__item"
+        :class="{ 'advantages__item--active': index === activeIndex }"
         @mouseenter="activeIndex = index"
       >
         {{ advantage }}
+
         <div v-if="index === activeIndex" class="advantages__tooltip">
           <div class="tooltip-triangle"></div>
-          <div class="tooltip-box">Подготовка писем и анализ результатов рассылки</div>
+          <div class="tooltip-box">{{ description[index] }}</div>
         </div>
       </li>
     </ul>
@@ -22,14 +23,20 @@
 import { ref } from 'vue'
 
 const advantages = ref<string[]>([
-  'Разработка стратегии',
-  'Верстка адаптивного шаблона',
-  'Ежемесячное ведение рассылки',
-  'Настройка триггерных кампаний',
-  'Welcome серии писем и автоворонки',
+  'Управление личными финансами',
+  'Планирование и контроль денежного потока',
+  'Просмотр подробностей каждого чека',
+  'Обширное количество параметров для сортировки транзакций и товаров',
 ])
 
-const activeIndex = ref<number>(3)
+const description = ref<string[]>([
+  'Ваш капитал под контролем',
+  'Прогнозируйте доходы и расходы',
+  'Сканируйте чеки, анализируйте траты',
+  'Фильтруйте покупки по любым критериям',
+])
+
+const activeIndex = ref<number>(0)
 </script>
 
 <style lang="scss" scoped>

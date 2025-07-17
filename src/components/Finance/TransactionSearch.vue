@@ -1,14 +1,6 @@
-```vue
-<!-- src/components/Finance/TransactionSearch.vue -->
 <template>
-  <!-- Обёртка с приятной карточкой и полупрозрачным фоном -->
-  <v-card
-    flat
-    class="pa-2 mx-4 mb-4"
-    elevation="2"
-    style="border-radius: 8px; backdrop-filter: blur(4px); background: rgba(255, 255, 255, 0.8)"
-  >
-    <!-- Стилизованное текстовое поле поиска -->
+  <!-- компактная обёртка без внешних отступов -->
+  <v-card flat class="pa-0 flex-grow-1 search-card" elevation="0">
     <v-text-field
       v-model="searchLocal"
       clearable
@@ -25,32 +17,24 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-// Принимаем v-model
-const props = defineProps<{
-  modelValue: string
-}>()
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
-}>()
+const props = defineProps<{ modelValue: string }>()
+const emit = defineEmits<{ (e: 'update:modelValue', value: string): void }>()
 
-// Локальная копия, чтобы не мутировать props напрямую
 const searchLocal = ref(props.modelValue)
 
-// Следим за изменениями локальной копии и эмитим наружу
-watch(searchLocal, (val) => {
-  emit('update:modelValue', val)
-})
-
-// Синхронизируем, если изменили модель сверху
+watch(searchLocal, (val) => emit('update:modelValue', val))
 watch(
   () => props.modelValue,
-  (newVal) => {
-    searchLocal.value = newVal
-  },
+  (val) => (searchLocal.value = val),
 )
 </script>
 
 <style scoped>
-/* Дополнительные мелкие правки */
+/* фон + блюр такие же, что и у верхнего тулбара */
+.search-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+}
+
+/* если нужно, чтобы поле не растягивалось на гигантских экранах */
 </style>
-```

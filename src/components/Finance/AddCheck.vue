@@ -1,15 +1,7 @@
 <template>
   <v-dialog v-model="dialog" max-width="1260">
     <template v-slot:activator="{ props: activatorProps }">
-      <v-btn
-        class="upload-btn"
-        variant="elevated"
-        elevation="4"
-        size="large"
-        v-bind="activatorProps"
-      >
-        <v-icon left>mdi-upload</v-icon>
-        Загрузить чек
+      <v-btn rounded="xl" variant="elevated" v-bind="activatorProps" icon="mdi-upload" class="mr-4">
       </v-btn>
     </template>
 
@@ -46,29 +38,4 @@ const onUpload = async () => {
 }
 </script>
 
-<style scoped>
-.upload-btn {
-  background-color: #2196f3;
-  color: #fff;
-  border-radius: 24px;
-  text-transform: none;
-  padding: 0 20px;
-  height: 48px;
-  font-weight: 500;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-.upload-btn .v-icon {
-  margin-right: 8px;
-}
-.upload-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-}
-.upload-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-</style>
+<style scoped></style>

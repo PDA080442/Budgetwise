@@ -4,10 +4,10 @@
     <div class="about__container">
       <div class="about__box">
         <div class="about__info">
-          <div class="about__info__title">{{ title }}</div>
+          <div class="about__info__title">Управляйте своими финансами</div>
           <div class="about__info__col1">
             <HomeAboutAdvantages />
-            <button class="about__info__btn">Заказать консультацию</button>
+            <router-link to="/finance" class="about__info__btn"> Финансовый менеджер </router-link>
           </div>
           <div class="about__info__col2"></div>
         </div>
@@ -20,10 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import HomeAboutAdvantages from '@/components/Home/HomeAboutAdvantages.vue'
-
-const title = ref('Email маркетинг под ключ')
 </script>
 
 <style lang="scss" scoped>

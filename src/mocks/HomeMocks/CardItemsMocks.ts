@@ -7,19 +7,18 @@ export interface HomeCardsItems {
 export const homecarditems: HomeCardsItems[] = [
   {
     img: 'src/assets/img/HomeAdvantage/statistic.png',
-    title: 'мы делаем это',
-    description:
-      'какая-то информация о том, что мы там предоставляем, днлаем и ид и тп ну ю ноу короче',
+    title: 'Быстрый обзор бюджета',
+    description: 'Сводка доходов и расходов за минуту. ',
   },
 
   {
     img: 'src/assets/img/HomeAdvantage/pig.png',
-    title: 'и еще это',
-    description: 'краткая информаия о том что мы делаем, но уже для этого пункта',
+    title: 'Минимум лишних трат',
+    description: 'Легко увидеть и сократить ненужные расходы.',
   },
   {
     img: 'src/assets/img/HomeAdvantage/cart.png',
-    title: 'и это',
-    description: 'еще одно описание того, чем мы занимаемся, что предоставляем',
+    title: '	Мотивация к развитию',
+    description: 'Видимый прогресс вдохновляет зарабатывать больше.',
   },
 ]

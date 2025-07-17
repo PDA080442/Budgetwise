@@ -3,7 +3,7 @@
     <div class="d-flex justify-center mb-10">
       <PopupCategory />
     </div>
-    <v-card border rounded="lg" style="border: 2px solid primary">
+    <v-card class="Transaction__card" rounded="lg" style="border: 2px solid primary">
       <v-data-table
         :headers="headers"
         :items="localTransactions"
@@ -16,19 +16,36 @@
           <v-toolbar flat dense class="styled-toolbar">
             <v-toolbar-title class="text-h5 font-weight-bold">Транзакции</v-toolbar-title>
             <v-spacer />
-
             <AddCheck />
-
-            <v-btn icon @click="filtersDrawer = true" class="mx-2 styled-icon-btn">
-              <v-icon size="24">mdi-filter-variant</v-icon>
-            </v-btn>
-
             <v-btn @click="addTransaction" class="styled-add-btn">
               <v-icon size="24">mdi-plus</v-icon>
             </v-btn>
           </v-toolbar>
-          <!-- Вместо <v-toolbar> с v-text-field: -->
-          <TransactionSearch v-model="search" />
+          <v-toolbar
+            flat
+            dense
+            class="transparent-toolbar mb-4 pa-5"
+            style="background-color: #1867c0"
+          >
+            <v-card
+              flat
+              class="search-wrapper flex-grow-1 pa-0"
+              rounded="lg"
+              style="background-color: #1867c0"
+            >
+              <TransactionSearch v-model="search" style="background-color: #fff" />
+            </v-card>
+
+            <v-btn
+              icon
+              class="filter-btn ml-4"
+              style="background-color: #fff"
+              @click="filtersDrawer = true"
+            >
+              <v-icon size="24">mdi-filter-variant</v-icon>
+            </v-btn>
+          </v-toolbar>
+
           <v-divider></v-divider>
         </template>
         <template v-slot:[`item.data-table-expand`]="{ internalItem, isExpanded, toggleExpand }">
@@ -323,12 +340,14 @@ const headers = [
 </script>
 
 <style scoped>
+.Transaction__card {
+  border: 2px solid #1867c0;
+}
 .styled-toolbar {
   background-color: rgb(var(--v-theme-primary)) !important;
-  border-radius: 12px;
+
   padding: 0 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin-bottom: 16px;
 }
 
 .styled-toolbar .v-toolbar-title {
@@ -346,10 +365,9 @@ const headers = [
 
 .styled-add-btn {
   background-color: #fff;
-  color: #764ba2;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   min-width: 40px;
   display: flex;
   align-items: center;

@@ -7,25 +7,25 @@ export interface TopServices {
 
 export const topservices: TopServices[] = [
   {
-    title: 'Аудит и стратегия рассылок',
+    title: 'BudgetWise',
     image: 'src/assets/img/HomeServices/loop.png',
     text: 'Небольшое описание о том, как мы это делаем. Что мы делаем аудиты и повышаем конверсию. Небольшое описание о том, как мы это делаем.',
     price: 'от 100 000 ₽',
   },
   {
-    title: 'Аудит и стратегия рассылок',
+    title: 'BudgetWise',
     image: 'src/assets/img/HomeServices/loop.png',
     text: 'Небольшое описание о том, как мы это делаем. Что мы делаем аудиты и повышаем конверсию. Небольшое описание о том, как мы это делаем.',
     price: 'от 100 000 ₽',
   },
   {
-    title: 'Аудит и стратегия рассылок',
+    title: 'BudgetWise',
     image: 'src/assets/img/HomeServices/loop.png',
     text: 'Небольшое описание о том, как мы это делаем. Что мы делаем аудиты и повышаем конверсию. Небольшое описание о том, как мы это делаем.',
     price: 'от 100 000 ₽',
   },
   {
-    title: 'Аудит и стратегия рассылок',
+    title: 'BudgetWise',
     image: 'src/assets/img/HomeServices/loop.png',
     text: 'Небольшое описание о том, как мы это делаем. Что мы делаем аудиты и повышаем конверсию. Небольшое описание о том, как мы это делаем.',
     price: 'от 100 000 ₽',

@@ -51,7 +51,7 @@ const { card } = defineProps<CardProps>()
     font-family: Montserrat;
     font-size: 18px;
     font-weight: 400;
-    line-height: 20px;
+    line-height: 30px;
   }
 
   &__title {

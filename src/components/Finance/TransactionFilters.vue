@@ -14,8 +14,7 @@
       dense
       class="px-4"
       style="
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        background: linear-gradient(120deg, #42a5f5, #478ed1);
+        background-color: #1867c0;
         color: white;
       "
     >

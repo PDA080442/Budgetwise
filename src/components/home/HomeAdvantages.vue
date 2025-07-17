@@ -1,10 +1,7 @@
 <template>
   <div class="advantages">
     <div class="advantages__box">
-      <h2 class="advantages__title">
-        Email рассылка для интернет магазинов<br />
-        в чем преимущества?
-      </h2>
+      <h2 class="advantages__title">Преимущества BudgetWise</h2>
       <div class="advantages__cards">
         <CardsAbout v-for="(card, index) in items" :key="index" :card="card" />
       </div>
@@ -40,7 +37,7 @@ const items = ref<HomeCardsItems[]>(homecarditems)
   font-family: 'Montserrat', sans-serif;
   font-size: 36px;
   font-weight: 600;
-  line-height: 40px;
+  line-height: 20px !important;
   color: #2e2e2e;
   margin: 0 0 50px 0;
 }
@@ -48,6 +45,7 @@ const items = ref<HomeCardsItems[]>(homecarditems)
 .advantages__cards {
   position: absolute;
   margin-top: 90px;
+
   display: flex;
   gap: 30px;
   justify-content: flex-start;
