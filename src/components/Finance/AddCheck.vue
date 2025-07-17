@@ -1,13 +1,15 @@
 <template>
   <v-dialog v-model="dialog" max-width="1260">
     <template v-slot:activator="{ props: activatorProps }">
-      <v-btn text="Загрузить чек" v-bind="activatorProps" border></v-btn>
+      <v-btn rounded="xl" variant="elevated" v-bind="activatorProps" icon="mdi-upload" class="mr-4">
+      </v-btn>
     </template>
+
     <template v-slot:default="{ isActive }">
       <v-card rounded="lg">
-        <v-card-title class="text-center">Загрузите или перетащите изображение чека</v-card-title>
+        <v-card-title class="text-center"> Загрузите или перетащите изображение чека </v-card-title>
         <v-card-text>
-          <v-file-input v-model="files" prepend-icon="mdi-upload" accept="image/*"> </v-file-input>
+          <v-file-input v-model="files" prepend-icon="mdi-upload" accept="image/*" />
         </v-card-text>
         <v-card-actions>
           <v-btn text="Загрузить" :disabled="!files" @click="onUpload()"></v-btn>
@@ -35,3 +37,5 @@ const onUpload = async () => {
   dialog.value = false
 }
 </script>
+
+<style scoped></style>

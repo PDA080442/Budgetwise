@@ -27,6 +27,7 @@ export async function logdata(logindata: LoginData): Promise<AuthTokens> {
   return tokens as AuthTokens
 }
 
+
 export async function logoutReq(refresh_token: string): Promise<void> {
   await call(
     '/logout/',
@@ -77,4 +78,5 @@ export async function postPassword(info: changePassword): Promise<changePassword
 export async function getEmail(): Promise<LoginData> {
   const response = await call('/profile/', {}, 'GET')
   return response as LoginData
+
 }

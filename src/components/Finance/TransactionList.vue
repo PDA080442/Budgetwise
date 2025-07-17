@@ -1,6 +1,7 @@
 <template>
   <v-container>
-    <v-card border rounded="lg">
+    <div class="d-flex justify-center mb-10"></div>
+    <v-card class="Transaction__card" rounded="lg" style="border: 2px solid primary">
       <v-data-table
         :headers="headers"
         :items="localTransactions"
@@ -10,72 +11,39 @@
         v-model:sort-by="sortOrder"
       >
         <template v-slot:top>
-          <v-toolbar class="d-flex">
-            <v-toolbar-title style="max-width: 300px"> Транзакции </v-toolbar-title>
-            <v-spacer />
-            <PopupCategory />
-            <v-spacer />
-            <v-btn
-              text="Добавить транзакцию"
-              prepend-icon="mdi-plus"
-              border
-              class="px-4"
-              @click="addTransaction"
-            ></v-btn>
+          <v-toolbar flat dense class="styled-toolbar">
+            <v-toolbar-title class="text-h5 font-weight-bold">Транзакции</v-toolbar-title>
             <v-spacer />
             <AddCheck />
+            <v-btn @click="addTransaction" class="styled-add-btn">
+              <v-icon size="24">mdi-plus</v-icon>
+            </v-btn>
           </v-toolbar>
-          <v-toolbar>
-            <v-text-field
-              v-model="search"
-              clearable
-              label="Поиск"
-              prepend-inner-icon="mdi-magnify"
-              variant="outlined"
-              hide-details
+          <v-toolbar
+            flat
+            dense
+            class="transparent-toolbar mb-4 pa-5"
+            style="background-color: #1867c0"
+          >
+            <v-card
+              flat
+              class="search-wrapper flex-grow-1 pa-0"
               rounded="lg"
-              class="mx-4"
-            />
+              style="background-color: #1867c0"
+            >
+              <TransactionSearch v-model="search" style="background-color: #fff" />
+            </v-card>
+
+            <v-btn
+              icon
+              class="filter-btn ml-4"
+              style="background-color: #fff"
+              @click="filtersDrawer = true"
+            >
+              <v-icon size="24">mdi-filter-variant</v-icon>
+            </v-btn>
           </v-toolbar>
-          <v-divider></v-divider>
-          <v-toolbar>
-            <v-text-field
-              v-model="dateAfter"
-              label="Начало"
-              type="date"
-              style="max-width: 200px"
-              clearable
-              class="ml-4"
-            />
-            <v-text-field
-              v-model="dateBefore"
-              label="Конец"
-              type="date"
-              style="max-width: 200px"
-              clearable
-            />
-            <v-select
-              v-model="selectCategories"
-              label="Выберите категории"
-              style="max-width: 343px"
-              :items="categories"
-              item-title="name"
-              item-value="id"
-              multiple
-              class="ml-2"
-              clearable
-            />
-            <v-select
-              v-model="selectTypes"
-              :items="types"
-              item-title="name"
-              item-value="id"
-              label="Доход/Расход"
-              clearable
-              style="max-width: 343px"
-              class="ml-2"
-            />
-          </v-toolbar>
+
           <v-divider></v-divider>
         </template>
         <template v-slot:[`item.data-table-expand`]="{ internalItem, isExpanded, toggleExpand }">
@@ -88,19 +56,66 @@
             @click="toggleExpand(internalItem)"
           />
         </template>
-        <template v-slot:[`item.type`]="{ item }">{{ getTypeText(item.type) }}</template>
-        <template v-slot:[`item.category`]="{ item }">{{
-          getCategoryText(item.category)
-        }}</template>
+
+        <template v-slot:[`item.type`]="{ item }">
+          <span :style="{ color: getTypeColor(item.type), fontWeight: '700' }">
+            {{ getTypeText(item.type) }}
+          </span>
+        </template>
+        <template v-slot:[`item.category`]="{ item }">
+          <v-container>
+            <v-tooltip
+              class="tooltip"
+              location="top"
+              open-on-hover
+              width="500"
+              elevated="24"
+              content-class="bg-primary text-subtitle-1 rounded-xl pa-5"
+            >
+              <template #activator="{ props }">
+                <v-chip
+                  v-bind="props"
+                  :color="getCategoryColor(item.category)"
+                  :border="`${getCategoryColor(item.category)} thin opacity-25`"
+                  size="large"
+                  :text="getCategoryText(item.category)"
+                  class="cursor-pointer"
+                />
+              </template>
+              <span class="font-weight-medium">
+                {{
+                  categories.find((c) => c.id === item.category)?.description ||
+                  'Нет описания категории'
+                }}
+              </span>
+            </v-tooltip>
+          </v-container>
+        </template>
+
+        <template v-slot:[`item.amount`]="{ item }">
+          <span class="font-weight-bold">
+            {{ formatCurrency(item.amount) }}
+          </span>
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <div class="d-flex ga-2 justify-start">
-            <v-icon icon="mdi-pencil" size="small" @click="edTransaction(item.id)"></v-icon>
-            <v-icon icon="mdi-delete" size="small" @click="delTransaction(item.id)"></v-icon>
+            <v-icon
+              color="primary"
+              icon="mdi-pencil"
+              size="large"
+              @click="edTransaction(item.id)"
+            ></v-icon>
+            <v-icon
+              color="red"
+              icon="mdi-delete"
+              size="large"
+              @click="delTransaction(item.id)"
+            ></v-icon>
           </div>
         </template>
         <template v-slot:expanded-row="{ columns, item }">
           <tr border>
-            <td :colspan="columns.length" class="py-4 font-italic">
+            <td :colspan="columns.length" class="pa-4">
               <v-sheet rounded="lg" border>
                 <ProductsList :transactionId="item.id" :key="item.id" />
               </v-sheet>
@@ -109,6 +124,26 @@
         </template>
       </v-data-table>
     </v-card>
+    <v-navigation-drawer
+      v-model="filtersDrawer"
+      location="end"
+      temporary
+      transition="slide-x-reverse-transition"
+      style="backdrop-filter: blur(4px)"
+      :width="500"
+    >
+      <TransactionFilters
+        v-model:dateAfter="dateAfter"
+        v-model:dateBefore="dateBefore"
+        v-model:selectCategories="selectCategories"
+        v-model:selectTypes="selectTypes"
+        :categories="categories"
+        :types="types"
+        @apply="filtersDrawer = false"
+        @close="filtersDrawer = false"
+      />
+    </v-navigation-drawer>
+
     <v-dialog v-model="dialog" max-width="500">
       <v-card class="pa-5 text-center" border rounded="lg">
         <v-card-title>
@@ -165,9 +200,11 @@ import type { Transaction } from '@/types/transaction.type'
 import { getCategories } from '@/composables/category.request'
 import { getTypes } from '@/composables/type.request'
 import type { Category } from '@/types/category.type'
-import PopupCategory from './PopupCategory.vue'
 import type { Types } from '@/types/types.type'
 import AddCheck from './AddCheck.vue'
+import TransactionFilters from './TransactionFilters.vue'
+import TransactionSearch from './TransactionSearch.vue'
+
 import {
   getTransaction,
   searchTransaction,
@@ -179,7 +216,6 @@ import {
 
 import { useTransactionActions } from '@/services/Actions/Finance/TransactionListActions'
 import { useTransactionRules } from '@/services/Rules/Finance/TransactionListRules'
-// import { useTransactionFilters } from '@/services/Filters/Finance/TransactionListFilters'
 
 const props = defineProps<{ transactions: Transaction[] }>()
 const localTransactions = ref<Transaction[]>([...props.transactions])
@@ -201,6 +237,32 @@ const dateAfter = ref<string>('')
 const selectCategories = ref<[]>([])
 const selectTypes = ref<number | null>(null)
 const sortOrder = ref<{ key: string; order: 'asc' | 'desc' }[]>([])
+const filtersDrawer = ref(false)
+
+const categoryColors: Record<number, string> = {
+  1: '#F44336',
+  2: '#2196F3',
+  3: '#4CAF50',
+  4: '#FF9800',
+  5: '#9C27B0',
+}
+
+function getCategoryColor(categoryId: number): string {
+  return categoryColors[categoryId] || '#000000'
+}
+
+const typeColors: Record<number, string> = {
+  0: '#00b909',
+  1: 'red',
+}
+
+function getTypeColor(typeId: number): string {
+  return typeColors[typeId] || 'inherit'
+}
+
+function formatCurrency(val: number): string {
+  return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(val)
+}
 
 const {
   addTransaction,
@@ -295,4 +357,51 @@ const headers = [
 ]
 </script>
 
-<style scoped></style>
+<style scoped>
+.Transaction__card {
+  border: 2px solid #1867c0;
+}
+.styled-toolbar {
+  background-color: rgb(var(--v-theme-primary)) !important;
+
+  padding: 0 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.styled-toolbar .v-toolbar-title {
+  color: #fff;
+}
+
+.styled-icon-btn .v-icon {
+  color: #fff;
+  transition: transform 0.2s;
+}
+
+.styled-icon-btn:hover .v-icon {
+  transform: scale(1.1);
+}
+
+.styled-add-btn {
+  background-color: #fff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+}
+
+.styled-add-btn:hover {
+  background-color: #ececff;
+  transform: translateY(-2px);
+}
+
+.v-tooltip__content {
+  background-color: #fff;
+}
+</style>

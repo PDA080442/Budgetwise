@@ -3,16 +3,7 @@
       <div>
         <HomeAboutSection></HomeAboutSection>
         <BalanceView />
-        <div class="advantages">
-          <div class="advantages__box">
-            <div class="advantages__text">
-              ну короче мы можем вам предоставить или сделать следующие пункты и тп
-            </div>
-            <div class="box_for_cards">
-              <cardsAbout v-for="(card, index) in items" :card="card" :key="index"></cardsAbout>
-            </div>
-          </div>
-        </div>
+        <HomeAdvantages />
         <div class="services">
           <HomeTopServices></HomeTopServices>
         </div>
@@ -22,14 +13,11 @@
 
 <script setup lang="ts">
 import HomeAboutSection from '@/components/Home/HomeAboutSection.vue'
-import CardsAbout from '@/components/Home/HomeCardsAbout.vue'
-import { ref } from 'vue'
+
 import HomeTopServices from '@/components/Home/HomeTopServices.vue'
 import NewLayout from '@/layouts/NewLayout.vue'
-import { homecarditems, type HomeCardsItems } from '@/mocks/HomeMocks/CardItemsMocks'
 import BalanceView from '@/components/Homepage/BalanceView.vue'
-
-const items = ref<HomeCardsItems[]>(homecarditems)
+import HomeAdvantages from '@/components/Home/HomeAdvantages.vue'
 </script>
 
 <style lang="scss" scoped>

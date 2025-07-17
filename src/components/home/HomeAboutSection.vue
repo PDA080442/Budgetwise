@@ -1,74 +1,84 @@
+// HomeAboutSection.vue
 <template>
   <div class="about">
-    <div class="about__fashions">
-      <h1 class="about__header">{{ title }}</h1>
-
-      <HomeAboutAdvantages></HomeAboutAdvantages>
-
-      <div class="buy_service">Заказать консультацию</div>
-    </div>
-
-    <div class="about__image">
-      <img src="@/assets/img/header/proger.jpg" alt="" />
+    <div class="about__container">
+      <div class="about__box">
+        <div class="about__info">
+          <div class="about__info__title">Управляйте своими финансами</div>
+          <div class="about__info__col1">
+            <HomeAboutAdvantages />
+            <router-link to="/finance" class="about__info__btn"> Финансовый менеджер </router-link>
+          </div>
+          <div class="about__info__col2"></div>
+        </div>
+        <div class="about__image">
+          <img src="@/assets/img/header/progger.png" alt="Illustration" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import HomeAboutAdvantages from '@/components/Home/HomeAboutAdvantages.vue'
-
-import { ref } from 'vue'
-const title = ref('Email маркетинг под ключ')
 </script>
 
 <style lang="scss" scoped>
 .about {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
   width: 100%;
-  max-height: 600px;
-  margin-top: 50px;
-  margin-left: auto;
-  margin-right: auto;
-  gap: 20px;
+  max-width: 1920px;
+  margin: 50px auto 0;
+  padding: 0 20px;
+  margin-bottom: 90px;
 
-  &__image {
-    height: 50px img;
+  &__container {
+    max-width: 1515px;
+    margin: 0 auto;
   }
 
-  &__fashions {
-    background-color: rgb(350, 350, 350);
-    height: 90%;
-    max-height: 600px;
-    border-radius: 20px;
+  &__box {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__info {
+    flex: 1;
+    background: #fff;
+    border-radius: 30px;
     box-shadow: 15px 15px 38px rgba(230, 230, 230, 0.9);
-    min-width: 600px;
-    max-width: 900px;
-    padding: 65px;
+    padding: 40px 45px 40px 80px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    z-index: 1;
-  }
 
-  &__header {
-    font-size: 40px;
-    font-weight: 600;
-    font-family: Montserrat;
-    text-align: center;
-  }
+    &__title {
+      font-family: Montserrat, sans-serif;
+      font-size: 30px;
+      font-weight: 600;
+      margin-left: 10px;
+      margin-bottom: 30px;
+    }
 
-  .buy_service {
-    height: 60px;
-    width: 300px;
-    border-radius: 20px;
-    text-align: center;
-    color: white;
-    font-family: Montserrat;
-    font-size: 18px;
-    padding: 15px;
-    margin-bottom: 50px;
-    background-color: rgba(255, 104, 113, 1);
+    &__col1 {
+      flex: 1.4;
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__btn {
+      align-self: self-start;
+      background-color: rgba(255, 104, 113, 1);
+      color: #fff;
+      font-family: Montserrat, sans-serif;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 15px 30px;
+      border-radius: 20px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(235, 90, 98, 1);
+      }
+    }
   }
 }
 </style>

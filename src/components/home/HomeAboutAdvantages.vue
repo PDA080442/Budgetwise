@@ -1,107 +1,106 @@
 <template>
-  <div class="content">
-    <div class="box2">
-      <div class="advantages__list">
-        <ul class="advantages__list__box" v-for="(advantage, index) in advantages" :key="index">
-          <div class="liBox">
-            <li class="advantage">
-              <div>{{ advantage }}</div>
-            </li>
-          </div>
-        </ul>
-      </div>
-    </div>
-    <div>
-      <div class="message">
-        <div class="box_message">
-          <div class>в нашей компании вы сможете сделать/получить тото тоьто и nl b ng</div>
+  <div class="advantages">
+    <ul class="advantages__list">
+      <li
+        v-for="(advantage, index) in advantages"
+        :key="index"
+        class="advantages__item"
+        :class="{ 'advantages__item--active': index === activeIndex }"
+        @mouseenter="activeIndex = index"
+      >
+        {{ advantage }}
+
+        <div v-if="index === activeIndex" class="advantages__tooltip">
+          <div class="tooltip-triangle"></div>
+          <div class="tooltip-box">{{ description[index] }}</div>
         </div>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const advantages = ref([
-  'делаем это для того',
-  'делаем то, чтобы работало это',
-  'занимаемся этим',
-  'вааававвавав',
-  'ааававааааапрпр',
+
+const advantages = ref<string[]>([
+  'Управление личными финансами',
+  'Планирование и контроль денежного потока',
+  'Просмотр подробностей каждого чека',
+  'Обширное количество параметров для сортировки транзакций и товаров',
 ])
+
+const description = ref<string[]>([
+  'Ваш капитал под контролем',
+  'Прогнозируйте доходы и расходы',
+  'Сканируйте чеки, анализируйте траты',
+  'Фильтруйте покупки по любым критериям',
+])
+
+const activeIndex = ref<number>(0)
 </script>
 
 <style lang="scss" scoped>
-.content {
-  display: flex;
-  justify-content: space-between;
+.advantages__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 30px;
 }
 
-.advantages {
-  &__list {
-    font-size: 18px;
-    font-family: Montserrat;
-    display: inline-block;
-    width: 100%;
+.advantages__item {
+  position: relative;
+  padding: 12px 16px 12px 40px;
+  border-radius: 12px;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  cursor: default;
 
-    li ::before {
-      content: '✓';
-      margin-right: 20px;
-    }
+  &::before {
+    content: '✓';
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: #0066ff;
+  }
 
-    &__box {
-      max-width: 275px;
-      min-width: 265px;
-
-      .advantage {
-        list-style: none;
-        padding: 7px;
-        max-width: 500px;
-        min-width: 295xpx;
-
-        &:hover {
-          background-color: rgb(234, 232, 232);
-          border-radius: 15px;
-          border: 2px;
-        }
-      }
-    }
+  &:hover {
+    background-color: #f5f5f5;
   }
 }
 
-.box2 {
-  gap: 10px;
-  width: 100%;
+.advantages__item--active {
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.message {
-  width: 250px;
-  min-width: 250px;
-  min-height: 150px;
-  height: fit-content;
-  background-color: rbg(250 250 250);
+.advantages__tooltip {
+  position: absolute;
+  top: 50%;
+  left: 60%;
+  transform: translate(16px, -50%);
   display: flex;
+  align-items: center;
+}
+
+.tooltip-triangle {
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  transform: rotate(45deg);
+  box-shadow: 13px 13px 38px rgba(230, 230, 230, 0.9);
+  border-radius: 3px;
+}
+
+.tooltip-box {
+  background: #ffffff;
+  padding: 16px;
+  margin-left: -4px;
   border-radius: 15px;
   box-shadow: 13px 13px 38px rgba(230, 230, 230, 0.9);
-}
-
-.traingle {
-  width: 30px;
-  height: 30px;
-  background-color: white;
-  transform: rotate(45deg);
-  border-radius: 5px;
-  display: flex;
-  position: absolute;
-  margin-top: 130px;
-  margin-left: 35px;
-  z-index: 2;
-}
-
-.box_message {
-  padding: 30px;
-  max-width: 260px;
-  word-break: break-all;
+  font-size: 16px;
+  font-family: Montserrat, sans-serif;
+  line-height: 1.4;
 }
 </style>

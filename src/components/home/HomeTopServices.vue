@@ -1,260 +1,114 @@
 <template>
   <div class="module3">
-    <div class="module3__title">Топ услуг</div>
-    <div class="module3__text">
-      any информация про то, что мы модем сделать\предоставить или чо там по плану и тд
-    </div>
+    <h2 class="module3__title">Топ услуг</h2>
+    <p class="module3__text">
+      Разработаем индивидуальную стратегию email маркетинга, подготовим корпоративный шаблон
+      рассылки или возьмем весь канал email на себя
+    </p>
     <div class="module3__cardsBox">
-      <div class="card" v-for="(card, index) in items" :card="card" :key="index">
-        <div class="gridBox box1">{{ card.title }}</div>
-        <div class="gridBox box2-2">
-          <!-- <img class="gridBox box2" : src="card.image"> -->
-          <img class="gridBox box2" :src="card.image" alt="" />
-        </div>
-        <div class="gridBox box3">
-          очень длинный текст, который описывает, что и зачем мы делаем, касаеио этого пункта
-        </div>
-        <div class="gridBox box4">Цена</div>
-        <div class="gridBox box5">
-          <!-- <div class="button">Заказать корнсультацию</div> -->
-          <button class="button">Заказать консультацию</button>
-        </div>
+      <div class="card" v-for="(card, index) in items" :key="index">
+        <h3 class="card__title">{{ card.title }}</h3>
+        <img class="card__image" :src="card.image" alt="" />
+        <p class="card__text">{{ card.text }}</p>
+        <span class="card__price">{{ card.price }}</span>
+        <button class="card__button">Заказать услугу</button>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts" src="">
-import { ref } from 'vue';
-import { topservices, type TopServices } from '@/mocks/HomeMocks/TopServicesMocks';
+<script setup lang="ts">
+import { ref } from 'vue'
+import { topservices, type TopServices } from '@/mocks/HomeMocks/TopServicesMocks'
 
 const items = ref<TopServices[]>(topservices)
 </script>
 
 <style lang="scss" scoped>
 .module3 {
-  padding: 5px 68px;
-  display: grid;
-  gap: 25px;
-
+  padding: 40px 68px;
+  font-family: Montserrat;
   &__title {
-    font-family: Montserrat;
     font-size: 36px;
-    width: 50%;
-    line-height: 40px;
     font-weight: 600;
-    width: 63%;
+    margin-bottom: 8px;
   }
-
   &__text {
-    font-family: Montserrat;
-    font-weight: 400;
-    font-size: 18px;
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 32px;
+    max-width: 800px;
+    line-height: 1.4;
+  }
+  &__cardsBox {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    padding-bottom: 20px;
   }
 
-  &__cardsBox {
-    max-width: 2050px;
-    height: 500px;
-    display: flex;
-    gap: 30px;
-    overflow: auto;
-    padding-top: 50px;
+  .card {
+    min-width: 420px;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    row-gap: 16px;
+    height: 100%;
 
-    .card {
-      width: 540px;
-      min-width: 540px;
-      height: 360px;
-      border-radius: 30px;
-      box-shadow: 15px 15px 38px rgba(230, 230, 230, 0.9);
-      box-shadow: 15px -15px 30px rgba(230, 230, 230, 0.9);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 5fr 4fr 3fr;
-      padding: 30px;
+    &__title {
+      grid-column: 1 / span 1;
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.2;
+      align-self: start;
+    }
 
-      & .box1 {
-        font-family: Montserrat;
-        font-weight: 600;
-        font-size: 28px;
-        align-content: center;
-        text-align: center;
-      }
+    &__image {
+      grid-column: 2 / span 1;
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
 
-      & .box2-2 {
-        justify-content: center;
-        padding: 0 50px;
-        align-content: center;
-        text-align: center;
+    &__text {
+      grid-column: 1 / -1;
+      margin: 0;
+      font-size: 14px;
+      color: #777;
+      line-height: 1.4;
+      align-self: start;
+    }
 
-        & .box2 {
-          max-width: 200px;
-          max-height: 120px;
-          align-content: center;
-          justify-content: center;
-        }
-      }
+    &__price {
+      grid-column: 1 / span 1;
+      font-size: 18px;
+      font-weight: 600;
+      align-self: end;
+    }
 
-      & .box3 {
-        grid-column-start: 1;
-        grid-column-end: 3;
-        padding-left: 15px;
-        font-family: Montserrat;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 130%;
-        align-content: center;
-      }
-
-      & .box4 {
-        font-family: Montserrat;
-        font-weight: 600;
-        font-size: 25px;
-        align-content: center;
-        text-align: center;
-        padding-right: 27px;
-      }
-
-      & .box5 {
-        align-content: center;
-        text-align: center;
-
-        & .button {
-          height: 56px;
-          width: 218px;
-          background-color: rgba(255, 104, 113, 1);
-          border-radius: 15px;
-          text-align: center;
-          color: white;
-          padding: 15px;
-          background-color: rgba(255, 104, 113, 1);
-        }
+    &__button {
+      grid-column: 2 / span 1;
+      justify-self: end;
+      align-self: end;
+      background-color: #ff6871;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      &:hover {
+        background-color: #e95762;
       }
     }
   }
 }
-
-// .module3__title {
-//   font-family: Montserrat;
-//   font-size: 36px;
-//   width: 50%;
-//   line-height: 40px;
-//   font-weight: 600;
-// }
-
-// .module3__text {
-//   font-family: Montserrat;
-//   font-weight: 400;
-//   font-size: 18px;
-// }
-
-// .cardsBox {
-//   max-width: 2050px;
-//   height: 500px;
-//   display: flex;
-//   gap: 30px;
-//   overflow: auto;
-//   padding-top: 50px;
-// }
-
-// .card {
-//   width: 540px;
-//   min-width: 540px;
-//   height: 360px;
-//   border-radius: 30px;
-//   box-shadow: 15px 15px 38px rgba(230, 230, 230, 0.9);
-//   box-shadow: 15px -15px 30px rgba(230, 230, 230, 0.9);
-//   display: grid;
-//   grid-template-columns: 1fr 1fr;
-//   grid-template-rows: 5fr 4fr 3fr;
-//   padding: 30px;
-// }
-
-// .box1 {
-//   font-family: Montserrat;
-//   font-weight: 600;
-//   font-size: 28px;
-//   align-content: center;
-//   text-align: center;
-// }
-
-// .box2 {
-//   max-width: 200px;
-//   max-height: 120px;
-//   align-content: center;
-//   justify-content: center;
-// }
-
-// .box2-2 {
-//   justify-content: center;
-//   padding: 0 50px;
-//   align-content: center;
-//   text-align: center;
-// }
-
-// .box3 {
-//   grid-column-start: 1;
-//   grid-column-end: 3;
-//   padding-left: 15px;
-//   font-family: Montserrat;
-//   font-weight: 400;
-//   font-size: 16px;
-//   line-height: 130%;
-//   align-content: center;
-// }
-
-// .box4 {
-//   font-family: Montserrat;
-//   font-weight: 600;
-//   font-size: 25px;
-//   align-content: center;
-//   text-align: center;
-//   padding-right: 27px;
-// }
-
-// .box5 {
-//   align-content: center;
-//   text-align: center;
-// }
-
-// .button {
-//   height: 56px;
-//   width: 218px;
-//   background-color: rgba(255, 104, 113, 1);
-//   border-radius: 15px;
-//   text-align: center;
-//   color: white;
-//   padding: 15px;
-//   background-color: rgba(255, 104, 113, 1);
-// }
-
-// .titleImgBox {
-//   background-color: rgb(8, 96, 25);
-//   width: 100%;
-//   min-height: 150px;
-//   display: flex;
-// }
-
-// .img {
-//   background-color: aliceblue;
-//   width: 37%;
-// }
-
-// .buttonPriceBox {
-//   background-color: aquamarine;
-//   width: 100%;
-//   height: 26%;
-// }
-
-// .price {
-//   background-color: azure;
-//   width: 50%;
-//   font-family: Montserrat;
-//   font-weight: 600;
-//   font-size: 25px;
-//   text-align: center;
-//   justify-content: center;
-//   align-items: center;
-//   margin: 0 auto;
-//   width: 100px;
-// }
 </style>

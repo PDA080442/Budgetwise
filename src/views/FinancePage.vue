@@ -1,9 +1,8 @@
 <template>
   <NewLayout>
-      <v-container>
-        <TransactionList :transactions="transactions" />
-       
-      </v-container>
+    <v-container>
+      <TransactionList :transactions="transactions" />
+    </v-container>
   </NewLayout>
 </template>
 
