@@ -44,17 +44,12 @@
 </template>
 
 <script lang="ts" setup>
-import { isEmail } from 'validator'
-
+import { useEntranceRules } from '@/services/Rules/Entrance/EntranceFormRules'
 import { useLoginActions } from '@/services/Actions/Entrance/EntranceFormActions'
 
 const { form, valid, logindata, serverErrors, submit, goToRegistration } = useLoginActions()
 
-const rules = {
-  require: (u: string) => !!u || 'Поле нужно заполнить',
-  email: (u: string) => isEmail(u) || 'Введен неправильный mail',
-  passwordmin: (u: string) => u?.length >= 6 || 'Минимальная длина - 6 символов',
-}
+const { rules } = useEntranceRules()
 </script>
 
 <style scoped lang="scss">
