@@ -25,8 +25,6 @@ export async function addTransactions(data: Transaction): Promise<Transaction> {
   return response as Transaction
 }
 
-/* Запросы на продукты */
-
 export async function getProduct(transactionId: number): Promise<Products[]> {
   const response = await call(`/${transactionId}/positions/`, {}, 'GET')
   return response as Products[]
@@ -50,7 +48,6 @@ export async function addProducts(transactionId: number, data: Products): Promis
   return response as Products
 }
 
-/* Запрос на фильтры  Транзакции*/
 export async function searchTransaction(query: string): Promise<Transaction[]> {
   const response = await call(`/?search=${query}`, {}, 'GET')
   return response as Transaction[]
@@ -83,7 +80,6 @@ export async function orderTransaction(
   return response as Transaction[]
 }
 
-/* Запрос Баланса */
 export async function getBalance(): Promise<Balance> {
   const response = await call('/balance/', {}, 'GET')
   return response as Balance

@@ -186,6 +186,8 @@ const headers = [
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+
   transition:
     background-color 0.2s,
     transform 0.2s;

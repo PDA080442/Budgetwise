@@ -1,12 +1,10 @@
 <template>
   <NewLayout>
-
-      <v-container class="diagram">
-        <Pie ref="chartRef" :data="chartData" :options="chartOptions" />
-      </v-container>
+    <v-container class="diagram">
+      <Pie ref="chartRef" :data="chartData" :options="chartOptions" />
+    </v-container>
   </NewLayout>
 </template>
-
 
 <script setup lang="ts">
 import MainLayout from '@/layouts/MainLayout.vue'
@@ -19,7 +17,7 @@ import {
   type ChartOptions,
   ArcElement,
   Tooltip,
-  Legend
+  Legend,
 } from 'chart.js'
 
 // Регистрируем необходимые элементы Chart.js
@@ -34,22 +32,19 @@ const chartData = ref<PieChartData>({
     {
       data: [33, 33, 33],
       backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-    }
-  ]
+      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+    },
+  ],
 })
 
 const chartOptions = ref<ChartOptions<'pie'>>({
   responsive: true,
-  maintainAspectRatio: false
+  maintainAspectRatio: false,
 })
 
 const chartRef = ref<InstanceType<typeof Pie> | null>(null)
 
-onMounted(() => {
-  // График автоматически рендерится при монтировании
-  // через пропсы data и options
-})
+onMounted(() => {})
 </script>
 
 <style lang="scss" scoped>

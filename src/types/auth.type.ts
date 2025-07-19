@@ -12,12 +12,6 @@ export interface FormData {
 export interface LoginData {
   email: string
   password: string
-  name: string
-  lastname: string
-  new_password: string
-  new_password2: string
-  old_password: string
-  changePasswords: string
 }
 
 export interface infoProfile {

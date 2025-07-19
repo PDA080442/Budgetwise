@@ -1,5 +1,9 @@
 <template>
-  <v-footer class="text-center d-flex flex-column ga-2 py-4" color="primary" style="height: auto; padding: 0px;">
+  <v-footer
+    class="text-center d-flex flex-column ga-2 py-4"
+    color="primary"
+    style="height: auto; padding: 0px"
+  >
     <div class="d-flex ga-3">
       <v-btn
         v-for="icon in icons"
@@ -18,15 +22,9 @@
 
     <v-divider></v-divider>
 
-    <div>
-      {{ new Date().getFullYear() }} — <strong>Хацкеры 2.0</strong>
-    </div>
+    <div>{{ new Date().getFullYear() }} — <strong>Хацкеры 2.0</strong></div>
   </v-footer>
 </template>
-<script setup>
-  const icons = [
-    'mdi-telegram',
-    'mdi-vk',
-    'mdi-instagram',
-  ]
+<script setup lang="ts">
+const icons = ['mdi-telegram', 'mdi-vk', 'mdi-instagram']
 </script>

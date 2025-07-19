@@ -1,10 +1,8 @@
 import { useApi } from '@/composables/useApi'
 import type { AuthTokens, LoginData } from '@/types/auth.type'
 import axios from 'axios'
-import  type { infoProfile } from '@/types/auth.type'
+import type { infoProfile } from '@/types/auth.type'
 import type { changePassword } from '@/types/auth.type'
-
-
 
 const { call } = useApi('/reg')
 
@@ -27,25 +25,15 @@ export async function logdata(logindata: LoginData): Promise<AuthTokens> {
   return tokens as AuthTokens
 }
 
-
 export async function logoutReq(refresh_token: string): Promise<void> {
-  await call(
-    '/logout/',
-    {
-      refresh: refresh_token
-    },
-    'POST',
-  )
+  await call('/logout/', { refresh: refresh_token }, 'POST')
 }
 
-//запрос на профиль
-export async function getInfo(): Promise <infoProfile> {
+export async function getInfo(): Promise<infoProfile> {
   const respons = await call('/profile/', {}, 'GET')
   return respons as infoProfile
 }
 
-
-//отправка ред данных профиля
 export async function postInfo(info: infoProfile): Promise<infoProfile> {
   try {
     const response = await call('/profile/', info, 'PUT')
@@ -57,16 +45,13 @@ export async function postInfo(info: infoProfile): Promise<infoProfile> {
   }
 }
 
-
-//запрос пароля
-export async function getPassword(): Promise <changePassword> {
+export async function getPassword(): Promise<changePassword> {
   const respons = await call('/profile/change-password/', {}, 'GET')
   return respons as changePassword
 }
 
-//отправка и сохранение пароля
 export async function postPassword(info: changePassword): Promise<changePassword> {
-  try{
+  try {
     const response = await call('/profile/change-password/', info, 'POST')
     return response as changePassword
   } catch (error) {
@@ -78,5 +63,4 @@ export async function postPassword(info: changePassword): Promise<changePassword
 export async function getEmail(): Promise<LoginData> {
   const response = await call('/profile/', {}, 'GET')
   return response as LoginData
-
 }

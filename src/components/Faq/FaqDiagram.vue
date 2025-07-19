@@ -4,7 +4,6 @@
   </v-container>
 </template>
 
-
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { Pie } from 'vue-chartjs'
@@ -14,7 +13,7 @@ import {
   type ChartOptions,
   ArcElement,
   Tooltip,
-  Legend
+  Legend,
 } from 'chart.js'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
@@ -27,27 +26,23 @@ const chartData = ref<PieChartData>({
     {
       data: [50, 30, 20],
       backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-    }
-  ]
+      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+    },
+  ],
 })
 
 const chartOptions = ref<ChartOptions<'pie'>>({
   responsive: true,
-  maintainAspectRatio: false
+  maintainAspectRatio: false,
 })
 
 const chartRef = ref<InstanceType<typeof Pie> | null>(null)
 
-onMounted(() => {
-  // График автоматически рендерится при монтировании
-  // через пропсы data и options
-})
+onMounted(() => {})
 </script>
 
 <style lang="scss" scoped>
 .diagram {
   margin: 40px;
 }
-
 </style>

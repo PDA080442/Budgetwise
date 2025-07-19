@@ -5,7 +5,6 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import HomePage from '@/views/HomePage.vue'
 import AuthRoutes from './auth'
 
-// TODO: Разбить роуты на модули
 const routes: RouteRecordRaw[] = [
   ...AuthRoutes,
   {
@@ -30,14 +29,6 @@ const routes: RouteRecordRaw[] = [
     path: '/faq',
     name: 'Faq',
     component: () => import('@/views/FaqPage.vue'),
-  },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('@/views/TestPage.vue'),
-    meta: {
-      requireAuth: true,
-    },
   },
   {
     path: '/accountsettings',
@@ -68,18 +59,5 @@ router.beforeEach(async (to, from, next) => {
     return next({ path: '/entrance' })
   }
 })
-
-// router.beforeEach((to, from, next) => {
-//   if (!to.meta.requireAuth) {
-//     return next()
-//   }
-
-//   const token = localStorage.getItem('accessToken')
-//   if (token) {
-//     return next()
-//   } else {
-//     return next({ name: 'Entrance' })
-//   }
-// })
 
 export default router

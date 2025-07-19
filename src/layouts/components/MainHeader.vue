@@ -21,16 +21,8 @@
             </template>
           </div>
         </v-flex>
-
         <v-flex>
           <v-col cols="auto">
-            <!-- <v-icon
-              v-if="isAuthenticated"
-              @click="confirmLogout"
-              icon="mdi-logout"
-              color="white"
-              size="small"
-            ></v-icon>  -->
             <MainUserButton v-if="isAuthenticated" @logout="confirmLogout" />
             <v-icon
               v-else
@@ -49,8 +41,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios' ////
-import { logoutReq } from '@/composables/auth.request' ///////////////////////
 import MainUserButton from '@/layouts/components/MainUserButton.vue'
 
 const router = useRouter()
@@ -87,38 +77,6 @@ const search = ref('')
 const confirmLogout = () => {
   logoutDialog.value = true
 }
-
-// const performLogout = () => {
-//   localStorage.removeItem('accessToken')
-//   localStorage.removeItem('refreshToken')
-
-//   logoutDialog.value = false
-//   router.push({ path: '/' })
-// }
-
-// const performLogout = async () => {
-//   try {
-//     const refreshToken = localStorage.getItem('refresh_Token')
-//     if (refreshToken) {
-//       await logoutReq(refreshToken)
-//     }
-
-//     localStorage.removeItem('accessToken')
-//     localStorage.removeItem('refresh_Token')
-//     delete axios.defaults.headers.common['Authorization']
-
-//     logoutDialog.value = false
-//     router.push({ path: '/' })
-//   } catch (error) {
-//     console.error('Ошибка при выходе:', error)
-//     // Все равно очищаем токены на клиенте
-//     localStorage.removeItem('accessToken')
-//     localStorage.removeItem('refresh_Token')
-//     delete axios.defaults.headers.common['Authorization']
-//     logoutDialog.value = false
-//     router.push({ path: '/' })
-//   }
-// }
 </script>
 
 <style lang="scss" scoped>

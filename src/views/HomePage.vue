@@ -1,13 +1,13 @@
 <template>
   <NewLayout>
-      <div>
-        <HomeAboutSection></HomeAboutSection>
-        <BalanceView />
-        <HomeAdvantages />
-        <div class="services">
-          <HomeTopServices></HomeTopServices>
-        </div>
+    <div>
+      <HomeAboutSection></HomeAboutSection>
+      <BalanceView />
+      <HomeAdvantages />
+      <div class="services">
+        <HomeTopServices></HomeTopServices>
       </div>
+    </div>
   </NewLayout>
 </template>
 

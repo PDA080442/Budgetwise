@@ -11,7 +11,6 @@ const app = createApp(App)
 const token = localStorage.getItem('accessToken')
 if (token) axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-
 app.use(createPinia())
 app.use(router)
 app.use(vuetify)

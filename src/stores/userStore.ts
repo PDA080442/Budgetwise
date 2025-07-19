@@ -1,17 +1,17 @@
-import { defineStore } from 'pinia';
-import { ref} from 'vue'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 import { getEmail } from '@/composables/auth.request'
 
-export const useUserStore = defineStore('user', ()=> {
+export const useUserStore = defineStore('user', () => {
   const userData = ref({
-    email: "",
+    email: '',
   })
   const loadUserEmail = async () => {
-    const data = await getEmail();
-    userData.value.email = data.email;
-  };
+    const data = await getEmail()
+    userData.value.email = data.email
+  }
   return {
     userData,
-    loadUserEmail
-  };
-});
+    loadUserEmail,
+  }
+})
